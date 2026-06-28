@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f2efe7">
 <meta name="description" content="Case Study: Summit CPA — Secure client portal and modern app design by DreamSites.">
-<link class="favicon" rel="icon" href="../favicon.svg">
+<link rel="icon" href="../favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css"><title>Summit CPA Case Study | DreamSites.pro</title>
 </head>
@@ -15,7 +15,7 @@
 <main id="main">
 <section class="sub-hero">
   <h1>Summit CPA</h1>
-  <p>Secure Client Portal · App Design · Professional Brand Refresh</p>
+  <p>Secure Client Onboarding Portal · CPA Document App Design</p>
 </section>
 
 <div class="case-grid">
@@ -27,6 +27,20 @@
       <li><b>SERVICES</b> <span>App Design, Security</span></li>
       <li><b>OUTCOME</b> <span>Document prep speed up 80%</span></li>
     </ul>
+
+    <h4 style="margin: 25px 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--coral);">Tech Stack (Tools Used)</h4>
+    <ul class="case-meta-list" style="font-size: 13px; margin-bottom: 25px;">
+      <li><b>Vault Storage</b> <span>AWS S3 (Encrypted)</span></li>
+      <li><b>Signatures</b> <span>DocuSign eSign API</span></li>
+      <li><b>State Manager</b> <span>Vanilla JS state engine</span></li>
+    </ul>
+
+    <h4 style="margin: 0 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--coral);">Business Infrastructure</h4>
+    <ul class="case-meta-list" style="font-size: 13px; margin-bottom: 30px;">
+      <li><b>Cloud Admin</b> <span>AWS IAM & KMS Policies</span></li>
+      <li><b>esign Account</b> <span>DocuSign Business</span></li>
+      <li><b>Email Alerts</b> <span>SendGrid SMTP (Secure)</span></li>
+    </ul>
     <a href="../index.html#contact" class="btn coral" style="width: 100%; display: flex;">Start your project ↗</a>
   </aside>
 
@@ -37,21 +51,20 @@
     <h2>The Strategy</h2>
     <p>We designed a secure, friendly, mobile-first Client Portal. The core idea was to replace intimidating directories with a simple, guided checklist. Instead of uploading random files to a generic folder, clients are guided step-by-step: "Upload W-2 Forms", "Sign Engagement Letter", and "Review Draft Return".</p>
 
-    <h2>The Design</h2>
-    <p>We selected a sophisticated muted purple and charcoal theme to convey security and trust. The portal checklist uses interactive indicators (checked, active, locked) with a soft pulsing green check dot, giving clients visual confirmation that they are doing everything correctly.</p>
+    <h2>System Mockup & Interface Design</h2>
+    <p>To implement this service, we designed and built a custom client-facing interface. Below is the secure client portal dashboard developed for this project:</p>
+    <img src="../images/summit-showcase.png" class="case-image-full" alt="Summit CPA Secure Client Portal App Mockup">
 
-    <h2>The Results</h2>
+    <h2 style="margin-top: 50px;">Business Operations & Integrations</h2>
+    <p>Tax document security is critical. The portal uses industry-standard tools to keep files safe and keep operations efficient:</p>
+    <ul>
+      <li><strong>AWS S3 & Key Management Service (KMS):</strong> Uploaded customer tax files are encrypted at rest using unique KMS keys. Strict AWS IAM policies guarantee that only authorized CPAs can access documents.</li>
+      <li><strong>DocuSign eSign API:</strong> Integrates legal document workflows directly. When the draft return is approved, clients click to sign their tax forms inside the portal.</li>
+      <li><strong>SendGrid Secure Emails:</strong> Sends temporary secure login links (passwordless authentication) to keep user accounts secure and prevent password-leaking vulnerabilities.</li>
+    </ul>
+
+    <h2>The Outcome</h2>
     <p>Document preparation turnaround times dropped by 80%. Summit CPA staff no longer need to manually chase down documents via email, as the portal automatically notifies and nudges clients about pending checklist tasks.</p>
-
-    <div class="app" style="height: 480px; border-radius: 20px; margin-top: 40px;">
-      <div class="phone-mockup" style="position: relative; z-index: 2;">
-        <div class="phone-bar">● ● ●　summit-portal.com</div>
-        <div class="phone-content">
-          <span class="portal-tag">✓ SECURE PORTAL</span>
-          <h3 style="font-size: 20px;">Summit CPA</h3>
-        </div>
-      </div>
-    </div>
   </article>
 </div>
 </main>

@@ -15,7 +15,7 @@
 <main id="main">
 <section class="sub-hero">
   <h1>Haven Hair Studio</h1>
-  <p>Brand Identity · Custom Booking System · High-end Salon Web Design</p>
+  <p>Brand Identity · Custom Booking App · High-End Salon Web Design</p>
 </section>
 
 <div class="case-grid">
@@ -24,8 +24,22 @@
     <ul class="case-meta-list">
       <li><b>CLIENT</b> <span>Haven Hair Studio</span></li>
       <li><b>YEAR</b> <span>2026</span></li>
-      <li><b>SERVICES</b> <span>Identity, Booking App</span></li>
+      <li><b>SERVICES</b> <span>Brand & Booking App</span></li>
       <li><b>OUTCOME</b> <span>No-show rate dropped to 0%</span></li>
+    </ul>
+
+    <h4 style="margin: 25px 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--coral);">Tech Stack (Tools Used)</h4>
+    <ul class="case-meta-list" style="font-size: 13px; margin-bottom: 25px;">
+      <li><b>Payments</b> <span>Stripe Checkout API</span></li>
+      <li><b>Calendar</b> <span>Cal.com Developer API</span></li>
+      <li><b>Local Cache</b> <span>Vanilla JS LocalStorage</span></li>
+    </ul>
+
+    <h4 style="margin: 0 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--coral);">Business Infrastructure</h4>
+    <ul class="case-meta-list" style="font-size: 13px; margin-bottom: 30px;">
+      <li><b>Merchant</b> <span>Stripe Business Account</span></li>
+      <li><b>Notification</b> <span>Twilio SMS notifications</span></li>
+      <li><b>Scheduler</b> <span>Google Calendar Sync</span></li>
     </ul>
     <a href="../index.html#contact" class="btn coral" style="width: 100%; display: flex;">Start your project ↗</a>
   </aside>
@@ -37,18 +51,20 @@
     <h2>The Strategy</h2>
     <p>We designed a bespoke booking experience native to their website. Instead of sending users to an external software platform, the site uses a custom calendar integration. This makes scheduling a stylist and picking a slot as frictionless as possible. The booking widget collects card details directly to guarantee the slot, maintaining a premium feeling throughout.</p>
 
-    <h2>The Design</h2>
-    <p>We used a soft, warm cream and pastel pink aesthetic that feels welcoming and clean. Typography details use elegant serifs. The custom booking interface on mobile fits perfectly in one screen thumb-reach, allowing guests to choose services, stylists, and slots in less than 60 seconds.</p>
+    <h2>System Mockup & Interface Design</h2>
+    <p>To implement this service, we designed and built a custom client-facing interface. Below is the custom scheduling calendar design developed for this project:</p>
+    <img src="../images/haven-showcase.png" class="case-image-full" alt="Haven Hair Studio Custom Booking App Mockup">
 
-    <h2>The Results</h2>
+    <h2 style="margin-top: 50px;">Business Operations & Integrations</h2>
+    <p>To support this seamless booking experience, the website integrates with several key micro-services:</p>
+    <ul>
+      <li><strong>Stripe Payment Integration:</strong> Secures and holds booking deposits automatically when an appointment is requested.</li>
+      <li><strong>Cal.com Scheduling System:</strong> Coordinates availability across stylists in real-time and prevents double bookings.</li>
+      <li><strong>Twilio SMS Text Alerts:</strong> Sends automated appointment confirmation messages and reminder notices to clients 24 hours prior to booking, minimizing late cancellations.</li>
+    </ul>
+
+    <h2>The Outcome</h2>
     <p>No-shows have dropped to absolute zero since implementing guaranteed deposits. Guests have repeatedly commented on how much they love booking online now, resulting in a 40% increase in bookings made outside salon working hours.</p>
-
-    <div class="salon" style="height: 480px; border-radius: 20px; margin-top: 40px;">
-      <div class="salon-site" style="position: relative; z-index: 2;">
-        <small>HAVEN HAIR STUDIO</small>
-        <h3>Your hair,<br>but <em>happier.</em></h3>
-      </div>
-    </div>
   </article>
 </div>
 </main>

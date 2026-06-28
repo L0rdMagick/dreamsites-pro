@@ -15,7 +15,7 @@
 <main id="main">
 <section class="sub-hero">
   <h1>Miso Noodle Bar</h1>
-  <p>Brand Refresh · Online Ordering System · Local SEO Strategy</p>
+  <p>Brand Refresh · Commission-Free Online Ordering System · Local SEO</p>
 </section>
 
 <div class="case-grid">
@@ -27,6 +27,19 @@
       <li><b>SERVICES</b> <span>Brand Refresh, E-Commerce</span></li>
       <li><b>OUTCOME</b> <span>Online sales increased 45%</span></li>
     </ul>
+
+    <h4 style="margin: 25px 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--coral);">Tech Stack (Tools Used)</h4>
+    <ul class="case-meta-list" style="font-size: 13px; margin-bottom: 25px;">
+      <li><b>Checkout</b> <span>Apple Pay / Web Pay API</span></li>
+      <li><b>Processor</b> <span>Stripe Payment Intents</span></li>
+      <li><b>State Manager</b> <span>Vanilla JS Cart Engine</span></li>
+    </ul>
+
+    <h4 style="margin: 0 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--coral);">Business Infrastructure</h4>
+    <ul class="case-meta-list" style="font-size: 13px; margin-bottom: 30px;">
+      <li><b>Printer Sync</b> <span>Stripe POS kitchen printer</span></li>
+      <li><b>Delivery Map</b> <span>Mapbox Distance API</span></li>
+    </ul>
     <a href="../index.html#contact" class="btn coral" style="width: 100%; display: flex;">Start your project ↗</a>
   </aside>
 
@@ -37,18 +50,19 @@
     <h2>The Strategy</h2>
     <p>We built a direct, commission-free online ordering app natively integrated into their web experience. The interface features their high-quality food photography and lets users configure orders and customize toppings (e.g., adding extra soft-boiled eggs or chashu pork) with a simple tap, checking out securely via Apple Pay or credit card.</p>
 
-    <h2>The Design</h2>
-    <p>We designed the system with dark, high-contrast aesthetics (deep green forest and wood tones) that mimic the warm, intimate atmosphere of a ramen bar at night. The ordering widgets are highly optimized for mobile, allowing hungry users to add items to their cart in 2 clicks.</p>
+    <h2>System Mockup & Interface Design</h2>
+    <p>To implement this service, we designed and built a custom client-facing interface. Below is the mobile-optimized direct ordering app mockup developed for this project:</p>
+    <img src="../images/miso-showcase.png" class="case-image-full" alt="Miso Noodle Bar Direct Ordering App Mockup">
 
-    <h2>The Results</h2>
+    <h2 style="margin-top: 50px;">Business Operations & Integrations</h2>
+    <p>Operating a restaurant requires speed. Orders must arrive in the kitchen instantly without manual typing or delays:</p>
+    <ul>
+      <li><strong>Stripe Terminal POS Printer Sync:</strong> When a user checks out using Apple Pay or credit card, the site sends a webhook directly to the kitchen POS. The order is printed directly on the kitchen prep line ticket printer.</li>
+      <li><strong>Mapbox Distance Calculation API:</strong> During delivery orders, the app calculates the distance from the restaurant to the client's home in real-time, validating delivery radius limits and calculating courier fees.</li>
+    </ul>
+
+    <h2>The Outcome</h2>
     <p>Direct online ordering sales increased by 45% within three months of launch. Because they bypassed third-party app fees, Miso Noodle Bar saved thousands of dollars in commissions, completely recouping the cost of their custom website build in under six weeks.</p>
-
-    <div class="restaurant" style="height: 480px; border-radius: 20px; margin-top: 40px; display: flex; align-items: center; justify-content: center;">
-      <div class="restaurant-copy" style="position: relative; z-index: 2;">
-        <small>HAND-PULLED & FRESH</small>
-        <h3 style="font-size: 32px; margin: 10px 0;">Bowls made for<br><em>slow days.</em></h3>
-      </div>
-    </div>
   </article>
 </div>
 </main>
