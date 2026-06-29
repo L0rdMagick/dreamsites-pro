@@ -105,9 +105,11 @@ Your dream site starts with a hello! We'd love to schedule a relaxed, no-pressur
       const validPhones = phones ? phones.filter(p => p.replace(/\D/g, '').length >= 7) : [];
 
       if (emails || validPhones.length > 0) {
-        sendLeadEmail(emails, validPhones, history, resendApiKey).catch(err => {
+        try {
+          await sendLeadEmail(emails, validPhones, history, resendApiKey);
+        } catch (err) {
           console.error('Failed to send lead email:', err);
-        });
+        }
       }
     }
 
