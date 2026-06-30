@@ -38,5 +38,48 @@ q('.chat form').addEventListener('submit',e=>{
   askAI(text);
   input.value='';
 });
-q('#contact-form').addEventListener('submit',e=>{e.preventDefault();const d=new FormData(e.currentTarget),subject=encodeURIComponent('DreamSites project inquiry — '+d.get('service')),body=encodeURIComponent('Name: '+d.get('name')+'\nEmail: '+d.get('email')+'\nService: '+d.get('service')+'\n\nAbout the project:\n'+d.get('message'));q('.form-status').textContent='Opening your email app and redirecting…';window.location.href='mailto:hello@dreamsites.pro?subject='+subject+'&body='+body;setTimeout(()=>{window.location.href='thanks.html'},1200)});
+q('#contact-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const statusEl = q('.form-status');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  if (submitBtn) submitBtn.disabled = true;
+  statusEl.textContent = 'Sending your request...';
+  statusEl.style.color = '';
+  
+  const d = new FormData(form);
+  const payload = {
+    name: d.get('name'),
+    email: d.get('email'),
+    service: d.get('service'),
+    message: d.get('message')
+  };
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      statusEl.textContent = 'Message sent successfully! Redirecting...';
+      statusEl.style.color = '#2e7d32';
+      setTimeout(() => {
+        window.location.href = 'thanks.html';
+      }, 1200);
+    } else {
+      const errData = await res.json();
+      throw new Error(errData.error || 'Failed to send message.');
+    }
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = `Error: ${err.message || 'Something went wrong. Please try again.'}`;
+    statusEl.style.color = '#d32f2f';
+    if (submitBtn) submitBtn.disabled = false;
+  }
+});
 let lastScroll=0;window.addEventListener('scroll',()=>{const currentScroll=window.pageYOffset||document.documentElement.scrollTop,nav=q('.nav');if(!nav)return;const menuExpanded=q('.menu')&&q('.menu').getAttribute('aria-expanded')==='true';if(menuExpanded)return;if(currentScroll<=0){nav.classList.remove('nav-hidden');return}if(currentScroll>lastScroll&&currentScroll>120&&!nav.classList.contains('nav-hidden')){nav.classList.add('nav-hidden')}else if(currentScroll<lastScroll&&nav.classList.contains('nav-hidden')){nav.classList.remove('nav-hidden')}lastScroll=currentScroll});
