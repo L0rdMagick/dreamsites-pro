@@ -111,3 +111,15 @@ if (visitorsInput && liftInput && valueInput) {
   [visitorsInput, liftInput, valueInput].forEach(input => input.addEventListener('input', updateCalc));
   updateCalc();
 }
+
+// Before/After Slider Logic
+const baRange = q('.ba-range');
+if (baRange) {
+  baRange.addEventListener('input', (e) => {
+    const val = e.target.value;
+    const beforeImg = q('.ba-before');
+    const handle = q('.ba-handle');
+    if (beforeImg) beforeImg.style.width = `${val}%`;
+    if (handle) handle.style.left = `${val}%`;
+  });
+}
