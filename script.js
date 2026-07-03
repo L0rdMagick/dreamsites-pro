@@ -83,3 +83,33 @@ q('#contact-form').addEventListener('submit', async (e) => {
   }
 });
 let lastScroll=0;window.addEventListener('scroll',()=>{const currentScroll=window.pageYOffset||document.documentElement.scrollTop,nav=q('.nav');if(!nav)return;const menuExpanded=q('.menu')&&q('.menu').getAttribute('aria-expanded')==='true';if(menuExpanded)return;if(currentScroll<=0){nav.classList.remove('nav-hidden');return}if(currentScroll>lastScroll&&currentScroll>120&&!nav.classList.contains('nav-hidden')){nav.classList.add('nav-hidden')}else if(currentScroll<lastScroll&&nav.classList.contains('nav-hidden')){nav.classList.remove('nav-hidden')}lastScroll=currentScroll});
+
+// ROI Calculator Logic
+const visitorsInput = q('#range-visitors');
+const convInput = q('#range-conv');
+const valueInput = q('#range-value');
+
+if (visitorsInput && convInput && valueInput) {
+  const formatCur = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+  
+  function updateCalc() {
+    const visitors = parseInt(visitorsInput.value, 10);
+    const conv = parseFloat(convInput.value) / 100;
+    const value = parseInt(valueInput.value, 10);
+    
+    q('#val-visitors').textContent = visitors.toLocaleString();
+    q('#val-conv').textContent = (conv * 100).toFixed(1) + '%';
+    q('#val-value').textContent = formatCur(value);
+    
+    const currentRev = visitors * conv * value;
+    const dreamsiteRev = visitors * 0.03 * value; // 3% optimized conversion rate
+    const increase = dreamsiteRev - currentRev;
+    
+    q('#out-current').textContent = formatCur(currentRev);
+    q('#out-dreamsite').textContent = formatCur(dreamsiteRev);
+    q('#out-increase').textContent = (increase >= 0 ? '+' : '') + formatCur(increase);
+  }
+  
+  [visitorsInput, convInput, valueInput].forEach(input => input.addEventListener('input', updateCalc));
+  updateCalc();
+}
