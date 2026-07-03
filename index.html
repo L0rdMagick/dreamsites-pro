@@ -37,6 +37,46 @@
 <article class="faq-item"><button aria-expanded="false">Can you redesign my current website?<b>+</b></button><div><p>Absolutely. We’ll review what is worth keeping, identify what is holding the site back, and recommend a targeted refresh or a clean rebuild.</p></div></article>
 <article class="faq-item"><button aria-expanded="false">Can you add AI chat, scheduling, or phone tools?<b>+</b></button><div><p>Yes. We can connect practical tools for questions, appointments, leads, and calls—without making the experience feel robotic.</p></div></article>
 <article class="faq-item"><button aria-expanded="false">Will I be able to update my site?<b>+</b></button><div><p>Yes. We can set up easy editing and provide a simple handoff so you feel comfortable from day one.</p></div></article></div></section>
+<section class="pad calculator" id="calculator">
+  <div class="calc-grid">
+    <div class="calc-intro reveal">
+      <p class="kicker">ROI Estimator</p>
+      <h2>What is a better website worth to you?</h2>
+      <p>A website shouldn't just look good—it should be your hardest working employee. Calculate the monthly revenue you could unlock by raising your conversion rate.</p>
+    </div>
+    <div class="calc-box reveal delay">
+      <div class="calc-inputs">
+        <div class="input-group">
+          <label>Monthly Visitors <span id="val-visitors">1,000</span></label>
+          <input type="range" id="range-visitors" min="100" max="10000" step="100" value="1000">
+        </div>
+        <div class="input-group">
+          <label>Current Conversion Rate <span id="val-conv">1.0%</span></label>
+          <input type="range" id="range-conv" min="0.2" max="5.0" step="0.1" value="1.0">
+        </div>
+        <div class="input-group">
+          <label>Avg. Customer Value <span id="val-value">$1,000</span></label>
+          <input type="range" id="range-value" min="50" max="10000" step="50" value="1000">
+        </div>
+      </div>
+      <div class="calc-outputs">
+        <div class="out-row">
+          <span>Current Revenue:</span>
+          <strong id="out-current">$10,000</strong>
+        </div>
+        <div class="out-row">
+          <span>With a DreamSite (3% conv.):</span>
+          <strong id="out-dreamsite" style="color: var(--lime);">$30,000</strong>
+        </div>
+        <div class="out-total">
+          <span>Est. Monthly Increase</span>
+          <h3 id="out-increase">+$20,000</h3>
+        </div>
+        <a href="#contact" class="btn coral" style="width: 100%; margin-top: 15px;">Capture this growth ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="pad contact" id="contact"><div class="contact-copy reveal"><p class="kicker">Let’s make something good</p><h2>Your dream site<br>starts with a <em>hello.</em></h2><p>Tell us about your business. We’ll follow up to schedule a relaxed, no-pressure consultation.</p><p class="email"><i>↗</i><span><b>Prefer email?</b><br><a href="mailto:hello@dreamsites.pro">hello@dreamsites.pro</a></span></p></div><form id="contact-form" class="reveal delay"><div class="fields"><label>Your name<input name="name" placeholder="Jane Smith" required></label><label>Email address<input type="email" name="email" placeholder="jane@yourbusiness.com" required></label></div><label>What can we help with?<select name="service" required><option value="">Choose a service</option><option>New website</option><option>Website redesign</option><option>AI, scheduling, or automation</option><option>App design</option><option>I’m not sure yet</option></select></label><label>Tell us about your business<textarea name="message" rows="4" placeholder="What do you do, and what would you love your new website to do for you?" required></textarea></label><button class="btn coral" type="submit">Request a consultation ↗</button><p class="form-status" role="status"></p></form></section>
 </main>
 <footer><div class="footer-grid"><a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a><p>Websites with brains,<br>beauty, and a bit of magic.</p><div><b>EXPLORE</b><a href="#work">Work</a><a href="#services">Services</a><a href="#process">Process</a></div><div><b>CONNECT</b><a href="mailto:hello@dreamsites.pro">Email</a><a href="#contact">Book a call</a></div><div><b>LEGAL</b><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></div></div><div class="footer-bottom"><span>© <i id="year"></i> DreamSites.pro</span><span>Designed with intention. Built with care.</span><a href="#top">Back to top ↑</a></div></footer>
