@@ -86,33 +86,28 @@ let lastScroll=0;window.addEventListener('scroll',()=>{const currentScroll=windo
 
 // ROI Calculator Logic
 const visitorsInput = q('#range-visitors');
-const convInput = q('#range-conv');
+const liftInput = q('#range-lift');
 const valueInput = q('#range-value');
 
-if (visitorsInput && convInput && valueInput) {
+if (visitorsInput && liftInput && valueInput) {
   const formatCur = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
   
   function updateCalc() {
     const visitors = parseInt(visitorsInput.value, 10);
-    const conv = parseFloat(convInput.value) / 100;
+    const lift = parseFloat(liftInput.value) / 100;
     const value = parseInt(valueInput.value, 10);
     
     q('#val-visitors').textContent = visitors.toLocaleString();
-    q('#val-conv').textContent = (conv * 100).toFixed(1) + '%';
+    q('#val-lift').textContent = '+' + (lift * 100).toFixed(1) + '%';
     q('#val-value').textContent = formatCur(value);
     
-    const currentRev = visitors * conv * value;
-    const lift = 0.022; // +2.2% absolute conversion rate lift (leads to 3.2% for a 1.0% base)
-    const dreamsiteConv = conv + lift;
-    const dreamsiteRev = visitors * dreamsiteConv * value;
-    const increase = dreamsiteRev - currentRev;
+    const additionalLeads = Math.round(visitors * lift);
+    const increase = additionalLeads * value;
     
-    q('#out-current').textContent = formatCur(currentRev);
-    q('#out-dreamsite-conv').textContent = (dreamsiteConv * 100).toFixed(1) + '%';
-    q('#out-dreamsite').textContent = formatCur(dreamsiteRev);
-    q('#out-increase').textContent = (increase >= 0 ? '+' : '') + formatCur(increase);
+    q('#out-leads').textContent = '+' + additionalLeads.toLocaleString() + ' leads / mo';
+    q('#out-increase').textContent = '+' + formatCur(increase);
   }
   
-  [visitorsInput, convInput, valueInput].forEach(input => input.addEventListener('input', updateCalc));
+  [visitorsInput, liftInput, valueInput].forEach(input => input.addEventListener('input', updateCalc));
   updateCalc();
 }
