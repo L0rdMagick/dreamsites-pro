@@ -102,10 +102,13 @@ if (visitorsInput && convInput && valueInput) {
     q('#val-value').textContent = formatCur(value);
     
     const currentRev = visitors * conv * value;
-    const dreamsiteRev = visitors * 0.03 * value; // 3% optimized conversion rate
+    const lift = 0.022; // +2.2% absolute conversion rate lift (leads to 3.2% for a 1.0% base)
+    const dreamsiteConv = conv + lift;
+    const dreamsiteRev = visitors * dreamsiteConv * value;
     const increase = dreamsiteRev - currentRev;
     
     q('#out-current').textContent = formatCur(currentRev);
+    q('#out-dreamsite-conv').textContent = (dreamsiteConv * 100).toFixed(1) + '%';
     q('#out-dreamsite').textContent = formatCur(dreamsiteRev);
     q('#out-increase').textContent = (increase >= 0 ? '+' : '') + formatCur(increase);
   }
