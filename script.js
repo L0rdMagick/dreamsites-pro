@@ -119,7 +119,7 @@ if (baRange) {
     const val = e.target.value;
     const beforeImg = q('.ba-before');
     const handle = q('.ba-handle');
-    if (beforeImg) beforeImg.style.width = `${val}%`;
+    if (beforeImg) beforeImg.style.clipPath = `inset(0 ${100 - val}% 0 0)`;
     if (handle) handle.style.left = `${val}%`;
   });
 }
