@@ -321,31 +321,31 @@ if (auditForm) {
       }
     });
 
-    const score = Math.round((yesCount / 5) * 100);
+    const score = Math.round((yesCount / auditQGroups.length) * 100);
     const scoreValEl = q('#audit-score-val');
     const gradeEl = q('#audit-grade');
     const recoEl = q('#audit-reco');
 
     let grade = "CRITICAL AUDIT";
     let color = "var(--coral)";
-    let reco = "Your website has major performance, SEO, and client booking issues. It is failing to convert traffic and hurting your Google credibility. We highly recommend a clean modern rebuild.";
+    let reco = "Your website has major bottlenecks. It is failing to convert traffic and hurting your Google credibility. We highly recommend a clean modern rebuild.";
 
     if (score === 100) {
       grade = "PERFECT STATUS";
       color = "var(--lime)";
       reco = "Your website is in excellent health! You've successfully automated client onboarding and achieved perfect performance metrics.";
-    } else if (score === 80) {
+    } else if (score >= 75) {
       grade = "GOOD STATUS";
       color = "var(--lime)";
       reco = "Your site is in good shape, but there is still room to optimize features or improve loading speeds. Let's make it fully bulletproof.";
-    } else if (score === 60) {
+    } else if (score >= 50) {
       grade = "NEEDS TUNING";
       color = "var(--coral)";
-      reco = "Your site works, but you have key bottlenecks in speed, SEO, or client booking automation. A focused Website Refresh will quickly resolve these.";
-    } else if (score === 40) {
+      reco = "Your site works, but you have key bottlenecks in speed, SEO, interactive conversion tools, or booking automation. A focused Website Refresh will quickly resolve these.";
+    } else if (score >= 25) {
       grade = "NEEDS REBUILD";
       color = "var(--coral)";
-      reco = "Your site is holding your business back. Outdated templates and lack of automation mean you are actively losing prospective clients. We recommend a full custom redesign.";
+      reco = "Your site is holding your business back. Outdated templates, lack of modern visuals, and lack of interactive features mean you are actively losing prospective clients.";
     }
 
     if (scoreValEl) {
