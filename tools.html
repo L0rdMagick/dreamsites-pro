@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamSites Toolbox — Free Digital Performance Audits & Calculators</title>
+  <meta name="description" content="Explore our suite of interactive tools to measure site speed, calculate website ROI, and run a self-diagnostic SEO audit.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a class="logo" href="index.html#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+    <nav>
+      <a href="index.html#work">Work</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#process">Process</a>
+      <a class="btn" href="index.html#contact">Get in touch ↗</a>
+    </nav>
+    <button class="menu" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- Hero / Intro -->
+    <section class="pad hero">
+      <div class="hero-copy">
+        <p class="kicker reveal">Free Resources</p>
+        <h1 class="reveal">Interactive <br>growth <em>toolbox.</em></h1>
+        <p class="lead reveal">We believe in validation, not guesswork. Use our interactive suite of tools to calculate your potential site revenue, compare speeds, and audit your digital health.</p>
+      </div>
+    </section>
+
+    <!-- Tools Grid Section -->
+    <section class="pad tools-hub-section">
+      <div class="projects tools-grid">
+        
+        <!-- Card 1: ROI Calculator -->
+        <a href="tools/roi.html" class="project reveal">
+          <div class="preview roi-preview">
+            <div class="mini-calc">
+              <span class="calc-tag">✦ ROI CALCULATOR</span>
+              <div class="mini-slider-row">
+                <div class="mini-dot"></div>
+              </div>
+              <div class="mini-result">
+                <small>Est. Monthly Increase</small>
+                <h4>+$20,000</h4>
+              </div>
+            </div>
+          </div>
+          <div class="meta">
+            <h3><span>01</span> Website ROI Calculator</h3>
+            <p>Calculate the monthly revenue and leads you could unlock by raising your conversion rate.</p>
+          </div>
+        </a>
+
+        <!-- Card 2: Speed Meter -->
+        <a href="tools/speed.html" class="project reveal delay">
+          <div class="preview speed-preview">
+            <div class="mini-speed">
+              <span class="speed-tag">✦ SPEED METER</span>
+              <div class="gauge-box">
+                <div class="gauge-center">99</div>
+              </div>
+              <div class="gauge-label">DreamSite speed score</div>
+            </div>
+          </div>
+          <div class="meta">
+            <h3><span>02</span> Platform Speed Meter</h3>
+            <p>Compare a hand-coded DreamSite against templates on WordPress, Wix, or Squarespace.</p>
+          </div>
+        </a>
+
+        <!-- Card 3: Health Audit -->
+        <a href="tools/audit.html" class="project reveal">
+          <div class="preview audit-preview">
+            <div class="mini-audit">
+              <span class="audit-tag">✦ DIAGNOSTIC CHECK</span>
+              <div class="audit-checklist">
+                <div class="check-item ok"><i>✓</i><span>Fast Load Speed</span></div>
+                <div class="check-item ok"><i>✓</i><span>Mobile-First Grid</span></div>
+                <div class="check-item bad"><i>✗</i><span>SEO Schema Markup</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="meta">
+            <h3><span>03</span> Self-Diagnostic Audit</h3>
+            <p>Audit your website's performance, mobile responsiveness, and SEO setup in 2 minutes.</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+      <p>Websites with brains,<br>beauty, and a bit of magic.</p>
+      <div>
+        <b>EXPLORE</b>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#process">Process</a>
+      </div>
+      <div>
+        <b>CONNECT</b>
+        <a href="mailto:hello@dreamsites.pro">Email</a>
+        <a href="index.html#contact">Book a call</a>
+      </div>
+      <div>
+        <b>LEGAL</b>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <i id="year"></i> DreamSites.pro</span>
+      <span>Designed with intention. Built with care.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- Guide Chatbot -->
+  <button class="chat-launch" aria-label="Open chat" aria-expanded="false"><i>✦</i><b>Questions?</b></button>
+  <aside class="chat" aria-hidden="true">
+    <header>
+      <span>✦</span>
+      <p><b>DreamGuide</b><small>● Here to help</small></p>
+      <button aria-label="Close chat">×</button>
+    </header>
+    <div class="messages">
+      <p>Hi! I’m the DreamSites guide. What would you like to know?</p>
+    </div>
+    <div class="replies">
+      <button data-key="cost">What does it cost?</button>
+      <button data-key="time">How long does it take?</button>
+      <button data-key="ai">Can you add AI?</button>
+      <button data-key="start">How do I start?</button>
+    </div>
+    <form>
+      <input aria-label="Type your question" placeholder="Ask a question…">
+      <button aria-label="Send">↑</button>
+    </form>
+  </aside>
+
+  <script src="script.js"></script>
+</body>
+</html>
