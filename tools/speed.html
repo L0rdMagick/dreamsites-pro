@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Speed Comparison Meter — DreamSites Toolbox</title>
+  <meta name="description" content="Compare the loading speeds of Wix, WordPress, Squarespace, and a hand-coded DreamSite to see how it affects your SEO and bounce rates.">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a class="logo" href="../index.html#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+    <nav>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#process">Process</a>
+      <a class="btn" href="../index.html#contact">Get in touch ↗</a>
+    </nav>
+    <button class="menu" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- Back to Hub Link -->
+    <div class="pad" style="padding-top: 120px; padding-bottom: 0;">
+      <a href="../tools.html" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--coral); display: inline-flex; align-items: center; gap: 8px;">
+        ← Back to all tools
+      </a>
+    </div>
+
+    <!-- Speed Meter Tool Section -->
+    <section class="pad calculator" id="speed-estimator" style="border-top: none;">
+      <div class="calc-grid" style="grid-template-columns: 1fr 1.1fr;">
+        <div class="calc-intro reveal">
+          <p class="kicker">Platform Comparison</p>
+          <h2>Speed is a <em>conversion metric.</em></h2>
+          <p>Every millisecond your website takes to load is a moment for a potential client to close the tab. Google penalizes slow sites in search rankings, while fast sites rank higher and convert more visitors.</p>
+          <p style="margin-top: 15px;">Click the tabs to compare the speed profiles of Wix, WordPress, Squarespace, and a custom hand-coded DreamSite.</p>
+        </div>
+
+        <div class="calc-box reveal delay" style="display: flex; flex-direction: column; gap: 30px;">
+          <!-- Tabs Selector -->
+          <div class="speed-tabs-container" style="display: flex; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 15px; overflow-x: auto;">
+            <button class="speed-tab active btn light" data-platform="dreamsite" style="padding: 10px 18px; border-radius: 99px; font-size: 12px; font-weight: 700;">DreamSite</button>
+            <button class="speed-tab btn light" data-platform="wordpress" style="padding: 10px 18px; border-radius: 99px; font-size: 12px; font-weight: 700; background: transparent; border-color: transparent;">WordPress</button>
+            <button class="speed-tab btn light" data-platform="wix" style="padding: 10px 18px; border-radius: 99px; font-size: 12px; font-weight: 700; background: transparent; border-color: transparent;">Wix</button>
+            <button class="speed-tab btn light" data-platform="squarespace" style="padding: 10px 18px; border-radius: 99px; font-size: 12px; font-weight: 700; background: transparent; border-color: transparent;">Squarespace</button>
+          </div>
+
+          <!-- Live Speed Gauge & Info -->
+          <div style="display: grid; grid-template-columns: 100px 1fr; gap: 30px; align-items: center;">
+            <!-- Score Meter Dial -->
+            <div id="speed-dial" class="gauge-box" style="width: 100px; height: 100px; border-width: 5px; transform: rotate(45deg); transition: 0.3s;">
+              <div id="speed-score" class="gauge-center" style="font-size: 26px;">99</div>
+            </div>
+            <!-- Performance stats -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="out-row" style="padding: 5px 0;">
+                <span>Estimated Load Time:</span>
+                <strong id="speed-time" style="font-family: var(--serif); font-size: 20px; color: var(--lime);">0.7 seconds</strong>
+              </div>
+              <div class="out-row" style="padding: 5px 0;">
+                <span>Visitor Bounce Risk:</span>
+                <strong id="speed-bounce" style="font-family: var(--serif); font-size: 20px; color: var(--lime);">Under 2%</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading Progress bar animation -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #777;">
+              <span>LOAD TIME PROGRESS</span>
+              <span id="speed-progress-lbl">0.7s / 5.0s</span>
+            </div>
+            <div style="height: 6px; background: rgba(0, 0, 0, 0.05); border-radius: 3px; overflow: hidden; border: 1px solid var(--line);">
+              <div id="speed-progress-bar" style="width: 14%; height: 100%; background: var(--lime); border-radius: 3px; transition: width 0.8s cubic-bezier(0.1, 0.8, 0.2, 1), background-color 0.3s;"></div>
+            </div>
+          </div>
+
+          <!-- Explanation box -->
+          <div style="background: rgba(0, 0, 0, 0.02); border: 1px dashed var(--line); border-radius: 12px; padding: 20px;">
+            <span class="calc-tag" style="color: var(--coral);">Diagnostic Detail</span>
+            <p id="speed-desc" style="font-size: 13px; line-height: 1.6; margin-top: 8px; color: #555;">Hand-coded static HTML + vanilla JS with 0 server-side database queries. Serviced via a global Content Delivery Network (CDN). Speed score is close to perfect.</p>
+          </div>
+
+          <a href="../index.html#contact" class="btn coral" style="width: 100%;">Get a high-performance build ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+      <p>Websites with brains,<br>beauty, and a bit of magic.</p>
+      <div>
+        <b>EXPLORE</b>
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#services">Services</a>
+        <a href="../index.html#process">Process</a>
+      </div>
+      <div>
+        <b>CONNECT</b>
+        <a href="mailto:hello@dreamsites.pro">Email</a>
+        <a href="../index.html#contact">Book a call</a>
+      </div>
+      <div>
+        <b>LEGAL</b>
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <i id="year"></i> DreamSites.pro</span>
+      <span>Designed with intention. Built with care.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- Guide Chatbot -->
+  <button class="chat-launch" aria-label="Open chat" aria-expanded="false"><i>✦</i><b>Questions?</b></button>
+  <aside class="chat" aria-hidden="true">
+    <header>
+      <span>✦</span>
+      <p><b>DreamGuide</b><small>● Here to help</small></p>
+      <button aria-label="Close chat">×</button>
+    </header>
+    <div class="messages">
+      <p>Hi! I’m the DreamSites guide. What would you like to know?</p>
+    </div>
+    <div class="replies">
+      <button data-key="cost">What does it cost?</button>
+      <button data-key="time">How long does it take?</button>
+      <button data-key="ai">Can you add AI?</button>
+      <button data-key="start">How do I start?</button>
+    </div>
+    <form>
+      <input aria-label="Type your question" placeholder="Ask a question…">
+      <button aria-label="Send">↑</button>
+    </form>
+  </aside>
+
+  <script src="../script.js"></script>
+</body>
+</html>
