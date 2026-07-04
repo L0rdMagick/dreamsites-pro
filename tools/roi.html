@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website ROI Calculator — DreamSites Toolbox</title>
+  <meta name="description" content="Calculate the exact revenue and lead increase your business can unlock with an optimized conversion rate.">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a class="logo" href="../index.html#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+    <nav>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#process">Process</a>
+      <a class="btn" href="../index.html#contact">Get in touch ↗</a>
+    </nav>
+    <button class="menu" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- Back to Hub Link -->
+    <div class="pad" style="padding-top: 120px; padding-bottom: 0;">
+      <a href="../tools.html" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--coral); display: inline-flex; align-items: center; gap: 8px;">
+        ← Back to all tools
+      </a>
+    </div>
+
+    <!-- ROI Calculator Section -->
+    <section class="pad calculator" id="calculator" style="border-top: none;">
+      <div class="calc-grid">
+        <div class="calc-intro reveal">
+          <p class="kicker">ROI Estimator</p>
+          <h2>What is a better website worth to you?</h2>
+          <p>A website shouldn't just look pretty—it should act as your hardest working salesperson. Drag the sliders to see how minor adjustments in your website's performance scale your business revenue month after month.</p>
+        </div>
+        <div class="calc-box reveal delay">
+          <div class="calc-inputs">
+            <div class="input-group">
+              <label>Monthly Visitors <span id="val-visitors">1,000</span></label>
+              <input type="range" id="range-visitors" min="100" max="10000" step="100" value="1000">
+            </div>
+            <div class="input-group">
+              <label>Conversion Rate Increase <span id="val-lift">+2.0%</span></label>
+              <input type="range" id="range-lift" min="0.5" max="5.0" step="0.1" value="2.0">
+            </div>
+            <div class="input-group">
+              <label>Avg. Customer Value <span id="val-value">$1,000</span></label>
+              <input type="range" id="range-value" min="50" max="10000" step="50" value="1000">
+            </div>
+          </div>
+          <div class="calc-outputs">
+            <div class="out-row">
+              <span>Additional Leads:</span>
+              <strong id="out-leads">+20 leads / mo</strong>
+            </div>
+            <div class="out-total">
+              <span>Increased Sales from DreamSite</span>
+              <h3 id="out-increase">+$20,000</h3>
+            </div>
+            <a href="../index.html#contact" class="btn coral" style="width: 100%; margin-top: 15px;">Capture this growth ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+      <p>Websites with brains,<br>beauty, and a bit of magic.</p>
+      <div>
+        <b>EXPLORE</b>
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#services">Services</a>
+        <a href="../index.html#process">Process</a>
+      </div>
+      <div>
+        <b>CONNECT</b>
+        <a href="mailto:hello@dreamsites.pro">Email</a>
+        <a href="../index.html#contact">Book a call</a>
+      </div>
+      <div>
+        <b>LEGAL</b>
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <i id="year"></i> DreamSites.pro</span>
+      <span>Designed with intention. Built with care.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- Guide Chatbot -->
+  <button class="chat-launch" aria-label="Open chat" aria-expanded="false"><i>✦</i><b>Questions?</b></button>
+  <aside class="chat" aria-hidden="true">
+    <header>
+      <span>✦</span>
+      <p><b>DreamGuide</b><small>● Here to help</small></p>
+      <button aria-label="Close chat">×</button>
+    </header>
+    <div class="messages">
+      <p>Hi! I’m the DreamSites guide. What would you like to know?</p>
+    </div>
+    <div class="replies">
+      <button data-key="cost">What does it cost?</button>
+      <button data-key="time">How long does it take?</button>
+      <button data-key="ai">Can you add AI?</button>
+      <button data-key="start">How do I start?</button>
+    </div>
+    <form>
+      <input aria-label="Type your question" placeholder="Ask a question…">
+      <button aria-label="Send">↑</button>
+    </form>
+  </aside>
+
+  <script src="../script.js"></script>
+</body>
+</html>
