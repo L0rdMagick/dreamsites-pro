@@ -207,3 +207,39 @@ if (baRange) {
     if (handle) handle.style.left = `${val}%`;
   });
 }
+
+// Planner Budget Estimator Logic
+const serviceCheckboxes = qa('input[name="services"]');
+const budgetLabel = q('#planner-price-range');
+
+if (serviceCheckboxes.length > 0 && budgetLabel) {
+  const priceMap = {
+    'New Website': { min: 1200, max: 1800 },
+    'Website Redesign': { min: 1000, max: 1600 },
+    'AI & Automations': { min: 600, max: 1200 },
+    'Custom Web App': { min: 2500, max: 4000 }
+  };
+  
+  function updateBudget() {
+    let minTotal = 0;
+    let maxTotal = 0;
+    let checkedCount = 0;
+    
+    serviceCheckboxes.forEach(cb => {
+      if (cb.checked && priceMap[cb.value]) {
+        minTotal += priceMap[cb.value].min;
+        maxTotal += priceMap[cb.value].max;
+        checkedCount++;
+      }
+    });
+    
+    if (checkedCount === 0) {
+      budgetLabel.textContent = 'Select services';
+    } else {
+      budgetLabel.textContent = `$${minTotal.toLocaleString()} – $${maxTotal.toLocaleString()}`;
+    }
+  }
+  
+  serviceCheckboxes.forEach(cb => cb.addEventListener('change', updateBudget));
+  updateBudget(); // initialize
+}
