@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self-Diagnostic Website Health Check Audit — DreamSites Toolbox</title>
+  <meta name="description" content="Audit your website's performance, SEO structure, mobile grid, and scheduling automations in under 2 minutes.">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a class="logo" href="../index.html#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+    <nav>
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#process">Process</a>
+      <a class="btn" href="../index.html#contact">Get in touch ↗</a>
+    </nav>
+    <button class="menu" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- Back to Hub Link -->
+    <div class="pad" style="padding-top: 120px; padding-bottom: 0;">
+      <a href="../tools.html" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--coral); display: inline-flex; align-items: center; gap: 8px;">
+        ← Back to all tools
+      </a>
+    </div>
+
+    <!-- Health Check Section -->
+    <section class="pad calculator" id="audit-tool" style="border-top: none;">
+      <div class="calc-grid" style="grid-template-columns: 1fr 1.1fr;">
+        <div class="calc-intro reveal">
+          <p class="kicker">Self-Diagnostic</p>
+          <h2>Diagnose your digital <em>bottlenecks.</em></h2>
+          <p>Most website performance flaws are invisible to the business owner but highly obvious to prospective clients and search engines. Spend 2 minutes running this self-diagnostic audit to grade your current site's layout, speed, and automations.</p>
+        </div>
+
+        <div class="calc-box reveal delay" style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- Audit Form Questions -->
+          <form id="audit-form" style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Q1 -->
+            <div class="audit-q" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777;">1. Speed Performance</span>
+              <p style="font-size: 14px; font-weight: 600; color: var(--ink); margin: 0;">Does your site load fully in under 2.0 seconds on mobile viewports?</p>
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q1" value="yes"> <span>Yes, loads instantly</span></label>
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q1" value="no" checked> <span>No, feels sluggish</span></label>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="audit-q" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777;">2. Search Visibility</span>
+              <p style="font-size: 14px; font-weight: 600; color: var(--ink); margin: 0;">Does your business rank on page 1 of Google for your core keywords?</p>
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q2" value="yes"> <span>Yes, we are highly visible</span></label>
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q2" value="no" checked> <span>No, cannot find it</span></label>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="audit-q" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777;">3. Scheduling & Bookings</span>
+              <p style="font-size: 14px; font-weight: 600; color: var(--ink); margin: 0;">Can clients book consultations or appointments directly on your site?</p>
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q3" value="yes"> <span>Yes, automated booking</span></label>
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q3" value="no" checked> <span>No, manual calls/emails</span></label>
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="audit-q" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777;">4. Mobile Design Quality</span>
+              <p style="font-size: 14px; font-weight: 600; color: var(--ink); margin: 0;">Is the layout responsive on all phones without cut-off elements?</p>
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q4" value="yes"> <span>Yes, fits perfectly</span></label>
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q4" value="no" checked> <span>No, some formatting issues</span></label>
+              </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="audit-q" style="display: flex; flex-direction: column; gap: 10px;">
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #777;">5. Custom Brand Identity</span>
+              <p style="font-size: 14px; font-weight: 600; color: var(--ink); margin: 0;">Is your website completely free of generic, cookie-cutter templates?</p>
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q5" value="yes"> <span>Yes, custom designed</span></label>
+                <label class="choice-option" style="flex: 1; padding: 10px 15px; font-size: 12px;"><input type="radio" name="q5" value="no" checked> <span>No, built on a template</span></label>
+              </div>
+            </div>
+
+          </form>
+
+          <!-- Audit Results Output Block -->
+          <div style="background: rgba(0, 0, 0, 0.02); border: 1px dashed var(--line); border-radius: 18px; padding: 25px; display: flex; flex-direction: column; gap: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="calc-tag" style="color: var(--coral);">Diagnostic Results</span>
+              <strong id="audit-grade" style="font-size: 11px; text-transform: uppercase; color: var(--coral); letter-spacing: 1px;">CRITICAL NEEDS</strong>
+            </div>
+            
+            <div style="display: flex; align-items: baseline; gap: 10px;">
+              <h3 id="audit-score-val" style="font-family: var(--serif); font-size: 52px; color: var(--coral); margin: 0; line-height: 1;">0%</h3>
+              <span style="font-size: 12px; color: #777; font-weight: 600;">HEALTH SCORE</span>
+            </div>
+
+            <p id="audit-reco" style="font-size: 13px; line-height: 1.6; margin: 0; color: #555;">Your website has significant bottlenecks that negatively impact your user experience and search ranking. We highly recommend a clean rebuild or a structured redesign to claim page 1 Google rankings and turn visits into actual clients.</p>
+          </div>
+
+          <a href="../index.html#contact" class="btn coral" style="width: 100%;">Request a free video teardown audit ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+      <p>Websites with brains,<br>beauty, and a bit of magic.</p>
+      <div>
+        <b>EXPLORE</b>
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#services">Services</a>
+        <a href="../index.html#process">Process</a>
+      </div>
+      <div>
+        <b>CONNECT</b>
+        <a href="mailto:hello@dreamsites.pro">Email</a>
+        <a href="../index.html#contact">Book a call</a>
+      </div>
+      <div>
+        <b>LEGAL</b>
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <i id="year"></i> DreamSites.pro</span>
+      <span>Designed with intention. Built with care.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- Guide Chatbot -->
+  <button class="chat-launch" aria-label="Open chat" aria-expanded="false"><i>✦</i><b>Questions?</b></button>
+  <aside class="chat" aria-hidden="true">
+    <header>
+      <span>✦</span>
+      <p><b>DreamGuide</b><small>● Here to help</small></p>
+      <button aria-label="Close chat">×</button>
+    </header>
+    <div class="messages">
+      <p>Hi! I’m the DreamSites guide. What would you like to know?</p>
+    </div>
+    <div class="replies">
+      <button data-key="cost">What does it cost?</button>
+      <button data-key="time">How long does it take?</button>
+      <button data-key="ai">Can you add AI?</button>
+      <button data-key="start">How do I start?</button>
+    </div>
+    <form>
+      <input aria-label="Type your question" placeholder="Ask a question…">
+      <button aria-label="Send">↑</button>
+    </form>
+  </aside>
+
+  <script src="../script.js"></script>
+</body>
+</html>
