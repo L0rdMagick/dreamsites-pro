@@ -475,9 +475,37 @@
 }
 
 /* Tools Hub Grid & Card Previews */
+.tools-hero {
+  min-height: auto !important;
+  padding-bottom: 20px !important;
+}
 .tools-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 40px 30px !important;
   margin-top: 20px;
+}
+.tool-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+}
+.tool-meta h3 {
+  font: 400 24px var(--serif);
+  margin: 0;
+  color: var(--ink);
+}
+.tool-meta h3 span {
+  font: 10px var(--sans);
+  color: var(--coral);
+  margin-right: 8px;
+  text-transform: uppercase;
+}
+.tool-meta p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+  color: #555;
 }
 .roi-preview {
   background: linear-gradient(135deg, #1d2b25 0%, #111a16 100%) !important;
