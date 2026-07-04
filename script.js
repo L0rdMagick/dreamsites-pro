@@ -99,73 +99,76 @@ teardownRadios.forEach(radio => {
 });
 
 // Submit planner details
-q('#contact-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const statusEl = q('.form-status');
-  const submitBtn = form.querySelector('button[type="submit"]');
-  
-  if (submitBtn) submitBtn.disabled = true;
-  statusEl.textContent = 'Sending your request...';
-  statusEl.style.color = '';
-  
-  const d = new FormData(form);
-  
-  // Collect checkboxes
-  const selectedServices = [];
-  qa('input[name="services"]:checked').forEach(cb => {
-    selectedServices.push(cb.value);
-  });
-  const serviceVal = selectedServices.length > 0 ? selectedServices.join(', ') : 'Not specified';
-  
-  // Prepend teardown option to message payload
-  const teardownChoice = d.get('teardown');
-  let teardownUrl = (d.get('current_url') || '').trim();
-  if (teardownUrl && !/^https?:\/\//i.test(teardownUrl)) {
-    teardownUrl = 'https://' + teardownUrl;
-  }
-  const userMessage = d.get('message');
-  
-  let formattedMessage = userMessage;
-  if (teardownChoice === 'yes' && teardownUrl) {
-    formattedMessage = `[FREE TEARDOWN REQUESTED - URL: ${teardownUrl}]\n\n${userMessage}`;
-  } else {
-    formattedMessage = `[No teardown requested]\n\n${userMessage}`;
-  }
-  
-  const payload = {
-    name: d.get('name'),
-    email: d.get('email'),
-    service: serviceVal,
-    message: formattedMessage
-  };
-
-  try {
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+const contactForm = q('#contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const statusEl = q('.form-status');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    if (submitBtn) submitBtn.disabled = true;
+    statusEl.textContent = 'Sending your request...';
+    statusEl.style.color = '';
+    
+    const d = new FormData(form);
+    
+    // Collect checkboxes
+    const selectedServices = [];
+    qa('input[name="services"]:checked').forEach(cb => {
+      selectedServices.push(cb.value);
     });
-
-    if (res.ok) {
-      statusEl.textContent = 'Message sent successfully! Redirecting...';
-      statusEl.style.color = '#2e7d32';
-      setTimeout(() => {
-        window.location.href = 'thanks.html';
-      }, 1200);
-    } else {
-      const errData = await res.json();
-      throw new Error(errData.error || 'Failed to send message.');
+    const serviceVal = selectedServices.length > 0 ? selectedServices.join(', ') : 'Not specified';
+    
+    // Prepend teardown option to message payload
+    const teardownChoice = d.get('teardown');
+    let teardownUrl = (d.get('current_url') || '').trim();
+    if (teardownUrl && !/^https?:\/\//i.test(teardownUrl)) {
+      teardownUrl = 'https://' + teardownUrl;
     }
-  } catch (err) {
-    console.error(err);
-    statusEl.textContent = `Error: ${err.message || 'Something went wrong. Please try again.'}`;
-    statusEl.style.color = '#d32f2f';
-    if (submitBtn) submitBtn.disabled = false;
-  }
-});
+    const userMessage = d.get('message');
+    
+    let formattedMessage = userMessage;
+    if (teardownChoice === 'yes' && teardownUrl) {
+      formattedMessage = `[FREE TEARDOWN REQUESTED - URL: ${teardownUrl}]\n\n${userMessage}`;
+    } else {
+      formattedMessage = `[No teardown requested]\n\n${userMessage}`;
+    }
+    
+    const payload = {
+      name: d.get('name'),
+      email: d.get('email'),
+      service: serviceVal,
+      message: formattedMessage
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        statusEl.textContent = 'Message sent successfully! Redirecting...';
+        statusEl.style.color = '#2e7d32';
+        setTimeout(() => {
+          window.location.href = 'thanks.html';
+        }, 1200);
+      } else {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Failed to send message.');
+      }
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = `Error: ${err.message || 'Something went wrong. Please try again.'}`;
+      statusEl.style.color = '#d32f2f';
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+}
 let lastScroll=0;window.addEventListener('scroll',()=>{const currentScroll=window.pageYOffset||document.documentElement.scrollTop,nav=q('.nav');if(!nav)return;const menuExpanded=q('.menu')&&q('.menu').getAttribute('aria-expanded')==='true';if(menuExpanded)return;if(currentScroll<=0){nav.classList.remove('nav-hidden');return}if(currentScroll>lastScroll&&currentScroll>120&&!nav.classList.contains('nav-hidden')){nav.classList.add('nav-hidden')}else if(currentScroll<lastScroll&&nav.classList.contains('nav-hidden')){nav.classList.remove('nav-hidden')}lastScroll=currentScroll});
 
 // ROI Calculator Logic
