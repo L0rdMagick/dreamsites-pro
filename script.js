@@ -38,6 +38,67 @@ q('.chat form').addEventListener('submit',e=>{
   askAI(text);
   input.value='';
 });
+// Project Planner Step Navigation
+let currentStep = 1;
+const formSteps = qa('.form-step');
+const progressBar = q('.planner-progress .progress-bar');
+const stepNumLabel = q('.planner-progress .step-num');
+
+function goToStep(step) {
+  currentStep = step;
+  formSteps.forEach(el => {
+    const sNum = parseInt(el.getAttribute('data-step'), 10);
+    el.classList.toggle('active', sNum === currentStep);
+  });
+  if (progressBar) progressBar.style.width = `${(currentStep / 4) * 100}%`;
+  if (stepNumLabel) {
+    const stepTitles = ["Contact", "Project Scope", "Website Teardown", "Goals"];
+    stepNumLabel.textContent = `Step ${currentStep} of 4: ${stepTitles[currentStep - 1]}`;
+  }
+}
+
+qa('.next-step').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const currentStepEl = q(`.form-step[data-step="${currentStep}"]`);
+    const inputs = qa('input[required], textarea[required]', currentStepEl);
+    let allValid = true;
+    inputs.forEach(input => {
+      if (!input.reportValidity()) {
+        allValid = false;
+      }
+    });
+    if (allValid && currentStep < 4) {
+      goToStep(currentStep + 1);
+    }
+  });
+});
+
+qa('.prev-step').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (currentStep > 1) {
+      goToStep(currentStep - 1);
+    }
+  });
+});
+
+// Toggle teardown website URL field
+const teardownRadios = qa('input[name="teardown"]');
+const urlFieldContainer = q('.teardown-url-field');
+const urlInput = urlFieldContainer ? q('input', urlFieldContainer) : null;
+
+teardownRadios.forEach(radio => {
+  radio.addEventListener('change', (e) => {
+    if (urlFieldContainer) {
+      const showUrl = e.target.value === 'yes';
+      urlFieldContainer.style.display = showUrl ? 'block' : 'none';
+      if (urlInput) {
+        urlInput.required = showUrl;
+      }
+    }
+  });
+});
+
+// Submit planner details
 q('#contact-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.currentTarget;
@@ -49,11 +110,31 @@ q('#contact-form').addEventListener('submit', async (e) => {
   statusEl.style.color = '';
   
   const d = new FormData(form);
+  
+  // Collect checkboxes
+  const selectedServices = [];
+  qa('input[name="services"]:checked').forEach(cb => {
+    selectedServices.push(cb.value);
+  });
+  const serviceVal = selectedServices.length > 0 ? selectedServices.join(', ') : 'Not specified';
+  
+  // Prepend teardown option to message payload
+  const teardownChoice = d.get('teardown');
+  const teardownUrl = d.get('current_url');
+  const userMessage = d.get('message');
+  
+  let formattedMessage = userMessage;
+  if (teardownChoice === 'yes' && teardownUrl) {
+    formattedMessage = `[FREE TEARDOWN REQUESTED - URL: ${teardownUrl}]\n\n${userMessage}`;
+  } else {
+    formattedMessage = `[No teardown requested]\n\n${userMessage}`;
+  }
+  
   const payload = {
     name: d.get('name'),
     email: d.get('email'),
-    service: d.get('service'),
-    message: d.get('message')
+    service: serviceVal,
+    message: formattedMessage
   };
 
   try {
