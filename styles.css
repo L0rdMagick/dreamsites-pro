@@ -319,3 +319,133 @@
     height: 340px;
   }
 }
+
+/* Multi-step Project Planner Form */
+.project-planner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.planner-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.planner-progress .progress-bar {
+  height: 4px;
+  background: var(--coral);
+  border-radius: 2px;
+  transition: width 0.3s ease-in-out;
+}
+.planner-progress .step-num {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #777;
+}
+.form-step {
+  display: none;
+  animation: fadeInStep 0.4s ease-in-out forwards;
+}
+.form-step.active {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+@keyframes fadeInStep {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.form-step h3 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.step-desc {
+  font-size: 14px;
+  color: #555;
+  margin: -10px 0 10px;
+}
+.choice-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+.choice-chips label.chip {
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+.choice-chips label.chip input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.choice-chips label.chip span {
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.25s;
+  background: var(--cream);
+  color: var(--ink);
+}
+.choice-chips label.chip input:checked + span {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.teardown-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.choice-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 0;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--cream);
+  transition: 0.25s;
+}
+.choice-option input {
+  accent-color: var(--coral);
+}
+.choice-option:has(input:checked) {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 1px var(--coral);
+}
+.planner-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+.planner-actions .btn {
+  flex: 1;
+}
+.planner-actions .btn.light {
+  background: transparent;
+  color: var(--ink);
+}
