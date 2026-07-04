@@ -94,7 +94,84 @@
     </div>
   </div>
 </section>
-<section class="pad contact" id="contact"><div class="contact-copy reveal"><p class="kicker">Let’s make something good</p><h2>Your dream site<br>starts with a <em>hello.</em></h2><p>Tell us about your business. We’ll follow up to schedule a relaxed, no-pressure consultation.</p><p class="email"><i>↗</i><span><b>Prefer email?</b><br><a href="mailto:hello@dreamsites.pro">hello@dreamsites.pro</a></span></p></div><form id="contact-form" class="reveal delay"><div class="fields"><label>Your name<input name="name" placeholder="Jane Smith" required></label><label>Email address<input type="email" name="email" placeholder="jane@yourbusiness.com" required></label></div><label>What can we help with?<select name="service" required><option value="">Choose a service</option><option>New website</option><option>Website redesign</option><option>AI, scheduling, or automation</option><option>App design</option><option>I’m not sure yet</option></select></label><label>Tell us about your business<textarea name="message" rows="4" placeholder="What do you do, and what would you love your new website to do for you?" required></textarea></label><button class="btn coral" type="submit">Request a consultation ↗</button><p class="form-status" role="status"></p></form></section>
+<section class="pad contact" id="contact">
+  <div class="contact-copy reveal">
+    <p class="kicker">Let’s make something good</p>
+    <h2>Your dream site<br>starts with a <em>hello.</em></h2>
+    <p>Tell us about your business. We’ll follow up to schedule a relaxed, no-pressure consultation.</p>
+    <p class="email"><i>↗</i><span><b>Prefer email?</b><br><a href="mailto:hello@dreamsites.pro">hello@dreamsites.pro</a></span></p>
+  </div>
+  
+  <form id="contact-form" class="reveal delay project-planner">
+    <!-- Progress Indicator -->
+    <div class="planner-progress">
+      <div class="progress-bar" style="width: 25%;"></div>
+      <span class="step-num">Step 1 of 4: Contact</span>
+    </div>
+
+    <!-- Step 1: Contact info -->
+    <div class="form-step active" data-step="1">
+      <h3>Let's start with who you are</h3>
+      <div class="fields">
+        <label>Your name<input name="name" placeholder="Jane Smith" required></label>
+        <label>Email address<input type="email" name="email" placeholder="jane@yourbusiness.com" required></label>
+      </div>
+      <div class="planner-actions">
+        <button type="button" class="btn next-step">Next Step ↗</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Project Scope -->
+    <div class="form-step" data-step="2">
+      <h3>What kind of project is this?</h3>
+      <label>Select services needed</label>
+      <div class="choice-chips">
+        <label class="chip"><input type="checkbox" name="services" value="New Website"> <span>New Website</span></label>
+        <label class="chip"><input type="checkbox" name="services" value="Website Redesign"> <span>Website Redesign</span></label>
+        <label class="chip"><input type="checkbox" name="services" value="AI & Automations"> <span>AI & Automations</span></label>
+        <label class="chip"><input type="checkbox" name="services" value="Custom Web App"> <span>Custom Web App</span></label>
+      </div>
+      <div class="planner-actions">
+        <button type="button" class="btn prev-step light">← Back</button>
+        <button type="button" class="btn next-step">Next Step ↗</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Free Teardown Option -->
+    <div class="form-step" data-step="3">
+      <h3>Free Website Teardown (Optional)</h3>
+      <p class="step-desc">Would you like a free 5-minute video teardown of your current site showing where you might be losing clients?</p>
+      <div class="teardown-options">
+        <label class="choice-option">
+          <input type="radio" name="teardown" value="no" checked>
+          <span>No, starting a brand new project</span>
+        </label>
+        <label class="choice-option">
+          <input type="radio" name="teardown" value="yes">
+          <span>Yes, record a teardown video for me</span>
+        </label>
+      </div>
+      <div class="teardown-url-field" style="display: none; margin-top: 15px;">
+        <label>Your current website URL<input type="url" name="current_url" placeholder="https://yourcurrentsite.com"></label>
+      </div>
+      <div class="planner-actions">
+        <button type="button" class="btn prev-step light">← Back</button>
+        <button type="button" class="btn next-step">Next Step ↗</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Goals & Submit -->
+    <div class="form-step" data-step="4">
+      <h3>Tell us a bit about your business</h3>
+      <label>Goals & details<textarea name="message" rows="4" placeholder="What does your business do, and what would you love this project to achieve?" required></textarea></label>
+      <div class="planner-actions">
+        <button type="button" class="btn prev-step light">← Back</button>
+        <button class="btn coral" type="submit">Submit Planner ↗</button>
+      </div>
+      <p class="form-status" role="status"></p>
+    </div>
+  </form>
+</section>
 </main>
 <footer><div class="footer-grid"><a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a><p>Websites with brains,<br>beauty, and a bit of magic.</p><div><b>EXPLORE</b><a href="#work">Work</a><a href="#services">Services</a><a href="#process">Process</a></div><div><b>CONNECT</b><a href="mailto:hello@dreamsites.pro">Email</a><a href="#contact">Book a call</a></div><div><b>LEGAL</b><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></div></div><div class="footer-bottom"><span>© <i id="year"></i> DreamSites.pro</span><span>Designed with intention. Built with care.</span><a href="#top">Back to top ↑</a></div></footer>
 <button class="chat-launch" aria-label="Open chat" aria-expanded="false"><i>✦</i><b>Questions?</b></button><aside class="chat" aria-hidden="true"><header><span>✦</span><p><b>DreamGuide</b><small>● Here to help</small></p><button aria-label="Close chat">×</button></header><div class="messages"><p>Hi! I’m the DreamSites guide. What would you like to know?</p></div><div class="replies"><button data-key="cost">What does it cost?</button><button data-key="time">How long does it take?</button><button data-key="ai">Can you add AI?</button><button data-key="start">How do I start?</button></div><form><input aria-label="Type your question" placeholder="Ask a question…"><button aria-label="Send">↑</button></form></aside>
