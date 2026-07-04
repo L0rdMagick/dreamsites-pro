@@ -246,7 +246,8 @@
   pointer-events: none;
 }
 .ba-before {
-  border-right: 2px solid var(--cream);
+  width: 100% !important;
+  clip-path: inset(0 50% 0 0);
 }
 .ba-handle {
   position: absolute;
@@ -265,6 +266,18 @@
   pointer-events: none;
   z-index: 10;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+.ba-handle::before {
+  content: '';
+  position: absolute;
+  top: -600px;
+  bottom: -600px;
+  left: 50%;
+  width: 2px;
+  background: var(--cream);
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
 }
 .ba-range {
   position: absolute;
