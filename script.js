@@ -120,7 +120,10 @@ q('#contact-form').addEventListener('submit', async (e) => {
   
   // Prepend teardown option to message payload
   const teardownChoice = d.get('teardown');
-  const teardownUrl = d.get('current_url');
+  let teardownUrl = (d.get('current_url') || '').trim();
+  if (teardownUrl && !/^https?:\/\//i.test(teardownUrl)) {
+    teardownUrl = 'https://' + teardownUrl;
+  }
   const userMessage = d.get('message');
   
   let formattedMessage = userMessage;
