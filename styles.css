@@ -428,6 +428,7 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--cream);
+  color: var(--ink);
   transition: 0.25s;
 }
 .choice-option input {
