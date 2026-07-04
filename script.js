@@ -243,3 +243,123 @@ if (serviceCheckboxes.length > 0 && budgetLabel) {
   serviceCheckboxes.forEach(cb => cb.addEventListener('change', updateBudget));
   updateBudget(); // initialize
 }
+
+// Platform Speed Meter Comparison Logic
+const speedTabs = qa('.speed-tab');
+if (speedTabs.length > 0) {
+  const speedData = {
+    dreamsite: { score: 99, time: "0.7 seconds", bounce: "Under 2%", progress: 14, color: "var(--lime)", desc: "Hand-coded static HTML + vanilla JS with 0 server-side database queries. Serviced via a global Content Delivery Network (CDN). Speed score is close to perfect." },
+    wordpress: { score: 48, time: "3.9 seconds", bounce: "Around 24%", progress: 78, color: "var(--coral)", desc: "Heavy database-driven architecture with slow server response times (TTFB) and plugin asset bloat. Standard drag-and-drop themes degrade mobile rendering." },
+    wix: { score: 32, time: "4.8 seconds", bounce: "Around 35%", progress: 96, color: "var(--coral)", desc: "Closed proprietary system with massive JavaScript file footprint. Renders slow layouts on mobile connections, causing visitors to close the page." },
+    squarespace: { score: 45, time: "4.2 seconds", bounce: "Around 28%", progress: 84, color: "var(--coral)", desc: "Proprietary templated server system with heavy stylesheet assets and rendering blocks. Decent visual load but slow time-to-interactive." }
+  };
+
+  speedTabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      const platform = e.target.getAttribute('data-platform');
+      const data = speedData[platform];
+      if (!data) return;
+
+      // Update active state on tab buttons
+      speedTabs.forEach(t => {
+        t.classList.toggle('active', t === e.target);
+        if (t === e.target) {
+          t.style.background = '';
+          t.style.borderColor = '';
+        } else {
+          t.style.background = 'transparent';
+          t.style.borderColor = 'transparent';
+        }
+      });
+
+      // Update score and details
+      const scoreEl = q('#speed-score');
+      const dialEl = q('#speed-dial');
+      const timeEl = q('#speed-time');
+      const bounceEl = q('#speed-bounce');
+      const progressLabel = q('#speed-progress-lbl');
+      const progressBar = q('#speed-progress-bar');
+      const descEl = q('#speed-desc');
+
+      if (scoreEl) {
+        scoreEl.textContent = data.score;
+        scoreEl.style.color = data.color;
+      }
+      if (dialEl) dialEl.style.borderColor = data.color;
+      if (timeEl) {
+        timeEl.textContent = data.time;
+        timeEl.style.color = data.color;
+      }
+      if (bounceEl) {
+        bounceEl.textContent = data.bounce;
+        bounceEl.style.color = data.color;
+      }
+      if (progressLabel) progressLabel.textContent = `${data.time.split(' ')[0]}s / 5.0s`;
+      if (progressBar) {
+        progressBar.style.width = `${data.progress}%`;
+        progressBar.style.backgroundColor = data.color;
+      }
+      if (descEl) descEl.textContent = data.desc;
+    });
+  });
+}
+
+// Self-Diagnostic Audit Logic
+const auditForm = q('#audit-form');
+if (auditForm) {
+  const auditQGroups = qa('.audit-q');
+  
+  function updateAuditScore() {
+    let yesCount = 0;
+    auditQGroups.forEach(group => {
+      const checkedInput = q('input:checked', group);
+      if (checkedInput && checkedInput.value === 'yes') {
+        yesCount++;
+      }
+    });
+
+    const score = Math.round((yesCount / 5) * 100);
+    const scoreValEl = q('#audit-score-val');
+    const gradeEl = q('#audit-grade');
+    const recoEl = q('#audit-reco');
+
+    let grade = "CRITICAL AUDIT";
+    let color = "var(--coral)";
+    let reco = "Your website has major performance, SEO, and client booking issues. It is failing to convert traffic and hurting your Google credibility. We highly recommend a clean modern rebuild.";
+
+    if (score === 100) {
+      grade = "PERFECT STATUS";
+      color = "var(--lime)";
+      reco = "Your website is in excellent health! You've successfully automated client onboarding and achieved perfect performance metrics.";
+    } else if (score === 80) {
+      grade = "GOOD STATUS";
+      color = "var(--lime)";
+      reco = "Your site is in good shape, but there is still room to optimize features or improve loading speeds. Let's make it fully bulletproof.";
+    } else if (score === 60) {
+      grade = "NEEDS TUNING";
+      color = "var(--coral)";
+      reco = "Your site works, but you have key bottlenecks in speed, SEO, or client booking automation. A focused Website Refresh will quickly resolve these.";
+    } else if (score === 40) {
+      grade = "NEEDS REBUILD";
+      color = "var(--coral)";
+      reco = "Your site is holding your business back. Outdated templates and lack of automation mean you are actively losing prospective clients. We recommend a full custom redesign.";
+    }
+
+    if (scoreValEl) {
+      scoreValEl.textContent = `${score}%`;
+      scoreValEl.style.color = color;
+    }
+    if (gradeEl) {
+      gradeEl.textContent = grade;
+      gradeEl.style.color = color;
+    }
+    if (recoEl) recoEl.textContent = reco;
+  }
+
+  // Update audit score on radio option changes
+  qa('input[type="radio"]', auditForm).forEach(radio => {
+    radio.addEventListener('change', updateAuditScore);
+  });
+  
+  updateAuditScore(); // Initialize
+}
