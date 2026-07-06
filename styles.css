@@ -478,6 +478,7 @@
 /* Tools Hub Grid & Card Previews */
 .tools-hero {
   min-height: auto !important;
+  padding-top: 70px !important;
   padding-bottom: 20px !important;
 }
 .tools-hub-section {
