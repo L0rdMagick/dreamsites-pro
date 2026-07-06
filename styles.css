@@ -480,40 +480,37 @@
   min-height: auto !important;
   padding-bottom: 20px !important;
 }
+.tools-hub-section {
+  padding-top: 0 !important;
+}
 .tools-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
   gap: 40px 30px !important;
   margin-top: 20px;
 }
-.tool-meta {
+.tools-grid .preview {
+  height: 480px !important;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-top: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 24px;
 }
-.tool-meta h3 {
+.preview-title {
   font: 400 24px var(--serif);
   margin: 0;
-  color: var(--ink);
+  text-align: center;
+  width: 100%;
 }
-.tool-meta h3 span {
-  font: 10px var(--sans);
-  color: var(--coral);
-  margin-right: 8px;
-  text-transform: uppercase;
-}
-.tool-meta p {
-  font-size: 13px;
-  line-height: 1.5;
+.preview-caption {
+  font-size: 12px;
+  line-height: 1.4;
   margin: 0;
-  color: #555;
+  text-align: center;
+  width: 100%;
 }
 .roi-preview {
   background: linear-gradient(135deg, #16221d 0%, #0d1512 100%) !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
 }
 .mini-roi-dashboard {
   background: rgba(255, 255, 255, 0.03);
@@ -639,10 +636,6 @@
 
 .speed-preview {
   background: #fbf9f6 !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
 }
 .mini-speed-dashboard {
   background: white;
@@ -735,10 +728,6 @@
 
 .audit-preview {
   background: #f5f4f0 !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
 }
 .mini-audit-dashboard {
   background: var(--cream);
