@@ -211,6 +211,39 @@ if (baRange) {
   });
 }
 
+// Synchronized Wheel Scroll inside Slider
+const baSlider = q('.ba-slider');
+if (baSlider) {
+  const images = qa('.ba-image');
+  let scrollPos = 0;
+  
+  const imgObj = new Image();
+  imgObj.src = 'images/slider-after.png';
+  imgObj.onload = () => {
+    const naturalWidth = imgObj.naturalWidth || 1200;
+    const naturalHeight = imgObj.naturalHeight || 2000;
+    const imageRatio = naturalWidth / naturalHeight;
+    
+    baSlider.addEventListener('wheel', (eEvent) => {
+      const currentWidth = baSlider.offsetWidth;
+      const currentHeight = baSlider.offsetHeight;
+      const scaledImgHeight = currentWidth / imageRatio;
+      const maxScroll = Math.max(0, scaledImgHeight - currentHeight);
+      
+      if (maxScroll <= 0) return;
+      
+      if ((eEvent.deltaY > 0 && scrollPos < maxScroll) || (eEvent.deltaY < 0 && scrollPos > 0)) {
+        eEvent.preventDefault();
+        scrollPos = Math.max(0, Math.min(maxScroll, scrollPos + eEvent.deltaY * 0.6));
+        
+        images.forEach(img => {
+          img.style.backgroundPositionY = `-${scrollPos}px`;
+        });
+      }
+    }, { passive: false });
+  };
+}
+
 // Planner Budget Estimator Logic
 const serviceCheckboxes = qa('input[name="services"]');
 const budgetLabel = q('#planner-price-range');
