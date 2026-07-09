@@ -751,7 +751,7 @@ qa('.mobile-dropdown-trigger').forEach(trigger => {
       if (btnPrev) btnPrev.style.visibility = 'visible';
     }
 
-    if (currentStep === steps.length - 1) {
+    if (currentStep === steps.length - 2) {
       if (btnNext) btnNext.style.display = 'none';
       if (btnSubmit) btnSubmit.style.display = 'inline-flex';
     } else {
