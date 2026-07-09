@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Landscaping Recommendation Quiz — Find Your Yard Plan</title>
+  <meta name="description" content="Take our interactive landscaping recommendation quiz to discover the perfect garden design, lawn recovery, or maintenance plan for your property.">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+</head>
+<body class="theme-green">
+
+  <header class="nav">
+    <a class="logo" href="../index.html#top" aria-label="DreamSites home"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#process">Process</a>
+      <a href="../index.html#about">About</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">Apps <span class="chevron">▼</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="../tools.html" class="dropdown-item">
+            <div class="dropdown-item-content">
+              <span class="dropdown-item-title">Why Us?</span>
+              <span class="dropdown-item-desc">Learn why local businesses choose our tools.</span>
+            </div>
+          </a>
+          <a href="landscaping.html" class="dropdown-item">
+            <div class="dropdown-item-content">
+              <span class="dropdown-item-title">Landscaping Apps</span>
+              <span class="dropdown-item-desc">Try our Yard Quote Calculator demo.</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <a class="btn small" href="../index.html#contact">Plan my website ↗</a>
+    <button class="menu" aria-label="Open menu" aria-expanded="false">
+      <i></i><i></i>
+    </button>
+  </header>
+
+  <div class="mobile-menu">
+    <a href="../index.html#work">Work</a>
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#process">Process</a>
+    <a href="../index.html#about">About</a>
+    <div class="mobile-dropdown">
+      <button class="mobile-dropdown-trigger" aria-haspopup="true" aria-expanded="false">Apps <span class="chevron">▼</span></button>
+      <div class="mobile-dropdown-menu">
+        <div class="mobile-dropdown-menu-inner">
+          <a href="../tools.html">Why Us?</a>
+          <a href="landscaping.html">Landscaping Apps</a>
+        </div>
+      </div>
+    </div>
+    <a href="../index.html#contact">Start a project</a>
+  </div>
+
+  <main id="top">
+    <!-- Hero / Intro Section -->
+    <section class="pad hero-calc-section" id="intro-screen">
+      <div class="calc-grid-layout">
+        <div class="calc-headline-side reveal">
+          <p class="kicker"><i></i> Smart Yard Advisor</p>
+          <h1>Find the Best Landscaping <em>Plan.</em></h1>
+          <p class="lead">Answer a few quick questions about your property, outdoor goals, style, budget, and maintenance preferences. We'll generate a personalized landscaping plan for your yard.</p>
+          <div class="actions" style="margin-top: 30px;">
+            <button class="btn coral" id="start-quiz-btn">Start My Yard Quiz ↗</button>
+            <a class="under" href="#faq-section">Read FAQs ↓</a>
+          </div>
+          <div class="trust" style="margin-top: 45px;">
+            <span>✓ Low-maintenance tips</span>
+            <span>✓ Native plants focus</span>
+            <span>✓ 100% Free report</span>
+          </div>
+        </div>
+        
+        <div class="calc-art-side reveal delay">
+          <div class="art-visual-box" style="background: radial-gradient(circle, #2d5a27 0%, #1b2622 100%); border-radius: 24px; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; min-height: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+            <div style="font-size: 50px; margin-bottom: 20px;">🌿</div>
+            <h3 style="font-family: var(--serif); font-weight: normal; font-size: 32px; margin: 0 0 10px;">Yard Advisor Tool</h3>
+            <p style="font-size: 14px; max-width: 320px; line-height: 1.5; color: #b7c0bb;">This diagnostic guide turns vague lawn ideas into clear service directions. Discover if your yard is best suited for a refresh, recovery, or full design makeover.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Wizard Section (Hidden initially) -->
+    <section class="pad hero-calc-section" id="quiz-wizard" style="display: none;">
+      <div class="calc-grid-layout">
+        <!-- Left Column: Step & Progress Tracking -->
+        <div class="calc-headline-side">
+          <p class="kicker">Yard Diagnostic Quiz</p>
+          <h2 style="font-size: 42px; margin-bottom: 25px; line-height: 1.1;" id="dynamic-headline">Finding Your Landscaping Match</h2>
+          
+          <div class="calc-progress-container" style="margin: 30px 0;">
+            <div class="calc-progress-label">
+              <span id="progress-step-text" style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #555;">Step 1 of 11</span>
+            </div>
+            <div class="calc-progress-bar">
+              <div class="calc-progress-bar-fill" style="width: 9%;"></div>
+            </div>
+          </div>
+          
+          <p style="font-size: 13px; color: #555;" id="dynamic-description">Tell us your primary goal so our advisor can identify the core priorities for your landscaping project.</p>
+        </div>
+
+        <!-- Right Column: Quiz Steps Forms -->
+        <div class="calc-form-card">
+          <form id="yard-quiz-form" onsubmit="return false;">
+            <!-- Anti-Spam Honeypot -->
+            <input type="text" id="cust-honeypot" style="display:none;" tabindex="-1" autocomplete="off">
+
+            <!-- Step 1: Primary Goal -->
+            <div class="calc-step active" data-step="0">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What do you want to improve most about your outdoor space?</h3>
+              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make my yard look cleaner and more maintained" required><span>Make yard cleaner & more maintained</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve curb appeal"><span>Improve curb appeal</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Replace dead or patchy grass"><span>Replace dead or patchy grass</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Add plants, flowers, or garden beds"><span>Add plants, flowers, or garden beds</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Create a low-maintenance landscape"><span>Create a low-maintenance landscape</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make the yard more drought-resistant"><span>Make yard more drought-resistant</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve the backyard for relaxing or entertaining"><span>Improve backyard for relaxing/entertaining</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Fix drainage or muddy areas"><span>Fix drainage or muddy areas</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Prepare the property to sell"><span>Prepare the property to sell</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="I’m not sure, I need recommendations"><span>I'm not sure, need recommendations</span></label>
+              </div>
+            </div>
+
+            <!-- Step 2: Property Area -->
+            <div class="calc-step" data-step="1">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">Which area needs the most attention?</h3>
+              <div class="options-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Front yard"><span>Front Yard</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Backyard"><span>Backyard</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Side yard"><span>Side Yard</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Flower beds"><span>Flower Beds</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Lawn / grass areas"><span>Lawn / Grass Areas</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Trees and shrubs"><span>Trees & Shrubs</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Patio / outdoor living area"><span>Patio / Living Area</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="area" value="Entire property"><span>Entire Property</span></label>
+              </div>
+            </div>
+
+            <!-- Step 3: Current Yard Condition -->
+            <div class="calc-step" data-step="2">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How would you describe your yard right now?</h3>
+              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Well maintained, just needs improvements"><span>Well maintained, just needs improvements</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="A little overgrown"><span>A little overgrown</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Patchy or unhealthy lawn"><span>Patchy or unhealthy lawn</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Bare dirt or dead grass"><span>Bare dirt or dead grass</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Weeds are taking over"><span>Weeds are taking over</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Old landscaping needs a refresh"><span>Old landscaping needs a refresh</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Drainage or erosion issues"><span>Drainage or erosion issues</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Very neglected / needs major cleanup"><span>Very neglected / needs major cleanup</span></label>
+              </div>
+            </div>
+
+            <!-- Step 4: Desired Style -->
+            <div class="calc-step" data-step="3">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What style do you want your landscaping to have?</h3>
+              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Clean and simple"><span>Clean and simple</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Modern and minimal"><span>Modern and minimal</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Lush and colorful"><span>Lush and colorful</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Native and natural"><span>Native and natural</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Drought-resistant / xeriscape"><span>Drought-resistant / xeriscape</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Family-friendly"><span>Family-friendly</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Pet-friendly"><span>Pet-friendly</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Luxury curb appeal"><span>Luxury curb appeal</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Tropical"><span>Tropical</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Cottage garden"><span>Cottage garden</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Not sure, recommend something"><span>Not sure, recommend something</span></label>
+              </div>
+            </div>
+
+            <!-- Step 5: Maintenance Preference -->
+            <div class="calc-step" data-step="4">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How much maintenance do you want after the work is done?</h3>
+              <div class="options-grid" style="grid-template-columns: 1fr; gap: 10px;">
+                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="Very low maintenance"><span>Very low maintenance</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="Moderate maintenance"><span>Moderate maintenance</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I enjoy gardening and upkeep"><span>I enjoy gardening & upkeep</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I want recurring professional maintenance"><span>I want recurring professional care</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I’m not sure"><span>I'm not sure</span></label>
+              </div>
+            </div>
+
+            <!-- Step 6: Water Use Preference -->
+            <div class="calc-step" data-step="5">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How important is water conservation for your yard?</h3>
+              <div class="options-grid" style="grid-template-columns: 1fr; gap: 10px;">
+                <label class="option-card quiz-card"><input type="radio" name="water" value="Very important"><span>Very Important (Focus on conservation)</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="water" value="Somewhat important"><span>Somewhat Important</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="water" value="Not a major concern"><span>Not a Major Concern</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="water" value="I want drought-resistant options"><span>I want Drought-Resistant Options</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="water" value="I’m not sure"><span>I'm Not Sure</span></label>
+              </div>
+            </div>
+
+            <!-- Step 7: Budget Range -->
+            <div class="calc-step" data-step="6">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What budget range are you considering?</h3>
+              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="Under $500"><span>Under $500</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="$500–$1,500"><span>$500 – $1,500</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="$1,500–$3,500"><span>$1,500 – $3,500</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="$3,500–$7,500"><span>$3,500 – $7,500</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="$7,500–$15,000"><span>$7,500 – $15,000</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="$15,000+"><span>$15,000+</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="I need help understanding costs"><span>I need help understanding costs</span></label>
+              </div>
+            </div>
+
+            <!-- Step 8: Timeline -->
+            <div class="calc-step" data-step="7">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">When would you like to start this project?</h3>
+              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="timeline" value="As soon as possible"><span>As soon as possible</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 2 weeks"><span>Within 2 weeks</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 30 days"><span>Within 30 days</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 2–3 months"><span>Within 2–3 months</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Just researching for now"><span>Just researching for now</span></label>
+              </div>
+            </div>
+
+            <!-- Step 9: Special Priorities (Multi-select) -->
+            <div class="calc-step" data-step="8">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 12px;">Do any of these matter to you?</h3>
+              <p style="font-size: 11px; color: #666; margin-bottom: 15px;">Select all that apply:</p>
+              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr 1fr; gap: 8px; max-height: 290px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Kid-friendly yard"><span>👶 Kid-friendly yard</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pet-friendly yard"><span>🐾 Pet-friendly yard</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="HOA-friendly design"><span>🏡 HOA-friendly design</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Privacy from neighbors"><span>🌳 Privacy from neighbors</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pollinator-friendly plants"><span>🐝 Pollinator-friendly</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Native plants"><span>🌱 Native plants</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Shade improvement"><span>☂️ Shade improvement</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Outdoor entertaining"><span>🔥 Outdoor entertaining</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Fire pit area"><span>🪵 Fire pit area</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Garden beds"><span>🌸 Garden beds</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Less mowing"><span>✂️ Less mowing</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Better drainage"><span>💧 Better drainage</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="More color"><span>🎨 More color</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Easier maintenance"><span>🧹 Easier maintenance</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Higher home value"><span>📈 Higher home value</span></label>
+              </div>
+            </div>
+
+            <!-- Step 10: Optional Notes -->
+            <div class="calc-step" data-step="9">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 12px;">Tell us anything else about your yard</h3>
+              <p style="font-size: 12px; color: #555; margin-bottom: 15px;">Specific plants you like, challenges, or requests (Optional):</p>
+              <textarea id="special-notes" class="calc-textarea" placeholder="Example: We have a wet spot by the back fence, and we'd love some blue or purple flowers that don't need watering every day..." style="height: 180px;"></textarea>
+            </div>
+
+            <!-- Step 11: Photo Upload -->
+            <div class="calc-step" data-step="10">
+              <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 12px;">Upload photos of your yard</h3>
+              <p style="font-size: 12px; color: #555; margin-bottom: 15px;">Photos help us analyze grass condition, weeds, and drainage patterns for a better recommendation (Optional):</p>
+              
+              <div class="photo-dropzone" id="photo-upload-zone">
+                <span class="dropzone-icon">📷</span>
+                <p class="dropzone-text">Drag and drop images here, or <strong>browse files</strong></p>
+                <span class="dropzone-sub">Supports PNG, JPG (Max 5MB per file)</span>
+                <input type="file" id="photo-file-input" multiple accept="image/png, image/jpeg" style="display:none;">
+              </div>
+
+              <!-- List of uploaded files -->
+              <div class="uploaded-files-container" id="uploaded-files"></div>
+            </div>
+
+            <!-- Error Banner -->
+            <div class="calc-error-msg" style="display: none;"></div>
+
+            <!-- Navigation Controls -->
+            <div class="calc-nav-buttons">
+              <button type="button" class="calc-btn btn-prev">← Back</button>
+              <button type="button" class="calc-btn btn-next">Next →</button>
+              <button type="button" class="calc-btn btn-submit" style="display: none;">Generate Recommendation ↗</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Results & Lead Capture Section (Hidden initially) -->
+    <section class="pad hero-calc-section" id="quiz-results" style="display: none;">
+      <div class="calc-grid-layout" style="grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: start;">
+        
+        <!-- Left: AI Generated Recommendation Report -->
+        <div class="calc-headline-side" style="position: sticky; top: 110px;">
+          <p class="kicker" style="color: #2d5a27;">Your Personalized Yard Report</p>
+          <h2 style="font-size: 38px; margin-bottom: 20px; line-height: 1.1;" id="report-title">Low-Maintenance Curb Appeal Refresh</h2>
+          
+          <!-- Recommendation Meta badges -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+            <span style="font-size: 10px; font-weight: bold; text-transform: uppercase; background: #e8f9e6; color: #2d5a27; padding: 4px 10px; border-radius: 12px; border: 1px solid #ccebc7;">
+              Priority: <span id="report-priority">Moderate Improvement</span>
+            </span>
+            <span style="font-size: 10px; font-weight: bold; text-transform: uppercase; background: #f0f4f2; color: #444; padding: 4px 10px; border-radius: 12px;">
+              Project: <span id="report-type">One-time installation</span>
+            </span>
+          </div>
+
+          <div style="background: white; border: 1px solid rgba(23,32,28,0.1); border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px;">
+            <h4 style="font-size: 13px; color: #606763; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">Why This Fits Your Yard</h4>
+            <div id="report-explanation" style="font-size: 14px; line-height: 1.6; color: #4d5551;">
+              <!-- Dynamic Explanation content -->
+            </div>
+          </div>
+
+          <div style="background: #f4fbf3; border: 1px solid #dbeef3; border-radius: 16px; padding: 25px;">
+            <h4 style="font-size: 13px; color: #2d5a27; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">Recommended Services Checklist</h4>
+            <ul id="report-services-list" style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; color: #17201c;">
+              <!-- Dynamic Services list -->
+            </ul>
+          </div>
+          
+          <div style="font-size: 11px; color: #888; margin-top: 15px; line-height: 1.4; font-style: italic;">
+            ⚠️ Disclaimer: This recommendation is for planning purposes only. Final service recommendations, pricing, and project scope may vary after site inspection.
+          </div>
+        </div>
+
+        <!-- Right: Lead Capture Contact Form -->
+        <div class="calc-form-card" style="background: var(--cream); border: 1px solid rgba(23,32,28,0.15); box-shadow: 15px 15px #17201c0c;">
+          <h3 style="font-family: var(--serif); font-size: 28px; font-weight: normal; margin-top: 0; margin-bottom: 8px;">Claim Your Professional Plan</h3>
+          <p style="font-size: 12px; color: #606763; margin-bottom: 25px; line-height: 1.4;">Submit your contact details and home address. Our local team will review your photos, finalize a budget estimate range, and contact you to schedule a consultation.</p>
+          
+          <form id="quiz-lead-form">
+            <div class="fields" style="gap: 15px; margin-bottom: 20px;">
+              <div class="calc-field-group">
+                <label for="cust-name">Full Name *</label>
+                <input type="text" id="cust-name" class="calc-input" placeholder="John Doe" required>
+              </div>
+              <div class="calc-field-group">
+                <label for="cust-phone">Phone Number *</label>
+                <input type="tel" id="cust-phone" class="calc-input" placeholder="(555) 000-0000" required>
+              </div>
+            </div>
+
+            <div class="fields" style="gap: 15px; margin-bottom: 20px;">
+              <div class="calc-field-group" style="grid-column: span 2;">
+                <label for="cust-email">Email Address *</label>
+                <input type="email" id="cust-email" class="calc-input" placeholder="john@example.com" required>
+              </div>
+            </div>
+
+            <div class="fields" style="gap: 15px; margin-bottom: 20px;">
+              <div class="calc-field-group" style="grid-column: span 2;">
+                <label for="cust-address">Property Address *</label>
+                <input type="text" id="cust-address" class="calc-input" placeholder="123 Maple Ave, City, ST" required>
+              </div>
+            </div>
+
+            <div class="fields" style="gap: 15px; margin-bottom: 25px;">
+              <div class="calc-field-group">
+                <label for="contact-method">Preferred Contact</label>
+                <select id="contact-method" class="calc-input" style="height: 42px; padding: 5px 0;">
+                  <option value="Email">Email</option>
+                  <option value="Phone Call">Phone Call</option>
+                  <option value="Text Message">Text Message</option>
+                </select>
+              </div>
+              <div class="calc-field-group">
+                <label for="consult-date">Preferred Consultation Date</label>
+                <input type="date" id="consult-date" class="calc-input" style="height: 42px;">
+              </div>
+            </div>
+
+            <div class="fields" style="gap: 15px; margin-bottom: 25px;">
+              <div class="calc-field-group" style="grid-column: span 2;">
+                <label for="contact-time">Best Time to Contact</label>
+                <select id="contact-time" class="calc-input" style="height: 42px; padding: 5px 0;">
+                  <option value="Morning (8 AM - 12 PM)">Morning (8 AM - 12 PM)</option>
+                  <option value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
+                  <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
+                  <option value="Anytime">Anytime</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Error MSG -->
+            <div class="lead-error-msg" style="display: none; color: #a82e16; font-size: 12px; font-weight: bold; margin-bottom: 15px; text-align: center;"></div>
+
+            <button type="submit" class="btn coral" style="width: 100%; justify-content: center; font-size: 15px;" id="submit-lead-btn">
+              Get My Professional Quote ↗
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Success Screen (Hidden initially) -->
+    <section class="pad hero-calc-section" id="quiz-success" style="display: none; min-height: 450px;">
+      <div style="max-width: 600px; margin: 0 auto; text-align: center; padding: 40px; background: white; border: 1px solid rgba(23,32,28,0.12); border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.06);">
+        <span style="font-size: 60px; display: block; margin-bottom: 20px;">🎉</span>
+        <h2 style="font-family: var(--serif); font-size: 38px; font-weight: normal; color: #2d5a27; margin: 0 0 15px 0;">Report Submitted Successfully!</h2>
+        <p style="font-size: 15px; line-height: 1.6; color: #555; margin-bottom: 30px;" id="success-desc">
+          Your landscaping recommendation has been sent. We’ll review your answers and contact you soon with the best next step for your yard.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+          <a href="landscaping.html" class="btn small">Back to Apps Suite</a>
+          <button class="btn small coral" onclick="window.location.reload();">Retake Quiz</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust / Benefits Grid Section -->
+    <section class="pad" style="border-top: 1px solid rgba(23,32,28,0.1); background: #fbfaf7;">
+      <p class="kicker">Why Use the Yard Quiz?</p>
+      <h2>Smart Guidance, <em>Zero Pressure.</em></h2>
+      <div class="steps" style="margin-top: 40px;">
+        <div class="step" style="min-height: auto; padding: 25px;">
+          <span style="font-size: 24px;">📊</span>
+          <h3 style="font-size: 22px; margin: 15px 0 10px;">Personalized Plans</h3>
+          <p style="font-size: 13px; margin: 0;">Get recommendations calculated based on your specific property area, condition, styles, and watering habits.</p>
+        </div>
+        <div class="step" style="min-height: auto; padding: 25px;">
+          <span style="font-size: 24px;">🙋</span>
+          <h3 style="font-size: 22px; margin: 15px 0 10px;">Perfect for Research</h3>
+          <p style="font-size: 13px; margin: 0;">If you are unsure where to start, our rules engine turns vague yard ideas into clear service requirements.</p>
+        </div>
+        <div class="step" style="min-height: auto; padding: 25px;">
+          <span style="font-size: 24px;">📸</span>
+          <h3 style="font-size: 22px; margin: 15px 0 10px;">Photo Review</h3>
+          <p style="font-size: 13px; margin: 0;">Upload yard photos. Our landscaping team uses them to examine weed density and soil access before following up.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section class="pad faq" id="faq-section">
+      <div class="faq-head">
+        <p class="kicker">FAQ</p>
+        <h2>Frequently <br>Asked <em>Questions.</em></h2>
+        <p>Learn more about how our AI Landscaping Recommendation Quiz works.</p>
+      </div>
+
+      <div class="faq-items">
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Is this a real quote?<b>+</b></button>
+          <div>
+            <p>No. The quiz provides a personalized landscaping recommendation, not a final price quote. A final quote depends on property size, photos, access, materials, labor, and an in-person or photo-based review.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">What if I do not know what my yard needs?<b>+</b></button>
+          <div>
+            <p>That is exactly what the quiz is for. It helps turn vague goals like "I want my yard to look cleaner" into clear service recommendations (like sod replacement or a mulch refresh).</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Can I upload photos?<b>+</b></button>
+          <div>
+            <p>Yes. Photos help the landscaping team better understand your yard and provide more accurate recommendations. You can upload them in Step 11 of the quiz.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Can this help with low-maintenance landscaping?<b>+</b></button>
+          <div>
+            <p>Yes. The quiz includes options for low-maintenance, native, drought-resistant, pet-friendly, and family-friendly landscaping.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">What happens after I submit my information?<b>+</b></button>
+          <div>
+            <p>The landscaping team will review your answers and contact you soon about next steps, pricing, and availability.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Simulated CRM Log Database Section for Developers/Client Auditing -->
+    <section class="pad" style="border-top: 1px solid rgba(23,32,28,0.12); background: #fafcfb;">
+      <p class="kicker" style="color: #2d5a27;">Simulated Lead Database (CRM Log)</p>
+      <h2 style="font-size: 32px; margin-bottom: 10px;">Local CRM Submissions</h2>
+      <p style="font-size: 13px; color: #555; max-width: 700px; margin-bottom: 30px;">
+        To assist in verification, all quiz submissions are saved in browser `localStorage`. Below is the client-side database table showing the captured leads and recommendation metrics in real-time.
+      </p>
+
+      <div class="sim-leads-container" id="simulated-leads-list">
+        <!-- Lead items list populated dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <a class="logo" href="#top"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+      <p>Websites with brains,<br>beauty, and a bit of magic.</p>
+      <div>
+        <b>EXPLORE</b>
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#services">Services</a>
+        <a href="../index.html#process">Process</a>
+        <a href="../tools.html">Tools</a>
+      </div>
+      <div>
+        <b>CONNECT</b>
+        <a href="mailto:hello@dreamsites.pro">Email</a>
+        <a href="../index.html#contact">Book a call</a>
+      </div>
+      <div>
+        <b>LEGAL</b>
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <i id="year">2026</i> DreamSites.pro</span>
+      <span>Designed with intention. Built with care.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- Guide Chatbot -->
+  <button class="chat-launch" aria-label="Open chat" aria-expanded="false"><i>✦</i><b>Questions?</b></button>
+  <aside class="chat" aria-hidden="true">
+    <header>
+      <span>✦</span>
+      <p><b>DreamGuide</b><small>● Here to help</small></p>
+      <button aria-label="Close chat">×</button>
+    </header>
+    <div class="messages">
+      <p>Hi! I’m the DreamSites guide. What would you like to know?</p>
+    </div>
+    <div class="replies">
+      <button data-key="cost">What does it cost?</button>
+      <button data-key="time">How long does it take?</button>
+      <button data-key="ai">Can you add AI?</button>
+      <button data-key="start">How do I start?</button>
+    </div>
+    <form>
+      <input aria-label="Type your question" placeholder="Ask a question…">
+      <button aria-label="Send">↑</button>
+    </form>
+  </aside>
+
+  <script src="../script.js"></script>
+
+  <!-- Quiz logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Elements
+      const introScreen = document.getElementById('intro-screen');
+      const quizWizard = document.getElementById('quiz-wizard');
+      const quizResults = document.getElementById('quiz-results');
+      const quizSuccess = document.getElementById('quiz-success');
+      
+      const startQuizBtn = document.getElementById('start-quiz-btn');
+      
+      const form = document.getElementById('yard-quiz-form');
+      const steps = Array.from(form.querySelectorAll('.calc-step'));
+      const progressBar = quizWizard.querySelector('.calc-progress-bar-fill');
+      const progressText = document.getElementById('progress-step-text');
+      const headline = document.getElementById('dynamic-headline');
+      const description = document.getElementById('dynamic-description');
+      
+      const btnPrev = quizWizard.querySelector('.btn-prev');
+      const btnNext = quizWizard.querySelector('.btn-next');
+      const btnSubmit = quizWizard.querySelector('.btn-submit');
+      const errorMsg = quizWizard.querySelector('.calc-error-msg');
+      
+      const fileInput = document.getElementById('photo-file-input');
+      const uploadZone = document.getElementById('photo-upload-zone');
+      const fileTagContainer = document.getElementById('uploaded-files');
+      
+      const leadForm = document.getElementById('quiz-lead-form');
+      const leadErrorMsg = quizResults.querySelector('.lead-error-msg');
+      
+      // Quiz State
+      let currentStep = 0;
+      const uploadedPhotos = []; // { name, base64 }
+      
+      const quizData = {
+        goal: '',
+        area: '',
+        condition: '',
+        style: '',
+        maintenance: '',
+        water: '',
+        budget: '',
+        timeline: '',
+        priorities: [],
+        notes: '',
+        photos: []
+      };
+
+      let generatedRecommendation = null;
+
+      const stepMetadata = [
+        { headline: "What is your primary goal?", description: "Tell us what you want to improve most so we can identify the core priorities." },
+        { headline: "Which area needs attention?", description: "Choose the location on your property that requires work." },
+        { headline: "Describe your yard's condition", description: "This helps us identify if you need cleanup, soil conditioning, or a reset." },
+        { headline: "Choose your desired style", description: "Select the visual theme you want your new landscape to have." },
+        { headline: "What is your maintenance preference?", description: "Let us know how much hands-on upkeep you want to handle later." },
+        { headline: "Select water use preference", description: "How important is conservation and drought-tolerance for you?" },
+        { headline: "Select your budget range", description: "We use this to recommend the scope and materials for your design." },
+        { headline: "Choose your start timeline", description: "Let us know when you would like to begin so we can assess availability." },
+        { headline: "Do any of these matter to you?", description: "Select any specific needs, like pet safety, HOA compliance, or fire pits." },
+        { headline: "Tell us anything else (Optional)", description: "Type any specific plant names, drainage issues, or detail requests." },
+        { headline: "Upload yard photos (Optional)", description: "Drag and drop images of your yard to help us evaluate turf patterns." }
+      ];
+
+      // Option Card Clicks (Auto Next for Single Choice Radios)
+      form.querySelectorAll('.calc-step').forEach((stepEl, stepIdx) => {
+        if (stepIdx > 8) return; // Skip priorities, notes, photos
+        
+        const cards = stepEl.querySelectorAll('.option-card:not(.checkbox)');
+        cards.forEach(card => {
+          const radio = card.querySelector('input[type="radio"]');
+          card.addEventListener('click', () => {
+            cards.forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            radio.checked = true;
+            
+            // Auto advance
+            setTimeout(() => {
+              if (currentStep === stepIdx && currentStep < steps.length - 1) {
+                currentStep++;
+                updateStepView();
+              }
+            }, 250);
+          });
+        });
+      });
+
+      // Checkboxes selection highlighting
+      form.querySelectorAll('.option-card.checkbox').forEach(card => {
+        const cb = card.querySelector('input[type="checkbox"]');
+        card.addEventListener('click', (e) => {
+          // If clicked the text/span, toggle checkbox manually
+          if (e.target !== cb) {
+            cb.checked = !cb.checked;
+          }
+          card.classList.toggle('selected', cb.checked);
+        });
+      });
+
+      // Start Quiz trigger
+      if (startQuizBtn) {
+        startQuizBtn.addEventListener('click', () => {
+          introScreen.style.display = 'none';
+          quizWizard.style.display = 'block';
+          window.scrollTo({ top: quizWizard.offsetTop - 100, behavior: 'smooth' });
+          updateStepView();
+        });
+      }
+
+      // Drag and Drop photos
+      if (uploadZone) {
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          uploadZone.style.borderColor = 'var(--coral)';
+          uploadZone.style.background = 'rgba(255, 107, 82, 0.05)';
+        });
+        uploadZone.addEventListener('dragleave', () => {
+          uploadZone.style.borderColor = '#ccc';
+          uploadZone.style.background = 'none';
+        });
+        uploadZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          uploadZone.style.borderColor = '#ccc';
+          uploadZone.style.background = 'none';
+          if (e.dataTransfer.files) {
+            handlePhotos(e.dataTransfer.files);
+          }
+        });
+      }
+
+      if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+          if (e.target.files) {
+            handlePhotos(e.target.files);
+          }
+        });
+      }
+
+      function handlePhotos(files) {
+        Array.from(files).forEach(file => {
+          if (!file.type.startsWith('image/')) return;
+          if (file.size > 5 * 1024 * 1024) {
+            alert(`File ${file.name} is larger than 5MB.`);
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            uploadedPhotos.push({
+              name: file.name,
+              base64: e.target.result
+            });
+            renderFileTags();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function renderFileTags() {
+        if (!fileTagContainer) return;
+        fileTagContainer.innerHTML = '';
+        uploadedPhotos.forEach((photo, idx) => {
+          const tag = document.createElement('div');
+          tag.className = 'file-tag';
+          tag.innerHTML = `
+            <span>📷 ${photo.name}</span>
+            <button type="button" onclick="removePhoto(${idx})">×</button>
+          `;
+          fileTagContainer.appendChild(tag);
+        });
+      }
+
+      window.removePhoto = function(idx) {
+        uploadedPhotos.splice(idx, 1);
+        renderFileTags();
+      };
+
+      // Step Navigation handlers
+      if (btnNext) {
+        btnNext.addEventListener('click', () => {
+          if (validateStep(currentStep)) {
+            currentStep++;
+            updateStepView();
+          }
+        });
+      }
+
+      if (btnPrev) {
+        btnPrev.addEventListener('click', () => {
+          if (currentStep > 0) {
+            currentStep--;
+            updateStepView();
+          }
+        });
+      }
+
+      if (btnSubmit) {
+        btnSubmit.addEventListener('click', () => {
+          if (validateStep(currentStep)) {
+            processQuizData();
+          }
+        });
+      }
+
+      function validateStep(stepIdx) {
+        if (errorMsg) errorMsg.style.display = 'none';
+        
+        if (stepIdx === 0) {
+          const val = form.querySelector('input[name="goal"]:checked');
+          if (!val) { showError("Please select a primary goal."); return false; }
+          quizData.goal = val.value;
+        }
+        if (stepIdx === 1) {
+          const val = form.querySelector('input[name="area"]:checked');
+          if (!val) { showError("Please select a property area."); return false; }
+          quizData.area = val.value;
+        }
+        if (stepIdx === 2) {
+          const val = form.querySelector('input[name="condition"]:checked');
+          if (!val) { showError("Please select your yard condition."); return false; }
+          quizData.condition = val.value;
+        }
+        if (stepIdx === 3) {
+          const val = form.querySelector('input[name="style"]:checked');
+          if (!val) { showError("Please select your desired style."); return false; }
+          quizData.style = val.value;
+        }
+        if (stepIdx === 4) {
+          const val = form.querySelector('input[name="maintenance"]:checked');
+          if (!val) { showError("Please select your maintenance preference."); return false; }
+          quizData.maintenance = val.value;
+        }
+        if (stepIdx === 5) {
+          const val = form.querySelector('input[name="water"]:checked');
+          if (!val) { showError("Please select your water conservation preference."); return false; }
+          quizData.water = val.value;
+        }
+        if (stepIdx === 7) {
+          const val = form.querySelector('input[name="timeline"]:checked');
+          if (!val) { showError("Please select a target timeline."); return false; }
+          quizData.timeline = val.value;
+        }
+        if (stepIdx === 6) {
+          const val = form.querySelector('input[name="budget"]:checked');
+          if (!val) { showError("Please select your budget range."); return false; }
+          quizData.budget = val.value;
+        }
+        return true;
+      }
+
+      function showError(text) {
+        if (errorMsg) {
+          errorMsg.textContent = text;
+          errorMsg.style.display = 'block';
+        }
+      }
+
+      function updateStepView() {
+        steps.forEach((step, idx) => {
+          step.classList.toggle('active', idx === currentStep);
+        });
+
+        // Dynamic helper titles
+        const meta = stepMetadata[currentStep];
+        if (meta) {
+          headline.textContent = meta.headline;
+          description.textContent = meta.description;
+        }
+
+        // Progress Fill
+        const percent = ((currentStep + 1) / steps.length) * 100;
+        if (progressBar) progressBar.style.width = `${percent}%`;
+        if (progressText) progressText.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+
+        // Navigation toggles
+        if (currentStep === 0) {
+          if (btnPrev) btnPrev.style.visibility = 'hidden';
+        } else {
+          if (btnPrev) btnPrev.style.visibility = 'visible';
+        }
+
+        if (currentStep === steps.length - 1) {
+          if (btnNext) btnNext.style.display = 'none';
+          if (btnSubmit) btnSubmit.style.display = 'inline-flex';
+        } else {
+          if (btnNext) btnNext.style.display = 'inline-flex';
+          if (btnSubmit) btnSubmit.style.display = 'none';
+        }
+      }
+
+      // Rules-Based Recommendation Engine
+      function processQuizData() {
+        // Collect multi-selects and texts
+        quizData.priorities = Array.from(form.querySelectorAll('input[name="priorities"]:checked')).map(cb => cb.value);
+        quizData.notes = document.getElementById('special-notes').value.trim();
+        quizData.photos = uploadedPhotos;
+
+        // Initialize Recommendation Scores
+        const scores = {
+          low_maintenance: 0,
+          drought: 0,
+          entertaining: 0,
+          lawn_recovery: 0,
+          cleanup: 0,
+          flower_bed: 0,
+          makeover: 0,
+          drainage: 0
+        };
+
+        // Rule weightings
+        // 1. Goal mapping
+        const g = quizData.goal;
+        if (g.includes("cleaner")) { scores.cleanup += 3; scores.low_maintenance += 1; }
+        else if (g.includes("curb")) { scores.low_maintenance += 2; scores.flower_bed += 1; }
+        else if (g.includes("Replace dead")) { scores.lawn_recovery += 4; }
+        else if (g.includes("Add plants")) { scores.flower_bed += 4; }
+        else if (g.includes("low-maintenance")) { scores.low_maintenance += 3; scores.drought += 1; }
+        else if (g.includes("drought-resistant")) { scores.drought += 4; }
+        else if (g.includes("relaxing")) { scores.entertaining += 4; }
+        else if (g.includes("drainage")) { scores.drainage += 4; }
+        else if (g.includes("sell")) { scores.makeover += 2; scores.low_maintenance += 2; }
+
+        // 2. Focus Area mapping
+        const a = quizData.area;
+        if (a === "Patio / outdoor living area") { scores.entertaining += 3; }
+        else if (a === "Lawn / grass areas") { scores.lawn_recovery += 3; }
+        else if (a === "Flower beds") { scores.flower_bed += 3; }
+        else if (a === "Entire property") { scores.makeover += 2; }
+        else if (a === "Front yard") { scores.low_maintenance += 1; }
+
+        // 3. Condition mapping
+        const c = quizData.condition;
+        if (c.includes("neglected") || c.includes("major")) { scores.cleanup += 4; }
+        else if (c.includes("overgrown")) { scores.cleanup += 2; }
+        else if (c.includes("unhealthy lawn") || c.includes("dead grass")) { scores.lawn_recovery += 3; }
+        else if (c.includes("Drainage")) { scores.drainage += 4; }
+        else if (c.includes("Old landscaping")) { scores.flower_bed += 1; scores.makeover += 1; }
+
+        // 4. Desired Style mapping
+        const s = quizData.style;
+        if (s.includes("drought") || s.includes("xeriscape")) { scores.drought += 4; }
+        else if (s.includes("Clean") || s.includes("Modern")) { scores.low_maintenance += 2; }
+        else if (s.includes("Lush") || s.includes("Cottage")) { scores.flower_bed += 3; }
+        else if (s.includes("Family") || s.includes("Pet")) { scores.entertaining += 2; }
+        else if (s.includes("Luxury")) { scores.makeover += 2; }
+
+        // 5. Maintenance mapping
+        const m = quizData.maintenance;
+        if (m.includes("Very low")) { scores.low_maintenance += 2; scores.drought += 1; }
+        else if (m.includes("recurring")) { scores.cleanup += 1; }
+
+        // 6. Water mapping
+        const w = quizData.water;
+        if (w.includes("Very") || w.includes("drought-resistant")) { scores.drought += 3; }
+
+        // 7. Budget mapping
+        const b = quizData.budget;
+        if (b.includes("15,000") || b === "15,000+") { scores.makeover += 4; }
+
+        // 8. Special Priorities mapping
+        quizData.priorities.forEach(p => {
+          if (p === "Outdoor entertaining" || p === "Fire pit area") scores.entertaining += 2;
+          if (p === "Better drainage") scores.drainage += 3;
+          if (p === "Garden beds" || p === "More color") scores.flower_bed += 1;
+          if (p === "Less mowing" || p === "Easier maintenance") scores.low_maintenance += 1;
+          if (p === "Native plants" || p === "Pollinator-friendly plants") scores.drought += 1;
+        });
+
+        // Determine plan with highest score
+        let winner = 'low_maintenance';
+        let maxScore = -1;
+        for (const [plan, score] of Object.entries(scores)) {
+          if (score > maxScore) {
+            maxScore = score;
+            winner = plan;
+          }
+        }
+
+        // Generate Plan specifics
+        const recommendations = {
+          low_maintenance: {
+            title: "Low-Maintenance Curb Appeal Refresh",
+            services: ["Yard cleanup", "Flower bed cleanup", "Mulch installation", "Hedge trimming", "Native plant installation", "Recurring maintenance plan"],
+            priority: "Quick Refresh",
+            type: "One-time installation",
+            next: "Schedule starting cleanup, then plan installation",
+            explanation: "Based on your answers, your yard is best suited for a Low-Maintenance Curb Appeal Refresh. Since you want a cleaner look, lower maintenance, and improved curb appeal, we recommend starting with flower bed cleanup, fresh mulch, shrub trimming, and introducing a few native ornamental plants. This gives the property a high-end immediate visual upgrade without requiring constant watering or pruning."
+          },
+          drought: {
+            title: "Drought-Resistant Native Landscape Plan",
+            services: ["Xeriscaping", "Native plant installation", "Mulch installation", "Irrigation inspection", "Seasonal maintenance"],
+            priority: "Moderate Improvement",
+            type: "Design consultation",
+            next: "Schedule an in-person consultation",
+            explanation: "Based on your choices, a Drought-Resistant Native Landscape is the perfect fit. Your focus on low water use, water conservation, and sustainability aligns with a modern xeriscape transition using decorative gravels, weed barriers, and native species. This reduces your water bills to near-zero and requires minimal upkeep while keeping your lawn looking natural."
+          },
+          entertaining: {
+            title: "Backyard Entertainment Upgrade Plan",
+            services: ["Patio or hardscape consultation", "Landscape lighting", "Native plant installation", "Flower bed cleanup", "Mulch installation"],
+            priority: "Major Upgrade",
+            type: "Multi-phase project",
+            next: "Schedule a design review consultation",
+            explanation: "Based on your answers, your yard is best suited for a Backyard Entertainment Upgrade. Since you want to create an inviting outdoor space for relaxing, gathering with friends, or hosting family, we suggest focused landscape lighting, a patio design consultation, and colorful low-maintenance plant beds to frame your outdoor seating areas."
+          },
+          lawn_recovery: {
+            title: "Lawn Recovery and Sod Replacement Plan",
+            services: ["Sod installation", "Lawn care program", "Irrigation inspection", "Yard cleanup"],
+            priority: "Moderate Improvement",
+            type: "One-time installation",
+            next: "Request a formal sod quote",
+            explanation: "Based on your choices, we recommend a Lawn Recovery and Sod Replacement Plan. If your turf is patchy, dead, or overtaken by weeds, a complete soil prep, leveling, and fresh sod installation is the fastest way to restore a lush green lawn. Pairing it with a modern irrigation system check ensures your new grass stays healthy and rooted."
+          },
+          cleanup: {
+            title: "Seasonal Cleanup and Reset Plan",
+            services: ["Yard cleanup", "Flower bed cleanup", "Hedge trimming", "Tree/shrub trimming", "Seasonal maintenance"],
+            priority: "Quick Reset",
+            type: "One-time cleanup",
+            next: "Start with a cleanup to reset the yard",
+            explanation: "Based on your selections, we recommend a Seasonal Cleanup and Reset Plan. Because your yard has become overgrown or neglected, clearing leaf debris, pulling invasive weeds, pruning dead limbs, and defining clean bed lines will immediately restore the beauty and order of your property. Once reset, it will be much easier to plan future layout designs."
+          },
+          flower_bed: {
+            title: "Flower Bed and Mulch Refresh",
+            services: ["Flower bed cleanup", "Flower bed design", "Mulch installation", "Native plant installation"],
+            priority: "Quick Refresh",
+            type: "One-time installation",
+            next: "Request a mulch and bed design quote",
+            explanation: "Based on your goals, a Flower Bed and Mulch Refresh is the ideal starting point. Re-defining bed edges, applying fresh double-shredded hardwood mulch, and introducing colorful native flowers will give your home immediate dimension and depth with minimal disruption."
+          },
+          makeover: {
+            title: "Full Property Landscape Makeover",
+            services: ["Flower bed design", "Native plant installation", "Mulch installation", "Sod installation", "Landscape lighting", "Yard cleanup", "Recurring maintenance plan"],
+            priority: "Full Transformation",
+            type: "Multi-phase project",
+            next: "Schedule an on-site master plan consultation",
+            explanation: "Based on your goals and budget considerations, you are a prime candidate for a Full Property Landscape Makeover. Whether preparing to sell for maximum equity or completely redefining your living environment, we recommend a coordinated design phase combining fresh sod, plant bed design, lighting, and cleanups."
+          },
+          drainage: {
+            title: "Drainage and Erosion Improvement Plan",
+            services: ["Drainage improvement", "Irrigation inspection", "Yard cleanup", "Sod installation"],
+            priority: "Major Upgrade",
+            type: "One-time installation",
+            next: "Schedule an on-site grading review",
+            explanation: "Based on your answers, your property requires a Drainage and Erosion Improvement Plan. Pooling water, soggy turf, and soil erosion can cause foundation damage and destroy your landscaping. We suggest evaluating your gutters, lawn grades, and installing French drains or rain gardens to channel runoff safely."
+          }
+        };
+
+        generatedRecommendation = recommendations[winner];
+
+        // Populate Recommendation UI
+        document.getElementById('report-title').textContent = generatedRecommendation.title;
+        document.getElementById('report-priority').textContent = generatedRecommendation.priority;
+        document.getElementById('report-type').textContent = generatedRecommendation.type;
+        document.getElementById('report-explanation').textContent = generatedRecommendation.explanation;
+        
+        const listEl = document.getElementById('report-services-list');
+        listEl.innerHTML = '';
+        generatedRecommendation.services.forEach(srv => {
+          const item = document.createElement('li');
+          item.innerHTML = `✔️ <strong>${srv}</strong>`;
+          listEl.appendChild(item);
+        });
+
+        // Hide Quiz / Show results
+        quizWizard.style.display = 'none';
+        quizResults.style.display = 'block';
+        window.scrollTo({ top: quizResults.offsetTop - 100, behavior: 'smooth' });
+      }
+
+      // Final Lead Capture Submission
+      if (leadForm) {
+        leadForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (leadErrorMsg) leadErrorMsg.style.display = 'none';
+
+          const name = document.getElementById('cust-name').value.trim();
+          const phone = document.getElementById('cust-phone').value.trim();
+          const email = document.getElementById('cust-email').value.trim();
+          const address = document.getElementById('cust-address').value.trim();
+          const contactMethod = document.getElementById('contact-method').value;
+          const consultDate = document.getElementById('consult-date').value;
+          const contactTime = document.getElementById('contact-time').value;
+          
+          // Anti-spam
+          const honey = document.getElementById('cust-honeypot').value;
+          if (honey) {
+            console.warn("Spam submission blocked via honeypot.");
+            quizResults.style.display = 'none';
+            quizSuccess.style.display = 'block';
+            return;
+          }
+
+          if (!name || !phone || !email || !address) {
+            if (leadErrorMsg) {
+              leadErrorMsg.textContent = "Please fill out all required fields.";
+              leadErrorMsg.style.display = 'block';
+            }
+            return;
+          }
+
+          // Build full lead payload
+          const leadPayload = {
+            primary_goal: quizData.goal,
+            property_area: quizData.area,
+            yard_condition: quizData.condition,
+            desired_style: quizData.style,
+            maintenance_preference: quizData.maintenance,
+            water_use_preference: quizData.water,
+            budget_range: quizData.budget,
+            timeline: quizData.timeline,
+            special_priorities: quizData.priorities,
+            user_notes: quizData.notes,
+            uploaded_photos: uploadedPhotos.map(p => ({ name: p.name, base64: p.base64 })), // Keep attachments
+            recommendation_title: generatedRecommendation.title,
+            recommended_services: generatedRecommendation.services,
+            priority_level: generatedRecommendation.priority,
+            project_type: generatedRecommendation.type,
+            suggested_next_step: generatedRecommendation.next,
+            personalized_explanation: generatedRecommendation.explanation,
+            customer_name: name,
+            phone: phone,
+            email: email,
+            property_address: address,
+            preferred_contact_method: contactMethod,
+            preferred_consultation_date: consultDate,
+            best_time_to_contact: contactTime,
+            submission_date: new Date().toLocaleString()
+          };
+
+          const submitBtn = document.getElementById('submit-lead-btn');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting Lead Details...';
+          }
+
+          try {
+            // 1. Save locally in CRM simulated DB
+            const existingLeads = JSON.parse(localStorage.getItem('landscaping_quiz_leads') || '[]');
+            // For storage size limits, save only photo names rather than base64 in localStorage
+            const localPayload = { ...leadPayload, uploaded_photos: uploadedPhotos.map(p => p.name) };
+            existingLeads.push(localPayload);
+            localStorage.setItem('landscaping_quiz_leads', JSON.stringify(existingLeads));
+
+            // 2. Dispatch to backend API
+            const response = await fetch('/api/landscaping-quiz-lead', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(leadPayload)
+            });
+
+            if (response.ok) {
+              quizResults.style.display = 'none';
+              quizSuccess.style.display = 'block';
+              window.scrollTo({ top: quizSuccess.offsetTop - 100, behavior: 'smooth' });
+              renderSimulatedLeads();
+            } else {
+              throw new Error("Failed to process API request.");
+            }
+          } catch (err) {
+            console.error("Submission Error:", err);
+            // Fallback: Success anyway since localStorage is saved
+            quizResults.style.display = 'none';
+            quizSuccess.style.display = 'block';
+            document.getElementById('success-desc').textContent = "Lead captured locally. Emails couldn't be dispatched, but our team will review your local entry soon!";
+            renderSimulatedLeads();
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Get My Professional Quote ↗';
+            }
+          }
+        });
+      }
+
+      // Render Simulated CRM table
+      function renderSimulatedLeads() {
+        const listEl = document.getElementById('simulated-leads-list');
+        if (!listEl) return;
+
+        const submissions = JSON.parse(localStorage.getItem('landscaping_quiz_leads') || '[]');
+
+        if (submissions.length === 0) {
+          listEl.innerHTML = '<p style="font-style: italic; color: #888;">No leads submitted yet. Try completing the quiz to see lead data populate here in real-time!</p>';
+          return;
+        }
+
+        listEl.innerHTML = '';
+        submissions.reverse().forEach(lead => {
+          const item = document.createElement('div');
+          item.className = 'sim-lead-card';
+          
+          let prioritiesString = lead.special_priorities && lead.special_priorities.length ? lead.special_priorities.join(', ') : 'None';
+          let photosString = lead.uploaded_photos && lead.uploaded_photos.length ? lead.uploaded_photos.join(', ') : 'None';
+          let servicesString = lead.recommended_services && lead.recommended_services.length ? lead.recommended_services.join(', ') : 'None';
+
+          item.innerHTML = `
+            <div class="sim-lead-header">
+              <span class="sim-lead-title">${lead.customer_name} (${lead.phone})</span>
+              <span class="sim-lead-date">${lead.submission_date}</span>
+              <span class="sim-lead-badge">${lead.recommendation_title}</span>
+            </div>
+            <div class="sim-lead-details">
+              <div><span>Email:</span> <strong>${lead.email}</strong></div>
+              <div><span>Address:</span> <strong>${lead.property_address}</strong></div>
+              <div><span>Primary Goal:</span> <strong>${lead.primary_goal}</strong></div>
+              <div><span>Property Area:</span> <strong>${lead.property_area}</strong></div>
+              <div><span>Condition:</span> <strong>${lead.yard_condition}</strong></div>
+              <div><span>Water Conservation:</span> <strong>${lead.water_use_preference}</strong></div>
+              <div><span>Budget:</span> <strong>${lead.budget_range}</strong></div>
+              <div><span>Timeline:</span> <strong>${lead.timeline}</strong></div>
+              <div><span>Priorities:</span> <strong>${prioritiesString}</strong></div>
+              <div><span>AI Recommended Services:</span> <strong style="color: #2d5a27;">${servicesString}</strong></div>
+              <div><span>Attached Photos:</span> <strong>${photosString}</strong></div>
+              <div><span>Special Notes:</span> <strong>${lead.user_notes || 'None'}</strong></div>
+            </div>
+          `;
+          listEl.appendChild(item);
+        });
+      }
+
+      // Initial CRM log load
+      renderSimulatedLeads();
+    });
+  </script>
+</body>
+</html>
