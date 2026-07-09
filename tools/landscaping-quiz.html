@@ -10,6 +10,104 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+  
+  <style>
+    /* Compact, Responsive Grid Overrides for Quiz Option Cards */
+    .options-grid.quiz-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+      gap: 10px !important;
+      margin-top: 15px !important;
+    }
+    
+    .option-card.quiz-card {
+      padding: 12px 14px !important;
+      font-size: 13px !important;
+      min-height: 52px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+      margin: 0 !important;
+      border-radius: 12px !important;
+      border: 1px solid rgba(23,32,28,0.12) !important;
+      background: white !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    
+    .option-card.quiz-card span {
+      display: block !important;
+      line-height: 1.3 !important;
+      pointer-events: none !important;
+    }
+    
+    .option-card.quiz-card input[type="radio"],
+    .option-card.quiz-card input[type="checkbox"] {
+      display: none !important; /* Hide native controls to keep card clean */
+    }
+    
+    .option-card.quiz-card.selected {
+      border-color: var(--coral) !important;
+      background: rgba(255, 107, 82, 0.06) !important;
+      box-shadow: 0 4px 12px rgba(255, 107, 82, 0.1) !important;
+    }
+
+    /* Fixed height dropzone */
+    .photo-dropzone {
+      border: 2px dashed #ccc;
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .uploaded-files-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .file-tag {
+      background: #e8f9e6;
+      border: 1px solid #ccebc7;
+      color: #2d5a27;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .file-tag button {
+      background: none;
+      border: none;
+      color: #a82e16;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* Mobile Overlap Bug Fix (position static on mobile, sticky only on desktop) */
+    .report-sidebar {
+      position: static !important;
+      margin-bottom: 30px;
+    }
+    
+    @media (min-width: 769px) {
+      .report-sidebar {
+        position: sticky !important;
+        top: 110px !important;
+        margin-bottom: 0;
+      }
+    }
+  </style>
 </head>
 <body class="theme-green">
 
@@ -119,24 +217,24 @@
             <!-- Step 1: Primary Goal -->
             <div class="calc-step active" data-step="0">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What do you want to improve most about your outdoor space?</h3>
-              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make my yard look cleaner and more maintained" required><span>Make yard cleaner & more maintained</span></label>
+              <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make my yard look cleaner and more maintained" required><span>Make yard cleaner & maintained</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve curb appeal"><span>Improve curb appeal</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="goal" value="Replace dead or patchy grass"><span>Replace dead or patchy grass</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Add plants, flowers, or garden beds"><span>Add plants, flowers, or garden beds</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Create a low-maintenance landscape"><span>Create a low-maintenance landscape</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make the yard more drought-resistant"><span>Make yard more drought-resistant</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve the backyard for relaxing or entertaining"><span>Improve backyard for relaxing/entertaining</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Add plants, flowers, or garden beds"><span>Add plants, flowers & beds</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Create a low-maintenance landscape"><span>Create low-maintenance yard</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make the yard more drought-resistant"><span>Make yard drought-resistant</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve the backyard for relaxing or entertaining"><span>Improve yard for entertaining</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="goal" value="Fix drainage or muddy areas"><span>Fix drainage or muddy areas</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Prepare the property to sell"><span>Prepare the property to sell</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="I’m not sure, I need recommendations"><span>I'm not sure, need recommendations</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="Prepare the property to sell"><span>Prepare property to sell</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="goal" value="I’m not sure, I need recommendations"><span>I'm not sure, need advice</span></label>
               </div>
             </div>
 
             <!-- Step 2: Property Area -->
             <div class="calc-step" data-step="1">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">Which area needs the most attention?</h3>
-              <div class="options-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="options-grid quiz-grid">
                 <label class="option-card quiz-card"><input type="radio" name="area" value="Front yard"><span>Front Yard</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="area" value="Backyard"><span>Backyard</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="area" value="Side yard"><span>Side Yard</span></label>
@@ -151,22 +249,22 @@
             <!-- Step 3: Current Yard Condition -->
             <div class="calc-step" data-step="2">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How would you describe your yard right now?</h3>
-              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Well maintained, just needs improvements"><span>Well maintained, just needs improvements</span></label>
+              <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Well maintained, just needs improvements"><span>Well maintained, needs tweaks</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="condition" value="A little overgrown"><span>A little overgrown</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="condition" value="Patchy or unhealthy lawn"><span>Patchy or unhealthy lawn</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="condition" value="Bare dirt or dead grass"><span>Bare dirt or dead grass</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="condition" value="Weeds are taking over"><span>Weeds are taking over</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Old landscaping needs a refresh"><span>Old landscaping needs a refresh</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Old landscaping needs a refresh"><span>Old landscaping needs refresh</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="condition" value="Drainage or erosion issues"><span>Drainage or erosion issues</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Very neglected / needs major cleanup"><span>Very neglected / needs major cleanup</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="condition" value="Very neglected / needs major cleanup"><span>Neglected / needs cleanup</span></label>
               </div>
             </div>
 
             <!-- Step 4: Desired Style -->
             <div class="calc-step" data-step="3">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What style do you want your landscaping to have?</h3>
-              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+              <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
                 <label class="option-card quiz-card"><input type="radio" name="style" value="Clean and simple"><span>Clean and simple</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="style" value="Modern and minimal"><span>Modern and minimal</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="style" value="Lush and colorful"><span>Lush and colorful</span></label>
@@ -177,18 +275,18 @@
                 <label class="option-card quiz-card"><input type="radio" name="style" value="Luxury curb appeal"><span>Luxury curb appeal</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="style" value="Tropical"><span>Tropical</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="style" value="Cottage garden"><span>Cottage garden</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Not sure, recommend something"><span>Not sure, recommend something</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="style" value="Not sure, recommend something"><span>Not sure, recommend style</span></label>
               </div>
             </div>
 
             <!-- Step 5: Maintenance Preference -->
             <div class="calc-step" data-step="4">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How much maintenance do you want after the work is done?</h3>
-              <div class="options-grid" style="grid-template-columns: 1fr; gap: 10px;">
+              <div class="options-grid quiz-grid">
                 <label class="option-card quiz-card"><input type="radio" name="maintenance" value="Very low maintenance"><span>Very low maintenance</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="maintenance" value="Moderate maintenance"><span>Moderate maintenance</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I enjoy gardening and upkeep"><span>I enjoy gardening & upkeep</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I want recurring professional maintenance"><span>I want recurring professional care</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I want recurring professional maintenance"><span>I want professional care</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I’m not sure"><span>I'm not sure</span></label>
               </div>
             </div>
@@ -196,11 +294,11 @@
             <!-- Step 6: Water Use Preference -->
             <div class="calc-step" data-step="5">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How important is water conservation for your yard?</h3>
-              <div class="options-grid" style="grid-template-columns: 1fr; gap: 10px;">
-                <label class="option-card quiz-card"><input type="radio" name="water" value="Very important"><span>Very Important (Focus on conservation)</span></label>
+              <div class="options-grid quiz-grid">
+                <label class="option-card quiz-card"><input type="radio" name="water" value="Very important"><span>Very Important (Conservation)</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="water" value="Somewhat important"><span>Somewhat Important</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="water" value="Not a major concern"><span>Not a Major Concern</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="water" value="I want drought-resistant options"><span>I want Drought-Resistant Options</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="water" value="I want drought-resistant options"><span>Drought-Resistant Focus</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="water" value="I’m not sure"><span>I'm Not Sure</span></label>
               </div>
             </div>
@@ -208,21 +306,21 @@
             <!-- Step 7: Budget Range -->
             <div class="calc-step" data-step="6">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What budget range are you considering?</h3>
-              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+              <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
                 <label class="option-card quiz-card"><input type="radio" name="budget" value="Under $500"><span>Under $500</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="budget" value="$500–$1,500"><span>$500 – $1,500</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="budget" value="$1,500–$3,500"><span>$1,500 – $3,500</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="budget" value="$3,500–$7,500"><span>$3,500 – $7,500</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="budget" value="$7,500–$15,000"><span>$7,500 – $15,000</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="budget" value="$15,000+"><span>$15,000+</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="I need help understanding costs"><span>I need help understanding costs</span></label>
+                <label class="option-card quiz-card"><input type="radio" name="budget" value="I need help understanding costs"><span>Need cost guidance</span></label>
               </div>
             </div>
 
             <!-- Step 8: Timeline -->
             <div class="calc-step" data-step="7">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">When would you like to start this project?</h3>
-              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 8px;">
+              <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
                 <label class="option-card quiz-card"><input type="radio" name="timeline" value="As soon as possible"><span>As soon as possible</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 2 weeks"><span>Within 2 weeks</span></label>
                 <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 30 days"><span>Within 30 days</span></label>
@@ -235,22 +333,22 @@
             <div class="calc-step" data-step="8">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 12px;">Do any of these matter to you?</h3>
               <p style="font-size: 11px; color: #666; margin-bottom: 15px;">Select all that apply:</p>
-              <div class="options-grid scrollable-options" style="grid-template-columns: 1fr 1fr; gap: 8px; max-height: 290px; overflow-y: auto; padding-right: 8px;">
+              <div class="options-grid quiz-grid scrollable-options" style="max-height: 290px; overflow-y: auto; padding-right: 8px;">
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Kid-friendly yard"><span>👶 Kid-friendly yard</span></label>
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pet-friendly yard"><span>🐾 Pet-friendly yard</span></label>
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="HOA-friendly design"><span>🏡 HOA-friendly design</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Privacy from neighbors"><span>🌳 Privacy from neighbors</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pollinator-friendly plants"><span>🐝 Pollinator-friendly</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Native plants"><span>🌱 Native plants</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Shade improvement"><span>☂️ Shade improvement</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Outdoor entertaining"><span>🔥 Outdoor entertaining</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Privacy from neighbors"><span>🌳 Privacy screen</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pollinator-friendly plants"><span>🐝 Pollinator plants</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Native plants"><span>🌱 Native species</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Shade improvement"><span>☂️ Shade control</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Outdoor entertaining"><span>🔥 Entertaining</span></label>
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Fire pit area"><span>🪵 Fire pit area</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Garden beds"><span>🌸 Garden beds</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Garden beds"><span>🌸 Flower beds</span></label>
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Less mowing"><span>✂️ Less mowing</span></label>
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Better drainage"><span>💧 Better drainage</span></label>
                 <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="More color"><span>🎨 More color</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Easier maintenance"><span>🧹 Easier maintenance</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Higher home value"><span>📈 Higher home value</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Easier maintenance"><span>🧹 Easy cleanup</span></label>
+                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Higher home value"><span>📈 Higher value</span></label>
               </div>
             </div>
 
@@ -264,7 +362,8 @@
             <!-- Step 11: Photo Upload -->
             <div class="calc-step" data-step="10">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 12px;">Upload photos of your yard</h3>
-              <p style="font-size: 12px; color: #555; margin-bottom: 15px;">Photos help us analyze grass condition, weeds, and drainage patterns for a better recommendation (Optional):</p>
+              <p style="font-size: 12px; color: #555; margin-bottom: 8px;">Photos help us analyze grass condition, weeds, and drainage patterns for a better recommendation (Optional):</p>
+              <p style="font-size: 11px; color: #888; font-style: italic; margin-bottom: 15px;">* Uploaded photos will be attached to your lead summary and reviewed by a landscaping design specialist to finalize your project scope.</p>
               
               <div class="photo-dropzone" id="photo-upload-zone">
                 <span class="dropzone-icon">📷</span>
@@ -293,10 +392,10 @@
 
     <!-- Quiz Results & Lead Capture Section (Hidden initially) -->
     <section class="pad hero-calc-section" id="quiz-results" style="display: none;">
-      <div class="calc-grid-layout" style="grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: start;">
+      <div class="calc-grid-layout" style="grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: start;">
         
-        <!-- Left: AI Generated Recommendation Report -->
-        <div class="calc-headline-side" style="position: sticky; top: 110px;">
+        <!-- Left: AI Generated Recommendation Report (Responsive Static/Sticky column) -->
+        <div class="calc-headline-side report-sidebar">
           <p class="kicker" style="color: #2d5a27;">Your Personalized Yard Report</p>
           <h2 style="font-size: 38px; margin-bottom: 20px; line-height: 1.1;" id="report-title">Low-Maintenance Curb Appeal Refresh</h2>
           
@@ -310,22 +409,38 @@
             </span>
           </div>
 
+          <!-- Why it Fits -->
           <div style="background: white; border: 1px solid rgba(23,32,28,0.1); border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px;">
             <h4 style="font-size: 13px; color: #606763; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">Why This Fits Your Yard</h4>
-            <div id="report-explanation" style="font-size: 14px; line-height: 1.6; color: #4d5551;">
-              <!-- Dynamic Explanation content -->
-            </div>
+            <div id="report-explanation" style="font-size: 14px; line-height: 1.6; color: #4d5551;"></div>
           </div>
 
-          <div style="background: #f4fbf3; border: 1px solid #dbeef3; border-radius: 16px; padding: 25px;">
+          <!-- Key Materials -->
+          <div style="background: white; border: 1px solid rgba(23,32,28,0.1); border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px;">
+            <h4 style="font-size: 13px; color: #606763; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">🔑 Key Material Recommendations</h4>
+            <ul id="report-materials-list" style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; color: #4d5551;"></ul>
+          </div>
+
+          <!-- Pro Tips -->
+          <div style="background: #fffbef; border: 1px solid #ffd685; border-radius: 16px; padding: 25px; margin-bottom: 25px;">
+            <h4 style="font-size: 13px; color: #b5800b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">💡 Pro Landscape Tips</h4>
+            <ul id="report-tips-list" style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; color: #b5800b;"></ul>
+          </div>
+
+          <!-- Project Phases -->
+          <div style="background: #f7f9f8; border: 1px solid #e1e4e3; border-radius: 16px; padding: 25px; margin-bottom: 25px;">
+            <h4 style="font-size: 13px; color: #444; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">🏗️ Expected Project Phases</h4>
+            <ol id="report-phases-list" style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; color: #444;"></ol>
+          </div>
+
+          <!-- Recommended Services -->
+          <div style="background: #f4fbf3; border: 1px solid #dbeef3; border-radius: 16px; padding: 25px; margin-bottom: 20px;">
             <h4 style="font-size: 13px; color: #2d5a27; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">Recommended Services Checklist</h4>
-            <ul id="report-services-list" style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; color: #17201c;">
-              <!-- Dynamic Services list -->
-            </ul>
+            <ul id="report-services-list" style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; color: #17201c;"></ul>
           </div>
           
           <div style="font-size: 11px; color: #888; margin-top: 15px; line-height: 1.4; font-style: italic;">
-            ⚠️ Disclaimer: This recommendation is for planning purposes only. Final service recommendations, pricing, and project scope may vary after site inspection.
+            ⚠️ Disclaimer: This recommendation is for planning purposes only. Final service recommendations, pricing, and project scope may vary after reviewing photos, property access, measurements, materials, and site conditions.
           </div>
         </div>
 
@@ -431,7 +546,7 @@
         <div class="step" style="min-height: auto; padding: 25px;">
           <span style="font-size: 24px;">📸</span>
           <h3 style="font-size: 22px; margin: 15px 0 10px;">Photo Review</h3>
-          <p style="font-size: 13px; margin: 0;">Upload yard photos. Our landscaping team uses them to examine weed density and soil access before following up.</p>
+          <p style="font-size: 13px; margin: 0;">Upload yard photos. Our landscaping team reviews them visually to evaluate lawn weeds, layout, and entries.</p>
         </div>
       </div>
     </section>
@@ -462,7 +577,7 @@
         <article class="faq-item reveal">
           <button aria-expanded="false">Can I upload photos?<b>+</b></button>
           <div>
-            <p>Yes. Photos help the landscaping team better understand your yard and provide more accurate recommendations. You can upload them in Step 11 of the quiz.</p>
+            <p>Yes. Photos are securely sent as attachments to our team. A local landscaping specialist reviews them to analyze weed coverage, entry paths, and obstacles to plan your visit.</p>
           </div>
         </article>
 
@@ -841,7 +956,7 @@
         }
       }
 
-      // Rules-Based Recommendation Engine
+      // Rules-Based Recommendation Engine with rich, educational details
       function processQuizData() {
         // Collect multi-selects and texts
         quizData.priorities = Array.from(form.querySelectorAll('input[name="priorities"]:checked')).map(cb => cb.value);
@@ -933,27 +1048,78 @@
         const recommendations = {
           low_maintenance: {
             title: "Low-Maintenance Curb Appeal Refresh",
-            services: ["Yard cleanup", "Flower bed cleanup", "Mulch installation", "Hedge trimming", "Native plant installation", "Recurring maintenance plan"],
+            services: ["Yard cleanup", "Flower bed cleanup", "Mulch installation", "Hedge trimming", "Native plant installation"],
             priority: "Quick Refresh",
             type: "One-time installation",
             next: "Schedule starting cleanup, then plan installation",
-            explanation: "Based on your answers, your yard is best suited for a Low-Maintenance Curb Appeal Refresh. Since you want a cleaner look, lower maintenance, and improved curb appeal, we recommend starting with flower bed cleanup, fresh mulch, shrub trimming, and introducing a few native ornamental plants. This gives the property a high-end immediate visual upgrade without requiring constant watering or pruning."
+            explanation: "Based on your answers, your yard is best suited for a Low-Maintenance Curb Appeal Refresh. Since you want a cleaner look, lower maintenance, and improved curb appeal, we recommend starting with flower bed cleanup, fresh mulch, shrub trimming, and introducing a few native ornamental plants. This gives the property a high-end immediate visual upgrade without requiring constant watering or pruning.",
+            materials: [
+              "Double-shredded cedar mulch (resists insects and retains soil moisture)",
+              "Low-maintenance dwarf evergreen boxwoods (stays green all winter)",
+              "Native Purple Coneflower (Echinacea) and Black-Eyed Susans (hardy, colorful perennials)",
+              "Organic weed barrier fabrics to minimize post-project weeding"
+            ],
+            tips: [
+              "Cut clean spade edges around beds instead of buying plastic borders—it looks cleaner and allows natural drainage.",
+              "Cedar mulch naturally deters ticks and fleas, making it ideal for walkway borders.",
+              "Prune your boxwoods in early spring to encourage dense leaf clusters."
+            ],
+            phases: [
+              "Edge & Weed Reset (establishing bed boundaries and removing grass margins)",
+              "Soil enrichment (composting the beds with organic leaf-mold nutrients)",
+              "Plant layout, spacing, and root-activation tilling",
+              "Mulch capping (applying a uniform 3-inch protective barrier)"
+            ]
           },
           drought: {
-            title: "Drought-Resistant Native Landscape Plan",
+            title: "Drought-Resistant Native Landscape",
             services: ["Xeriscaping", "Native plant installation", "Mulch installation", "Irrigation inspection", "Seasonal maintenance"],
             priority: "Moderate Improvement",
             type: "Design consultation",
             next: "Schedule an in-person consultation",
-            explanation: "Based on your choices, a Drought-Resistant Native Landscape is the perfect fit. Your focus on low water use, water conservation, and sustainability aligns with a modern xeriscape transition using decorative gravels, weed barriers, and native species. This reduces your water bills to near-zero and requires minimal upkeep while keeping your lawn looking natural."
+            explanation: "Based on your choices, a Drought-Resistant Native Landscape is the perfect fit. Your focus on low water use, water conservation, and sustainability aligns with a modern xeriscape transition using decorative gravels, weed barriers, and native species. This reduces your water bills to near-zero and requires minimal upkeep while keeping your lawn looking natural.",
+            materials: [
+              "Decomposed granite pathways and washed river rock (adds multi-color dry creek look)",
+              "Native Switchgrass and Blue Grama grass (uses 70% less water than Bermuda)",
+              "Drought-hardy perennials: Autumn Sage, Agave, and Russian Sage",
+              "Smart drip irrigation lines with pressure-regulating emitters"
+            ],
+            tips: [
+              "Group plants with similar water needs together (hydrozoning) to avoid overwatering native species.",
+              "Native plants have deep root systems (up to 15 ft) that naturally find groundwater after the first year.",
+              "Apply river rock in drainage channels to prevent gravel washing away during heavy downpours."
+            ],
+            phases: [
+              "Turf excavation and layout grading",
+              "Heavy-duty woven geo-textile placement to block weed growth",
+              "Drip-irrigation line installation and emitter testing",
+              "Plant pocket cutting, composting, and rock topdressing"
+            ]
           },
           entertaining: {
-            title: "Backyard Entertainment Upgrade Plan",
+            title: "Backyard Entertainment Upgrade",
             services: ["Patio or hardscape consultation", "Landscape lighting", "Native plant installation", "Flower bed cleanup", "Mulch installation"],
             priority: "Major Upgrade",
             type: "Multi-phase project",
             next: "Schedule a design review consultation",
-            explanation: "Based on your answers, your yard is best suited for a Backyard Entertainment Upgrade. Since you want to create an inviting outdoor space for relaxing, gathering with friends, or hosting family, we suggest focused landscape lighting, a patio design consultation, and colorful low-maintenance plant beds to frame your outdoor seating areas."
+            explanation: "Based on your answers, your yard is best suited for a Backyard Entertainment Upgrade. Since you want to create an inviting outdoor space for relaxing, gathering with friends, or hosting family, we suggest focused landscape lighting, a patio design consultation, and colorful low-maintenance plant beds to frame your outdoor seating areas.",
+            materials: [
+              "Washed flagstone or premium concrete interlocking pavers",
+              "Polymeric joint sand (prevents weeds from growing between pavers)",
+              "Low-voltage LED brass path lights and up-lights (3000K warm tone)",
+              "Evergreen privacy borders: Green Giant Arborvitae or Leyland Cypress"
+            ],
+            tips: [
+              "Warm-toned LED lighting makes outdoor seating areas feel cozy and premium compared to harsh white security lights.",
+              "Plant evergreens on the north-west border of your yard to block cold winter winds and screen out neighbors.",
+              "Ensure pavers are sealed every 3 years to maintain color vibrance and block grease stains."
+            ],
+            phases: [
+              "Excavation and subgrade compacting (base gravel layer)",
+              "Paver layout, leveling, and polymeric sand locking",
+              "Electrical conduit installation and LED uplighting adjustments",
+              "Border screening evergreen placement and bark mulch layering"
+            ]
           },
           lawn_recovery: {
             title: "Lawn Recovery and Sod Replacement Plan",
@@ -961,7 +1127,24 @@
             priority: "Moderate Improvement",
             type: "One-time installation",
             next: "Request a formal sod quote",
-            explanation: "Based on your choices, we recommend a Lawn Recovery and Sod Replacement Plan. If your turf is patchy, dead, or overtaken by weeds, a complete soil prep, leveling, and fresh sod installation is the fastest way to restore a lush green lawn. Pairing it with a modern irrigation system check ensures your new grass stays healthy and rooted."
+            explanation: "Based on your choices, we recommend a Lawn Recovery and Sod Replacement Plan. If your turf is patchy, dead, or overtaken by weeds, a complete soil prep, leveling, and fresh sod installation is the fastest way to restore a lush green lawn. Pairing it with a modern irrigation system check ensures your new grass stays healthy and rooted.",
+            materials: [
+              "Premium Tall Fescue or hybrid Bermudagrass sod rolls",
+              "Enriched sandy loam topsoil (creates a loose bed for root binding)",
+              "Agricultural gypsum (breaks down compacted clay and aerates soil)",
+              "Organic starter fertilizer (high in phosphorus to encourage root growth)"
+            ],
+            tips: [
+              "Avoid mowing fresh sod for at least 14 days, and water deeply twice a day to ensure roots establish into the subsoil.",
+              "Mow grass high (3 to 4 inches). Tall grass blades shade the soil, reducing water evaporation and choking out new weed seeds.",
+              "Aerate and overseed every fall to prevent lawn thinning and patchiness."
+            ],
+            phases: [
+              "Old turf removal and root tilling",
+              "Clay conditioning (applying gypsum, tilling loam, and leveling)",
+              "Sod laying (staggering seams to avoid line erosion) and rolling",
+              "Initial 2-week deep saturation watering cycle"
+            ]
           },
           cleanup: {
             title: "Seasonal Cleanup and Reset Plan",
@@ -969,7 +1152,24 @@
             priority: "Quick Reset",
             type: "One-time cleanup",
             next: "Start with a cleanup to reset the yard",
-            explanation: "Based on your selections, we recommend a Seasonal Cleanup and Reset Plan. Because your yard has become overgrown or neglected, clearing leaf debris, pulling invasive weeds, pruning dead limbs, and defining clean bed lines will immediately restore the beauty and order of your property. Once reset, it will be much easier to plan future layout designs."
+            explanation: "Based on your selections, we recommend a Seasonal Cleanup and Reset Plan. Because your yard has become overgrown or neglected, clearing leaf debris, pulling invasive weeds, pruning dead limbs, and defining clean bed lines will immediately restore the beauty and order of your property. Once reset, it will be much easier to plan future layout designs.",
+            materials: [
+              "Biodegradable leaf collection bags and debris containers",
+              "Organic tree wound sealant (protects cuts from insect boring)",
+              "Selective pre-emergent weed controls (targets crabgrass and dandelions)",
+              "Premium organic compost topdressing to revitalize depleted beds"
+            ],
+            tips: [
+              "Prune tree limbs back to the branch collar. Leaving stumps invites rot, while cutting too close damages the trunk.",
+              "Clear wet leaves within 10 days; leaves trap mold spores that kill grass underneath.",
+              "Apply pre-emergent weed control in early spring when soil temps reach 55°F to block dandelions."
+            ],
+            phases: [
+              "Debris extraction (removing leaves, branches, trash, and dead foliage)",
+              "Tree limb raising and shrub shaping/pruning",
+              "Bed weeding and hand-weeding margins",
+              "Mowing, edging, and applying starter compost"
+            ]
           },
           flower_bed: {
             title: "Flower Bed and Mulch Refresh",
@@ -977,15 +1177,49 @@
             priority: "Quick Refresh",
             type: "One-time installation",
             next: "Request a mulch and bed design quote",
-            explanation: "Based on your goals, a Flower Bed and Mulch Refresh is the ideal starting point. Re-defining bed edges, applying fresh double-shredded hardwood mulch, and introducing colorful native flowers will give your home immediate dimension and depth with minimal disruption."
+            explanation: "Based on your goals, a Flower Bed and Mulch Refresh is the ideal starting point. Re-defining bed edges, applying fresh double-shredded hardwood mulch, and introducing colorful native flowers will give your home immediate dimension and depth with minimal disruption.",
+            materials: [
+              "Premium triple-shredded hardwood mulch (dyed dark brown or black)",
+              "Enriched leaf-compost and organic compost soil mix",
+              "Native Salvia, Yarrow, and Coneflowers (provides continuous summer blooms)",
+              "Spade-cut edge trenches (retains mulch and stops grass invasion)"
+            ],
+            tips: [
+              "Never build 'mulch volcanoes' around tree trunks. Leave a 2-inch gap around bark to prevent wood rot and insect nesting.",
+              "A 3-inch layer of hardwood mulch blocks 90% of weed seeds from germinating and locks in soil moisture.",
+              "Deadhead spent flowers (cut off dead blooms) to encourage the plants to bloom a second time in late summer."
+            ],
+            phases: [
+              "Weeding existing bed areas and removing old compacted mulch",
+              "Vertical trench spade edging (4 inches deep, 3 inches wide)",
+              "Composting the bed soil and digging planting pockets",
+              "Laying new perennials and capping with premium mulch"
+            ]
           },
           makeover: {
             title: "Full Property Landscape Makeover",
-            services: ["Flower bed design", "Native plant installation", "Mulch installation", "Sod installation", "Landscape lighting", "Yard cleanup", "Recurring maintenance plan"],
+            services: ["Flower bed design", "Native plant installation", "Mulch installation", "Sod installation", "Landscape lighting", "Yard cleanup"],
             priority: "Full Transformation",
             type: "Multi-phase project",
             next: "Schedule an on-site master plan consultation",
-            explanation: "Based on your goals and budget considerations, you are a prime candidate for a Full Property Landscape Makeover. Whether preparing to sell for maximum equity or completely redefining your living environment, we recommend a coordinated design phase combining fresh sod, plant bed design, lighting, and cleanups."
+            explanation: "Based on your goals and budget considerations, you are a prime candidate for a Full Property Landscape Makeover. Whether preparing to sell for maximum equity or completely redefining your living environment, we recommend a coordinated design phase combining fresh sod, plant bed design, lighting, and cleanups.",
+            materials: [
+              "Enriched premium turf soils and planting mixes",
+              "A mix of canopy trees (Oak or Maple) and mid-story screen shrubs",
+              "Accent flagstone paths and dry river rock drainage creekbeds",
+              "Low-voltage LED lighting transformer and zoned fixtures"
+            ],
+            tips: [
+              "Plan your landscape in layers: tall canopy trees first, mid-story shrubs second, and low ground cover last to create depth.",
+              "Select plants with different blooming schedules so your yard has color from early spring to late autumn.",
+              "Ensure correct grading away from your home's foundation (1 inch drop per foot for the first 10 feet)."
+            ],
+            phases: [
+              "Site clearing, excavation, and structural grading",
+              "Walkways, lighting conduits, and hardscape base installation",
+              "Soil conditioning, tree planting, and flower bed mapping",
+              "Sod installation, lighting finalization, and multi-zone irrigation test"
+            ]
           },
           drainage: {
             title: "Drainage and Erosion Improvement Plan",
@@ -993,7 +1227,24 @@
             priority: "Major Upgrade",
             type: "One-time installation",
             next: "Schedule an on-site grading review",
-            explanation: "Based on your answers, your property requires a Drainage and Erosion Improvement Plan. Pooling water, soggy turf, and soil erosion can cause foundation damage and destroy your landscaping. We suggest evaluating your gutters, lawn grades, and installing French drains or rain gardens to channel runoff safely."
+            explanation: "Based on your answers, your property requires a Drainage and Erosion Improvement Plan. Pooling water, soggy turf, and soil erosion can cause foundation damage and destroy your landscaping. We suggest evaluating your gutters, lawn grades, and installing French drains or rain gardens to channel runoff safely.",
+            materials: [
+              "Perforated PVC drainage pipes (more durable than corrugated pipes)",
+              "Washed river rock (1.5-inch diameter to allow fast water flow)",
+              "Non-woven filter fabric sleeve (stops silt from clogging the drainage pipe)",
+              "Moisture-loving native plants: River Birch, Sweetspire, and Siberian Iris"
+            ],
+            tips: [
+              "French drains must have a downward slope of at least 1% (1 inch of drop for every 8 feet of length) to function correctly.",
+              "Plant a rain garden in low spots. Native moisture-tolerant plants naturally filter runoff into the deep soil within 24 hours.",
+              "Clean gutter downspouts before installing french drains to prevent leaves from clogging underground pipe inlets."
+            ],
+            phases: [
+              "Property grade assessment and laser level routing",
+              "Trench excavation, fabric lining, and gravel base placement",
+              "Drain pipe positioning, sleeve wrapping, and gravel backfill",
+              "Soil covering, turf sodding, or river-rock dry creek finishing"
+            ]
           }
         };
 
@@ -1005,6 +1256,34 @@
         document.getElementById('report-type').textContent = generatedRecommendation.type;
         document.getElementById('report-explanation').textContent = generatedRecommendation.explanation;
         
+        // Populate Materials List
+        const matList = document.getElementById('report-materials-list');
+        matList.innerHTML = '';
+        generatedRecommendation.materials.forEach(mat => {
+          const li = document.createElement('li');
+          li.innerHTML = `• ${mat}`;
+          matList.appendChild(li);
+        });
+
+        // Populate Pro Tips List
+        const tipsList = document.getElementById('report-tips-list');
+        tipsList.innerHTML = '';
+        generatedRecommendation.tips.forEach(tip => {
+          const li = document.createElement('li');
+          li.innerHTML = `★ <strong>Did you know?</strong> ${tip}`;
+          tipsList.appendChild(li);
+        });
+
+        // Populate Phases List
+        const phasesList = document.getElementById('report-phases-list');
+        phasesList.innerHTML = '';
+        generatedRecommendation.phases.forEach(phase => {
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${phase.split('(')[0]}</strong>${phase.includes('(') ? ' (' + phase.split('(')[1] : ''}`;
+          phasesList.appendChild(li);
+        });
+
+        // Populate Services checklist
         const listEl = document.getElementById('report-services-list');
         listEl.innerHTML = '';
         generatedRecommendation.services.forEach(srv => {
