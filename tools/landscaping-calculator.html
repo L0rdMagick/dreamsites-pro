@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instant Yard Quote Calculator — DreamSites Apps</title>
+  <meta name="description" content="Get an instant estimate for lawn mowing, yard cleanup, mulch installation, sod installation, hedge trimming, leaf removal, and more.">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
+</head>
+<body class="theme-green">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Header Nav -->
+  <header class="nav">
+    <a class="logo" href="../index.html#top" aria-label="DreamSites home"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#process">Process</a>
+      <a href="../index.html#about">About</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">Apps <span class="chevron">▼</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="../tools.html" class="dropdown-item">
+            <div class="dropdown-item-content">
+              <span class="dropdown-item-title">Why Us?</span>
+              <span class="dropdown-item-desc">Learn why local businesses choose our tools.</span>
+            </div>
+          </a>
+          <a href="landscaping-calculator.html" class="dropdown-item">
+            <div class="dropdown-item-content">
+              <span class="dropdown-item-title">Landscaping App</span>
+              <span class="dropdown-item-desc">Try our Yard Quote Calculator demo.</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <a class="btn small" href="../index.html#contact">Plan my website ↗</a>
+    <button class="menu" aria-label="Open menu" aria-expanded="false">
+      <i></i><i></i>
+    </button>
+  </header>
+  
+  <div class="mobile-menu">
+    <a href="../index.html#work">Work</a>
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#process">Process</a>
+    <a href="../index.html#about">About</a>
+    <div class="mobile-dropdown">
+      <button class="mobile-dropdown-trigger" aria-haspopup="true" aria-expanded="false">Apps <span class="chevron">▼</span></button>
+      <div class="mobile-dropdown-menu">
+        <div class="mobile-dropdown-menu-inner">
+          <a href="../tools.html">Why Us?</a>
+          <a href="landscaping-calculator.html">Landscaping App</a>
+        </div>
+      </div>
+    </div>
+    <a href="../index.html#contact">Start a project</a>
+  </div>
+
+  <main id="top">
+    <!-- Back to Hub Link -->
+    <div class="pad" style="padding-top: 40px; padding-bottom: 0;">
+      <a href="../tools.html" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); display: inline-flex; align-items: center; gap: 8px;">
+        ← Back to all apps
+      </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="landscaping-hero">
+      <p class="kicker" style="color: var(--primary); font-weight: 700;">✦ Smart Conversion Demos</p>
+      <h1>Get an Instant Estimate<br>for Your <em>Yard.</em></h1>
+      <p>Answer a few quick questions about your property and the service you need. We’ll give you an estimated price range and help you request a professional quote.</p>
+      <a href="#calculator" class="btn coral" style="color: white; border-color: var(--coral);">Start My Estimate ↓</a>
+    </section>
+
+    <!-- Calculator Widget Section -->
+    <section class="pad" id="calculator" style="padding-top: 50px;">
+      <div class="yard-calculator" id="yard-calculator">
+        
+        <!-- Progress Bar -->
+        <div class="calc-progress-container">
+          <div class="calc-progress-text">
+            <span id="progress-step-text">Step 1 of 7</span>
+            <span>Yard Estimate Wizard</span>
+          </div>
+          <div class="calc-progress-bar-track">
+            <div class="calc-progress-bar-fill"></div>
+          </div>
+        </div>
+
+        <form id="landscaping-quote-form" novalidate>
+          
+          <!-- Step 1: Service Type -->
+          <div class="calc-step active">
+            <h2 class="step-title">What service do you need?</h2>
+            <p class="step-desc">Select the primary service you are interested in today.</p>
+            <div class="options-grid">
+              <div class="option-card" data-service="mowing">
+                <span class="option-card-icon">🚜</span>
+                <span class="option-card-title">Lawn Mowing</span>
+                <span class="option-card-desc">Weekly or bi-weekly mowing, trimming, and edging.</span>
+              </div>
+              <div class="option-card" data-service="cleanup">
+                <span class="option-card-icon">🧹</span>
+                <span class="option-card-title">Yard Cleanup</span>
+                <span class="option-card-desc">Seasonal overhaul, debris cleanup, and lawn restoration.</span>
+              </div>
+              <div class="option-card" data-service="mulch">
+                <span class="option-card-icon">🪵</span>
+                <span class="option-card-title">Mulch Installation</span>
+                <span class="option-card-desc">Fresh double-shredded hardwood mulch installation.</span>
+              </div>
+              <div class="option-card" data-service="sod">
+                <span class="option-card-icon">🌱</span>
+                <span class="option-card-title">Sod Installation</span>
+                <span class="option-card-desc">Instant lawn replacement with premium local sod varieties.</span>
+              </div>
+              <div class="option-card" data-service="hedge">
+                <span class="option-card-icon">✂️</span>
+                <span class="option-card-title">Hedge Trimming</span>
+                <span class="option-card-desc">Detailed trimming and shaping of privacy hedges and shrubs.</span>
+              </div>
+              <div class="option-card" data-service="leaf">
+                <span class="option-card-icon">🍂</span>
+                <span class="option-card-title">Leaf Removal</span>
+                <span class="option-card-desc">Blowing, vacuuming, and complete removal of accumulated leaves.</span>
+              </div>
+              <div class="option-card" data-service="flowerbed">
+                <span class="option-card-icon">🌸</span>
+                <span class="option-card-title">Flower Bed Cleanup</span>
+                <span class="option-card-desc">Weeding, cultivation, soil prep, and border definition.</span>
+              </div>
+              <div class="option-card" data-service="landscape">
+                <span class="option-card-icon">🏡</span>
+                <span class="option-card-title">Landscape Install</span>
+                <span class="option-card-desc">Design and installation of new beds, shrubs, and trees.</span>
+              </div>
+              <div class="option-card" data-service="irrigation">
+                <span class="option-card-icon">💧</span>
+                <span class="option-card-title">Irrigation Check</span>
+                <span class="option-card-desc">Sprinkler audit, zone testing, and adjustments for leaks.</span>
+              </div>
+              <div class="option-card" data-service="tree">
+                <span class="option-card-icon">🌳</span>
+                <span class="option-card-title">Tree Trimming</span>
+                <span class="option-card-desc">Trimming lower limbs and structural pruning of small/med trees.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Property Size -->
+          <div class="calc-step">
+            <h2 class="step-title">How large is your yard?</h2>
+            <p class="step-desc">Select a category below. You can also specify the exact square footage if you know it.</p>
+            <div class="options-grid">
+              <div class="option-card" data-size="small">
+                <span class="option-card-icon">🏡</span>
+                <span class="option-card-title">Small Yard</span>
+                <span class="option-card-desc">Under 2,500 sq ft. Townhomes, courtyard homes, small lots.</span>
+              </div>
+              <div class="option-card" data-size="medium">
+                <span class="option-card-icon">🏡</span>
+                <span class="option-card-title">Medium Yard</span>
+                <span class="option-card-desc">2,500 – 7,500 sq ft. Standard suburban residential lots.</span>
+              </div>
+              <div class="option-card" data-size="large">
+                <span class="option-card-icon">🏰</span>
+                <span class="option-card-title">Large Yard</span>
+                <span class="option-card-desc">7,500 – 15,000 sq ft. Large residential corner lots or acreage.</span>
+              </div>
+              <div class="option-card" data-size="xl">
+                <span class="option-card-icon">🌳</span>
+                <span class="option-card-title">Extra Large Yard</span>
+                <span class="option-card-desc">15,000+ sq ft. Estate properties or commercial parcels.</span>
+              </div>
+            </div>
+            <div class="calc-field-group" style="max-width: 400px; margin: 30px auto 0;">
+              <label for="exact-sqft">Exact Square Footage (Optional)</label>
+              <input type="number" id="exact-sqft" class="calc-input" placeholder="e.g. 4800" min="100">
+            </div>
+          </div>
+
+          <!-- Step 3: Current Yard Condition -->
+          <div class="calc-step">
+            <h2 class="step-title">What is the current condition?</h2>
+            <p class="step-desc">Be honest! Overgrown properties require extra labor and specialized equipment.</p>
+            <div class="options-grid-3">
+              <div class="option-card" data-condition="well">
+                <span class="option-card-icon">✓</span>
+                <span class="option-card-title">Well Maintained</span>
+                <span class="option-card-desc">Regularly serviced. Low grass, clean beds, no major weeds.</span>
+              </div>
+              <div class="option-card" data-condition="light">
+                <span class="option-card-icon">▲</span>
+                <span class="option-card-title">Slightly Overgrown</span>
+                <span class="option-card-desc">Needs a bit of extra trimming, grass is higher than usual (+15%).</span>
+              </div>
+              <div class="option-card" data-condition="very">
+                <span class="option-card-icon">⚠️</span>
+                <span class="option-card-title">Very Overgrown</span>
+                <span class="option-card-desc">Knee-high grass, thick weed growth, shrubs look wild (+30%).</span>
+              </div>
+              <div class="option-card" data-condition="major">
+                <span class="option-card-icon">🚨</span>
+                <span class="option-card-title">Needs Major Cleanup</span>
+                <span class="option-card-desc">Reclaimed by nature. Thick brambles, tree saplings, heavy vines (+50%).</span>
+              </div>
+              <div class="option-card" data-condition="unsure">
+                <span class="option-card-icon">?</span>
+                <span class="option-card-title">Not Sure</span>
+                <span class="option-card-desc">We will compute a baseline and double-check during review.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Access and Complexity -->
+          <div class="calc-step">
+            <h2 class="step-title">Access and Complexity</h2>
+            <p class="step-desc">Let us know if there are any barriers to getting our heavy mowers into your yard.</p>
+            <div class="calc-field-group">
+              <label>Is the yard easy to access?</label>
+              <div class="options-grid-3">
+                <div class="option-card" data-access="yes">
+                  <span class="option-card-icon">🟢</span>
+                  <span class="option-card-title">Yes</span>
+                  <span class="option-card-desc">Wide gate (50"+), flat terrain, no stairs or obstacles.</span>
+                </div>
+                <div class="option-card" data-access="somewhat">
+                  <span class="option-card-icon">🟡</span>
+                  <span class="option-card-title">Somewhat</span>
+                  <span class="option-card-desc">Standard gate (36"), minor slopes, pets, or outdoor toys.</span>
+                </div>
+                <div class="option-card" data-access="no">
+                  <span class="option-card-icon">🔴</span>
+                  <span class="option-card-title">No / Difficult Access</span>
+                  <span class="option-card-desc">Narrow gate, steep hills, terraces, or locked gates (+15%).</span>
+                </div>
+              </div>
+            </div>
+            <div class="calc-field-group">
+              <label for="access-notes">Slopes, obstacles, pets, gates, or special instructions?</label>
+              <input type="text" id="access-notes" class="calc-input" placeholder="e.g. Steep slope in back yard, 34-inch wide gate, friendly dog.">
+            </div>
+          </div>
+
+          <!-- Step 5: Frequency -->
+          <div class="calc-step">
+            <h2 class="step-title">How often do you need service?</h2>
+            <p class="step-desc">Recurring schedules lower your cost per visit and keep your property gorgeous year-round.</p>
+            <div class="options-grid-3">
+              <div class="option-card" data-frequency="once">
+                <span class="option-card-icon">📅</span>
+                <span class="option-card-title">One-Time Service</span>
+                <span class="option-card-desc">A single visit to get things sorted. No contract.</span>
+              </div>
+              <div class="option-card" data-frequency="weekly">
+                <span class="option-card-icon">🗓️</span>
+                <span class="option-card-title">Weekly</span>
+                <span class="option-card-desc">Highly recommended for lawns during active growing seasons.</span>
+              </div>
+              <div class="option-card" data-frequency="biweekly">
+                <span class="option-card-icon">⏳</span>
+                <span class="option-card-title">Bi-Weekly</span>
+                <span class="option-card-desc">Great balance for standard maintenance throughout the season.</span>
+              </div>
+              <div class="option-card" data-frequency="monthly">
+                <span class="option-card-icon">🌙</span>
+                <span class="option-card-title">Monthly</span>
+                <span class="option-card-desc">Ideal for slow growing periods or basic light maintenance.</span>
+              </div>
+              <div class="option-card" data-frequency="seasonal">
+                <span class="option-card-icon">🍂</span>
+                <span class="option-card-title">Seasonal</span>
+                <span class="option-card-desc">Spring and Fall prep visits to protect your turf health.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 6: Optional Add-ons -->
+          <div class="calc-step">
+            <h2 class="step-title">Optional Add-ons</h2>
+            <p class="step-desc">Need a little extra touch? Select any secondary tasks you'd like estimated.</p>
+            <div class="addons-list">
+              <div class="addon-item" data-addon="clippings">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Bag Clippings</span>
+                  <span class="addon-price">+$15 – $50</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="haul">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Haul Away Debris</span>
+                  <span class="addon-price">+$75 – $250</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="weeds">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Weed Removal</span>
+                  <span class="addon-price">+$40 – $150</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="fert">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Fertilization</span>
+                  <span class="addon-price">+$50 – $150</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="edging">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Edging Refresh</span>
+                  <span class="addon-price">+$25 – $80</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="cleanup">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Flower Bed Cleanup</span>
+                  <span class="addon-price">+$100 – $400</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="mulch">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Mulch Refresh</span>
+                  <span class="addon-price">+$150 – $600</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="pressure">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Pressure Washing</span>
+                  <span class="addon-price">+$100 – $450</span>
+                </div>
+              </div>
+              <div class="addon-item" data-addon="irrigation">
+                <div class="addon-checkbox"></div>
+                <div class="addon-info">
+                  <span class="addon-name">Irrigation Check</span>
+                  <span class="addon-price">+$50 – $160</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 7: Contact and Lead Capture -->
+          <div class="calc-step">
+            <h2 class="step-title">Where should we send your estimate?</h2>
+            <p class="step-desc">Enter your contact details to calculate your instant range and submit your official quote request.</p>
+            <div class="fields" style="gap: 15px; margin-bottom: 24px;">
+              <div class="calc-field-group">
+                <label for="cust-name">Full Name *</label>
+                <input type="text" id="cust-name" class="calc-input" placeholder="John Doe" required>
+              </div>
+              <div class="calc-field-group">
+                <label for="cust-phone">Phone Number *</label>
+                <input type="tel" id="cust-phone" class="calc-input" placeholder="(555) 000-0000" required>
+              </div>
+              <div class="calc-field-group">
+                <label for="cust-email">Email Address *</label>
+                <input type="email" id="cust-email" class="calc-input" placeholder="john@example.com" required>
+              </div>
+              <div class="calc-field-group">
+                <label for="cust-address">Property Address *</label>
+                <input type="text" id="cust-address" class="calc-input" placeholder="123 Green Lane, Lawn City" required>
+              </div>
+              <div class="calc-field-group">
+                <label for="contact-method">Preferred Contact Method</label>
+                <select id="contact-method" class="calc-select">
+                  <option value="Email">Email</option>
+                  <option value="Phone">Phone Call</option>
+                  <option value="Text">Text Message</option>
+                </select>
+              </div>
+              <div class="calc-field-group">
+                <label for="service-date">Preferred Service Date</label>
+                <input type="date" id="service-date" class="calc-input">
+              </div>
+            </div>
+            
+            <div class="calc-field-group">
+              <label>Upload Yard Photos (Optional)</label>
+              <div class="file-upload-zone" id="photo-upload-zone">
+                <input type="file" id="photo-file-input" style="display: none;" accept="image/*" multiple>
+                <span class="upload-icon">📁</span>
+                <p>Drag and drop photos here, or click to upload</p>
+                <small>Supports PNG, JPG, JPEG (Max 5MB each)</small>
+              </div>
+              <div class="uploaded-files-list" id="uploaded-files"></div>
+            </div>
+
+            <div class="calc-field-group">
+              <label for="special-notes">Notes / Special Requests</label>
+              <textarea id="special-notes" class="calc-textarea" placeholder="e.g. Please look out for the flower gardens in the side yard..."></textarea>
+            </div>
+
+            <!-- Anti-Spam Honeypot Field -->
+            <input type="text" id="cust-honeypot" style="display: none;" autocomplete="off" value="">
+          </div>
+
+          <!-- Result Screen (Hidden by default, triggered on submit success) -->
+          <div class="calc-step" id="calc-step-result">
+            <div class="result-container">
+              <div class="success-graphic">✓</div>
+              <h2 class="step-title" style="margin-bottom: 5px;">Lead Request Submitted!</h2>
+              <span class="result-badge">Estimate Generated</span>
+              
+              <div class="price-range-display">
+                <div class="price-range-label">Your Estimated Price Range</div>
+                <div class="price-range-val" id="price-range-value">$000 – $000</div>
+              </div>
+
+              <p class="price-disclaimer">
+                <strong>Important Disclaimer:</strong> Instant estimates are provided for planning purposes only. Final pricing depends on property review, photos, access, materials, labor requirements, and current availability.
+              </p>
+
+              <!-- Simulated Lead capture presentation -->
+              <div class="success-lead-summary">
+                <h4>Submission Lead Summary</h4>
+                <div class="summary-row"><span>Service Type:</span><strong id="sum-service">-</strong></div>
+                <div class="summary-row"><span>Property Size:</span><strong id="sum-size">-</strong></div>
+                <div class="summary-row"><span>Condition:</span><strong id="sum-condition">-</strong></div>
+                <div class="summary-row"><span>Frequency:</span><strong id="sum-frequency">-</strong></div>
+                <div class="summary-row"><span>Calculated Estimate:</span><strong id="sum-estimate">-</strong></div>
+                <div class="summary-row"><span>Name:</span><strong id="sum-name">-</strong></div>
+                <div class="summary-row"><span>Phone:</span><strong id="sum-phone">-</strong></div>
+                <div class="summary-row"><span>Email:</span><strong id="sum-email">-</strong></div>
+                <div class="summary-row"><span>Address:</span><strong id="sum-address">-</strong></div>
+              </div>
+
+              <div style="margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <button class="btn coral" onclick="window.location.hash = '#calculator'; window.location.reload();" style="border-color: var(--coral);">Book a Yard Review</button>
+                <a href="../tools.html" class="btn">Explore Other Apps ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div class="calc-error-msg"></div>
+
+          <!-- Navigation Controls -->
+          <div class="calc-nav-buttons">
+            <button type="button" class="calc-btn btn-prev">← Back</button>
+            <button type="button" class="calc-btn btn-next">Next →</button>
+            <button type="button" class="calc-btn btn-submit" style="display: none;">Generate Estimate & Submit Lead ↗</button>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- Trust / Benefits Section -->
+    <section class="pad" style="background: white; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+      <div class="section-head reveal">
+        <div>
+          <p class="kicker" style="color: var(--primary);">Why Homeowners Trust Us</p>
+          <h2>Professional lawn care,<br>made <em>incredibly simple.</em></h2>
+        </div>
+        <p style="color: #606763; width: 35%;">We combine local agricultural expertise with modern digital service to give you a stress-free experience from day one.</p>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">⏱️</div>
+          <h3>Fast Estimates</h3>
+          <p>Get a preliminary budget range online in under 3 minutes, then locking it in is a breeze.</p>
+        </div>
+        <div class="benefit-card reveal delay">
+          <div class="benefit-icon">🌿</div>
+          <h3>Lawn & Landscape Experts</h3>
+          <p>Our crews are trained, insured, and committed to high standards of local lawn ecology.</p>
+        </div>
+        <div class="benefit-card reveal delay2">
+          <div class="benefit-icon">🔍</div>
+          <h3>Transparent Pricing</h3>
+          <p>We break down all materials, labor, and add-on costs so you know exactly what you're paying for.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">📸</div>
+          <h3>Photo-Based Review</h3>
+          <p>Skip the appointments—upload photos of your yard and gate so we can confirm quotes remotely.</p>
+        </div>
+        <div class="benefit-card reveal delay">
+          <div class="benefit-icon">🤝</div>
+          <h3>No-Pressure Quote</h3>
+          <p>We provide clear proposals and let you review options at your leisure. No aggressive sales pitches.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section class="pad faq" style="background: var(--cream);">
+      <div class="faq-head reveal">
+        <p class="kicker" style="color: var(--primary);">Common Questions</p>
+        <h2>Frequently<br>asked <em>questions.</em></h2>
+        <p style="color: #606763; margin-top: 20px;">Have questions about pricing, booking, or how our estimators calculate yard quotes? Here are the answers.</p>
+      </div>
+      <div class="faq-list">
+        
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Is this an exact quote?<b>+</b></button>
+          <div>
+            <p>No, the online estimator provides a preliminary price range based on averages for properties of your size. Our estimator helps you establish a budget. We confirm exact costs after a quick review of your uploaded photos or a physical site review.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Do I need to know my yard size?<b>+</b></button>
+          <div>
+            <p>Not exactly. We provide average size categories (Small under 2.5k sq ft, Medium 2.5k-7.5k sq ft, etc.) to help you guess. If you enter your address, our team can also measure your property using satellite GIS software during the review process!</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Can I upload photos?<b>+</b></button>
+          <div>
+            <p>Yes! In Step 7, you can drag and drop photos of your front yard, back yard, gate, or any specific problem areas. Photos are the fastest way for us to bypass an in-person walkthrough and email you an official, locked-in quote.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">How fast will someone contact me?<b>+</b></button>
+          <div>
+            <p>Our local team processes quote requests very quickly. You will typically receive an email with your finalized official quote or a call to schedule an on-site review within 2–4 business hours of submitting the calculator form.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Do you offer recurring lawn maintenance?<b>+</b></button>
+          <div>
+            <p>Absolutely. We offer weekly and bi-weekly mowing programs, along with monthly and seasonal bed maintenance. You can specify your preferred schedule frequency in Step 5 of the calculator wizard.</p>
+          </div>
+        </article>
+
+        <article class="faq-item reveal">
+          <button aria-expanded="false">Can I request multiple services?<b>+</b></button>
+          <div>
+            <p>You can select your main service on Step 1, and then combine it with any of the 9 optional add-ons in Step 6 (like leaf removal, bed cleanups, pressure washing, or fertilization) to get an all-inclusive yard estimate range.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Simulated Lead Log (Developer/Admin Demonstration Box) -->
+    <section class="pad sim-leads-section" id="sim-leads-demo">
+      <div class="sim-leads-container">
+        <h3 style="font-family: var(--serif); font-size: 32px; margin-bottom: 8px;">Simulated Lead Database</h3>
+        <p style="font-size: 13px; color: #555; margin-bottom: 24px;">This panel simulates the business's CRM database or inbox notification log, capturing form submissions stored in your browser's local storage.</p>
+        <div id="simulated-leads-list">
+          <p style="font-style: italic; color: #888;">No leads submitted yet. Try completing the calculator above to see lead data populate here in real-time!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="pad contact" style="background: var(--primary); color: white;">
+      <div class="contact-copy">
+        <p class="kicker" style="color: var(--accent);">Ready to transform your lawn?</p>
+        <h2 style="color: white;">Let’s get your lawn<br>looking its <em>absolute best.</em></h2>
+        <p style="color: var(--accent-light); margin-top: 20px;">Whether you need weekly maintenance, a heavy seasonal cleanup, or an extensive landscape remodel, our crew is ready to step in.</p>
+      </div>
+      <div style="background: var(--cream); color: var(--ink); padding: 35px; border-radius: 24px; box-shadow: 12px 14px 0 rgba(0, 0, 0, 0.15);">
+        <h3 style="font-family: var(--serif); font-size: 32px; margin-top: 0; margin-bottom: 8px;">Request a Quote Review</h3>
+        <p style="font-size: 14px; color: #555; margin-bottom: 20px;">Fill out the instant quote calculator above to send us your details. Alternatively, email us directly or schedule a quick phone call.</p>
+        <div class="email">
+          <i>✉</i>
+          <div>
+            <small style="text-transform: uppercase; font-size: 9px; letter-spacing: 1px; color: var(--primary);">DIRECT CONTACT</small><br>
+            <a href="mailto:hello@dreamsites.pro" style="color: var(--primary); font-weight: bold; font-size: 16px;">hello@dreamsites.pro</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <a class="logo" href="../index.html"><i>D</i><b>dreamsites<span>.pro</span></b></a>
+      <p>Websites with brains,<br>beauty, and a bit of magic.</p>
+      <div>
+        <b>EXPLORE</b>
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#services">Services</a>
+        <a href="../index.html#process">Process</a>
+        <a href="../tools.html">Apps</a>
+      </div>
+      <div>
+        <b>CONNECT</b>
+        <a href="mailto:hello@dreamsites.pro">Email</a>
+        <a href="../index.html#contact">Book a call</a>
+      </div>
+      <div>
+        <b>LEGAL</b>
+        <a href="../privacy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <i id="year">2026</i> DreamSites.pro</span>
+      <span>Designed with intention. Built with care.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script>
+    // Lead Database Simulation view
+    function renderSimulatedLeads() {
+      const listEl = document.getElementById('simulated-leads-list');
+      if (!listEl) return;
+      
+      const submissions = JSON.parse(localStorage.getItem('landscaping_leads') || '[]');
+      
+      if (submissions.length === 0) {
+        listEl.innerHTML = '<p style="font-style: italic; color: #888;">No leads submitted yet. Try completing the calculator above to see lead data populate here in real-time!</p>';
+        return;
+      }
+
+      listEl.innerHTML = '';
+      // Show latest first
+      submissions.reverse().forEach(lead => {
+        const item = document.createElement('div');
+        item.className = 'sim-lead-card';
+        
+        let addonString = lead.addons && lead.addons.length ? lead.addons.join(', ') : 'None';
+        let photosString = lead.photos && lead.photos.length ? lead.photos.join(', ') : 'None';
+        let estimateRange = lead.isCustom ? 'Custom Quote Required' : `$${lead.estimated_low} – $${lead.estimated_high}`;
+
+        item.innerHTML = `
+          <div class="sim-lead-header">
+            <span class="sim-lead-title">${lead.name} (${lead.phone})</span>
+            <span class="sim-lead-date">${lead.submission_date}</span>
+            <span class="sim-lead-badge">${estimateRange}</span>
+          </div>
+          <div class="sim-lead-details">
+            <div><span>Email:</span> <strong>${lead.email}</strong></div>
+            <div><span>Address:</span> <strong>${lead.address}</strong></div>
+            <div><span>Service:</span> <strong>${lead.service}</strong></div>
+            <div><span>Yard Size:</span> <strong>${lead.size} ${lead.sqft ? '(' + lead.sqft + ' sq ft)' : ''}</strong></div>
+            <div><span>Yard Condition:</span> <strong>${lead.condition}</strong></div>
+            <div><span>Access:</span> <strong>${lead.access} ${lead.accessNotes ? ' - ' + lead.accessNotes : ''}</strong></div>
+            <div><span>Frequency:</span> <strong>${lead.frequency}</strong></div>
+            <div><span>Add-ons:</span> <strong>${addonString}</strong></div>
+            <div><span>Photos:</span> <strong>${photosString}</strong></div>
+            <div><span>Pref. Contact:</span> <strong>${lead.contactMethod}</strong></div>
+            <div><span>Pref. Date:</span> <strong>${lead.serviceDate || 'Not specified'}</strong></div>
+            <div><span>Special Notes:</span> <strong>${lead.notes || 'None'}</strong></div>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+    }
+    
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSimulatedLeads();
+    });
+  </script>
+</body>
+</html>

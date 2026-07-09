@@ -881,3 +881,896 @@
   align-items: center;
   justify-content: center;
 }
+
+/* ==========================================================================
+   APPS DROPDOWN AND YARD CALCULATOR STYLES
+   ========================================================================== */
+
+/* Apps Dropdown Styling for Desktop Nav */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-dropdown-trigger {
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.25s, color 0.25s;
+}
+
+.nav-dropdown-trigger:hover,
+.nav-dropdown:hover .nav-dropdown-trigger {
+  border-color: var(--coral);
+}
+
+.nav-dropdown-trigger .chevron {
+  font-size: 8px;
+  transition: transform 0.25s;
+  display: inline-block;
+}
+
+.nav-dropdown:hover .nav-dropdown-trigger .chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu Desktop styling */
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  width: 320px;
+  background: rgba(250, 248, 242, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 12px 36px rgba(23, 32, 28, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(8px);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  transition: background 0.2s, transform 0.2s;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 107, 82, 0.08);
+  transform: translateX(4px);
+}
+
+.dropdown-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdown-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.dropdown-item:hover .dropdown-item-title {
+  color: var(--coral);
+}
+
+.dropdown-item-desc {
+  font-size: 11px;
+  color: #606763;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+/* Mobile Dropdown Styling (inside .mobile-menu) */
+.mobile-dropdown {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mobile-dropdown-trigger {
+  background: none;
+  border: none;
+  font-family: var(--serif);
+  font-size: 44px;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 5px 0;
+  width: auto;
+  margin: 0 auto;
+  outline: none;
+}
+
+.mobile-dropdown-trigger .chevron {
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+
+.mobile-dropdown.open .mobile-dropdown-trigger .chevron {
+  transform: rotate(180deg);
+}
+
+.mobile-dropdown-menu {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  width: 80%;
+  max-width: 320px;
+  background: rgba(23, 32, 28, 0.04);
+  border-radius: 14px;
+  margin: 8px auto 0;
+}
+
+.mobile-dropdown.open .mobile-dropdown-menu {
+  grid-template-rows: 1fr;
+}
+
+.mobile-dropdown-menu-inner {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 24px;
+  text-align: center;
+}
+
+.mobile-dropdown-menu a {
+  font-size: 26px !important;
+  font-family: var(--serif) !important;
+  font-weight: 400 !important;
+  padding: 6px 0 !important;
+  color: #4d5551 !important;
+  transition: color 0.2s, transform 0.2s;
+  display: block;
+}
+
+.mobile-dropdown-menu a:hover {
+  color: var(--coral) !important;
+  transform: scale(1.03);
+}
+
+/* Green Theme Variables for Landscaping Calculator */
+.theme-green {
+  --primary: #2d5a27;
+  --primary-rgb: 45, 90, 39;
+  --primary-hover: #1e3f1a;
+  --accent: #8eed80;
+  --accent-light: #e8f9e6;
+  --accent-dark: #1b3d16;
+  --bg-green-soft: #f4fcf3;
+  --line-green: rgba(45, 90, 39, 0.15);
+}
+
+/* Landscaping Calculator Component Styles */
+.yard-calculator {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: clamp(24px, 5vw, 48px);
+  box-shadow: 12px 14px 0 rgba(23, 32, 28, 0.05);
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.calc-progress-container {
+  margin-bottom: 35px;
+}
+
+.calc-progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  color: #606763;
+}
+
+.calc-progress-bar-track {
+  height: 6px;
+  background: rgba(23, 32, 28, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.calc-progress-bar-fill {
+  height: 100%;
+  background: var(--primary, #2d5a27);
+  width: 14.3%;
+  border-radius: 99px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.calc-step {
+  display: none;
+}
+
+.calc-step.active {
+  display: block;
+  animation: calcFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes calcFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 38px);
+  color: var(--ink);
+  margin: 0 0 10px 0;
+  line-height: 1.1;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: #59605c;
+  margin: 0 0 28px 0;
+}
+
+/* Grid Layouts for options */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.options-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+/* Card Selection Elements */
+.option-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  background: var(--cream);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.option-card:hover {
+  border-color: var(--primary, #2d5a27);
+  background: var(--bg-green-soft, #f4fcf3);
+  transform: translateY(-2px);
+}
+
+.option-card.selected {
+  border-color: var(--primary, #2d5a27);
+  background: var(--accent-light, #e8f9e6);
+  box-shadow: 0 0 0 1px var(--primary, #2d5a27);
+}
+
+.option-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(23, 32, 28, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.25s;
+}
+
+.option-card:hover .option-card-icon {
+  background: rgba(45, 90, 39, 0.12);
+  color: var(--primary, #2d5a27);
+}
+
+.option-card.selected .option-card-icon {
+  background: var(--primary, #2d5a27);
+  color: white;
+}
+
+.option-card-title {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.option-card-desc {
+  font-size: 12px;
+  color: #606763;
+  line-height: 1.3;
+}
+
+/* Inputs styling */
+.calc-field-group {
+  margin-bottom: 24px;
+}
+
+.calc-field-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.calc-input,
+.calc-select,
+.calc-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+  color: var(--ink);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.calc-input:focus,
+.calc-select:focus,
+.calc-textarea:focus {
+  border-color: var(--primary, #2d5a27);
+  box-shadow: 0 0 0 3px rgba(45, 90, 39, 0.1);
+}
+
+.calc-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Checkbox Add-ons */
+.addons-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.addon-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--cream);
+  text-align: left;
+}
+
+.addon-item:hover {
+  border-color: var(--primary, #2d5a27);
+  background: var(--bg-green-soft, #f4fcf3);
+}
+
+.addon-item.selected {
+  border-color: var(--primary, #2d5a27);
+  background: var(--accent-light, #e8f9e6);
+}
+
+.addon-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  background: white;
+}
+
+.addon-item.selected .addon-checkbox {
+  border-color: var(--primary, #2d5a27);
+  background: var(--primary, #2d5a27);
+}
+
+.addon-checkbox::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  display: none;
+}
+
+.addon-item.selected .addon-checkbox::after {
+  display: block;
+}
+
+.addon-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.addon-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.addon-price {
+  font-size: 11px;
+  color: #606763;
+}
+
+/* File Upload drag and drop zone */
+.file-upload-zone {
+  border: 2px dashed var(--line);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  background: white;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.file-upload-zone:hover,
+.file-upload-zone.dragover {
+  border-color: var(--primary, #2d5a27);
+  background: var(--bg-green-soft, #f4fcf3);
+}
+
+.upload-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.file-upload-zone p {
+  margin: 0;
+  font-size: 13px;
+  color: #606763;
+}
+
+.file-upload-zone small {
+  font-size: 11px;
+  color: #888;
+}
+
+.uploaded-files-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.uploaded-file-tag {
+  background: rgba(23, 32, 28, 0.05);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uploaded-file-remove {
+  background: none;
+  border: none;
+  color: var(--coral);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+/* Navigation buttons */
+.calc-nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  gap: 15px;
+}
+
+.calc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ink);
+  border-radius: 99px;
+  padding: 12px 26px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.calc-btn.btn-prev {
+  background: transparent;
+  color: var(--ink);
+}
+
+.calc-btn.btn-next,
+.calc-btn.btn-submit {
+  background: var(--primary, #2d5a27);
+  border-color: var(--primary, #2d5a27);
+  color: white;
+}
+
+.calc-btn.btn-next:hover,
+.calc-btn.btn-submit:hover {
+  background: var(--primary-hover, #1e3f1a);
+  border-color: var(--primary-hover, #1e3f1a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(45, 90, 39, 0.15);
+}
+
+.calc-btn.btn-prev:hover {
+  background: rgba(23, 32, 28, 0.05);
+  transform: translateY(-2px);
+}
+
+.calc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Result Screen */
+.result-container {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.result-badge {
+  display: inline-block;
+  background: var(--accent-light, #e8f9e6);
+  color: var(--primary, #2d5a27);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 16px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+}
+
+.price-range-display {
+  margin: 25px 0;
+  padding: 30px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.price-range-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #606763;
+  margin-bottom: 10px;
+}
+
+.price-range-val {
+  font-family: var(--serif);
+  font-size: clamp(48px, 6vw, 72px);
+  color: var(--primary, #2d5a27);
+  line-height: 1;
+  font-weight: 400;
+}
+
+.price-disclaimer {
+  max-width: 580px;
+  margin: 20px auto 30px;
+  font-size: 12px;
+  color: #606763;
+  line-height: 1.5;
+  background: rgba(23, 32, 28, 0.03);
+  padding: 14px 20px;
+  border-radius: 10px;
+}
+
+.success-graphic {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--accent-light, #e8f9e6);
+  color: var(--primary, #2d5a27);
+  font-size: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+  animation: pulseSuccess 2s infinite;
+}
+
+@keyframes pulseSuccess {
+  0% { box-shadow: 0 0 0 0 rgba(142, 237, 128, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(142, 237, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(142, 237, 128, 0); }
+}
+
+.success-lead-summary {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 30px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.success-lead-summary h4 {
+  margin: 0 0 8px 0;
+  font-family: var(--serif);
+  font-size: 22px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  border-bottom: 1px dashed rgba(23, 32, 28, 0.08);
+  padding-bottom: 6px;
+}
+
+.summary-row span {
+  color: #606763;
+}
+
+.summary-row strong {
+  color: var(--ink);
+}
+
+/* Error message styling */
+.calc-error-msg {
+  background: #fff5f5;
+  border-left: 4px solid #ff4d4d;
+  color: #990000;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 13px;
+  display: none;
+}
+
+/* Landscaping page specific styles */
+.landscaping-hero {
+  background: linear-gradient(135deg, rgba(232, 249, 230, 0.5) 0%, rgba(244, 252, 243, 0.5) 100%), var(--cream);
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  padding: calc(var(--nav-height) + 60px) clamp(20px, 5vw, 40px) 60px;
+}
+
+.landscaping-hero h1 {
+  font-family: var(--serif);
+  color: var(--ink);
+  font-size: clamp(48px, 6.5vw, 92px);
+  margin-bottom: 20px;
+  line-height: 0.95;
+}
+
+.landscaping-hero h1 em {
+  color: var(--primary, #2d5a27);
+  font-style: italic;
+}
+
+.landscaping-hero p {
+  color: #4d5551;
+  font-size: clamp(16px, 1.4vw, 20px);
+  max-width: 680px;
+  margin: 0 auto 35px;
+}
+
+.landscaping-hero .btn {
+  background: var(--primary, #2d5a27);
+  border-color: var(--primary, #2d5a27);
+  color: white;
+}
+
+.landscaping-hero .btn:hover {
+  background: var(--primary-hover, #1e3f1a);
+  border-color: var(--primary-hover, #1e3f1a);
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.benefit-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(20px, 4vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.25s;
+}
+
+.benefit-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary, #2d5a27);
+}
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--accent-light, #e8f9e6);
+  color: var(--primary, #2d5a27);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.benefit-card h3 {
+  font-family: var(--serif);
+  font-size: 24px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.benefit-card p {
+  font-size: 13px;
+  color: #59605c;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Landscaping simulation leads log */
+.sim-leads-section {
+  background: rgba(23, 32, 28, 0.02);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.sim-leads-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.sim-lead-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.sim-lead-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sim-lead-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.sim-lead-date {
+  font-size: 11px;
+  color: #888;
+}
+
+.sim-lead-badge {
+  background: var(--accent-light, #e8f9e6);
+  color: var(--primary, #2d5a27);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.sim-lead-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  font-size: 12px;
+}
+
+.sim-lead-details span {
+  color: #555;
+}
+
+.sim-lead-details strong {
+  color: var(--ink);
+}
+
+/* Adjustments for mobile responsive */
+@media (max-width: 768px) {
+  .options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .options-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .addons-list {
+    grid-template-columns: 1fr;
+  }
+  .yard-calculator {
+    padding: 24px 16px;
+    border-radius: 18px;
+  }
+  .price-range-display {
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+  .mobile-dropdown-menu {
+    width: 90%;
+  }
+  .mobile-dropdown-trigger {
+    font-size: 34px;
+  }
+}

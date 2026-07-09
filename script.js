@@ -399,3 +399,508 @@ if (auditForm) {
   
   updateAuditScore(); // Initialize
 }
+
+/* ==========================================================================
+   APPS DROPDOWN AND LANDSCAPING CALCULATOR SCRIPTS
+   ========================================================================== */
+
+// Close desktop dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const openTrigger = q('.nav-dropdown-trigger[aria-expanded="true"]');
+  if (openTrigger && !e.target.closest('.nav-dropdown')) {
+    openTrigger.setAttribute('aria-expanded', 'false');
+  }
+});
+
+// Mobile dropdown toggle inside mobile-menu
+qa('.mobile-dropdown-trigger').forEach(trigger => {
+  trigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropdown = trigger.closest('.mobile-dropdown');
+    const isOpen = dropdown.classList.contains('open');
+    
+    // Toggle active state
+    dropdown.classList.toggle('open', !isOpen);
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+});
+
+// Landscaping Calculator Wizard Logic
+(function() {
+  const calc = q('#yard-calculator');
+  if (!calc) return;
+
+  const serviceBasePrices = {
+    mowing: { small: [45, 65], medium: [65, 95], large: [95, 150], xl: [150, 250] },
+    cleanup: { small: [150, 250], medium: [250, 450], large: [450, 750], xl: [750, 1000] },
+    mulch: { small: [250, 450], medium: [450, 850], large: [850, 1500], xl: null }, // null means Custom Quote
+    sod: { small: [800, 1500], medium: [1500, 4000], large: [4000, 8000], xl: null },
+    hedge: { small: [100, 200], medium: [200, 400], large: [400, 700], xl: null },
+    leaf: { small: [100, 175], medium: [175, 350], large: [350, 600], xl: [600, 900] },
+    flowerbed: { small: [150, 300], medium: [300, 600], large: [600, 1000], xl: null },
+    landscape: { small: [750, 1500], medium: [1500, 4000], large: [4000, 10000], xl: null },
+    irrigation: { small: [95, 175], medium: [95, 175], large: [95, 175], xl: [95, 175] }, // base range flat
+    tree: { small: [150, 300], medium: [300, 600], large: [600, 1200], xl: null }
+  };
+
+  const conditionMultipliers = {
+    well: 1.0,
+    light: 1.15,
+    very: 1.30,
+    major: 1.50,
+    unsure: 1.0
+  };
+
+  const accessMultipliers = {
+    yes: 1.0,
+    somewhat: 1.0,
+    no: 1.15
+  };
+
+  const addonPrices = {
+    clippings: { small: [15, 25], medium: [25, 35], large: [35, 50], xl: [50, 75] },
+    haul: { small: [75, 100], medium: [120, 150], large: [180, 220], xl: [250, 300] },
+    weeds: { small: [40, 60], medium: [60, 90], large: [90, 150], xl: [150, 250] },
+    fert: { small: [50, 70], medium: [70, 100], large: [100, 150], xl: [150, 220] },
+    edging: { small: [25, 35], medium: [35, 50], large: [50, 80], xl: [80, 120] },
+    cleanup: { small: [100, 150], medium: [150, 250], large: [250, 400], xl: [400, 600] },
+    mulch: { small: [150, 220], medium: [220, 350], large: [350, 600], xl: [600, 900] },
+    pressure: { small: [100, 150], medium: [150, 250], large: [250, 450], xl: [450, 700] },
+    irrigation: { small: [50, 75], medium: [75, 110], large: [110, 160], xl: [160, 220] }
+  };
+
+  let currentStep = 0;
+  const steps = qa('.calc-step', calc);
+  const progressBar = q('.calc-progress-bar-fill', calc);
+  const progressText = q('#progress-step-text', calc);
+  const btnPrev = q('.btn-prev', calc);
+  const btnNext = q('.btn-next', calc);
+  const btnSubmit = q('.btn-submit', calc);
+  const errorMsg = q('.calc-error-msg', calc);
+  const fileInput = q('#photo-file-input', calc);
+  const uploadZone = q('#photo-upload-zone', calc);
+  const fileTagContainer = q('#uploaded-files', calc);
+  
+  let formData = {
+    service: '',
+    size: '',
+    sqft: '',
+    condition: '',
+    access: '',
+    accessNotes: '',
+    frequency: '',
+    addons: [],
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    contactMethod: 'Email',
+    serviceDate: '',
+    photos: [], // contains { name, base64 }
+    notes: ''
+  };
+
+  // Option select handlers
+  qa('.option-card[data-service]').forEach(card => {
+    card.addEventListener('click', () => {
+      qa('.option-card[data-service]').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      formData.service = card.dataset.service;
+      btnNext.disabled = false;
+    });
+  });
+
+  qa('.option-card[data-size]').forEach(card => {
+    card.addEventListener('click', () => {
+      qa('.option-card[data-size]').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      formData.size = card.dataset.size;
+      btnNext.disabled = false;
+    });
+  });
+
+  // exact sqft handler
+  const sqftInput = q('#exact-sqft');
+  if (sqftInput) {
+    sqftInput.addEventListener('input', () => {
+      const val = parseInt(sqftInput.value.trim(), 10);
+      if (!isNaN(val) && val > 0) {
+        formData.sqft = val;
+        // auto select size card
+        let sizeCode = 'small';
+        if (val >= 15000) sizeCode = 'xl';
+        else if (val >= 7500) sizeCode = 'large';
+        else if (val >= 2500) sizeCode = 'medium';
+        
+        qa('.option-card[data-size]').forEach(c => {
+          if (c.dataset.size === sizeCode) {
+            c.classList.add('selected');
+            formData.size = sizeCode;
+          } else {
+            c.classList.remove('selected');
+          }
+        });
+        btnNext.disabled = false;
+      } else {
+        formData.sqft = '';
+      }
+    });
+  }
+
+  qa('.option-card[data-condition]').forEach(card => {
+    card.addEventListener('click', () => {
+      qa('.option-card[data-condition]').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      formData.condition = card.dataset.condition;
+      btnNext.disabled = false;
+    });
+  });
+
+  qa('.option-card[data-access]').forEach(card => {
+    card.addEventListener('click', () => {
+      qa('.option-card[data-access]').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      formData.access = card.dataset.access;
+      btnNext.disabled = false;
+    });
+  });
+
+  qa('.option-card[data-frequency]').forEach(card => {
+    card.addEventListener('click', () => {
+      qa('.option-card[data-frequency]').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      formData.frequency = card.dataset.frequency;
+      btnNext.disabled = false;
+    });
+  });
+
+  // Addon list multiple selection
+  qa('.addon-item[data-addon]').forEach(item => {
+    item.addEventListener('click', () => {
+      const addon = item.dataset.addon;
+      item.classList.toggle('selected');
+      if (item.classList.contains('selected')) {
+        if (!formData.addons.includes(addon)) formData.addons.push(addon);
+      } else {
+        formData.addons = formData.addons.filter(a => a !== addon);
+      }
+    });
+  });
+
+  // Photo uploading drag-and-drop
+  if (uploadZone && fileInput) {
+    uploadZone.addEventListener('click', () => fileInput.click());
+    
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+    
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+    
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+    
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) {
+        handleFiles(fileInput.files);
+      }
+    });
+  }
+
+  function handleFiles(files) {
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) {
+        showError("Only image files are allowed.");
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        formData.photos.push({
+          name: file.name,
+          base64: reader.result
+        });
+        renderFileTags();
+      };
+    });
+  }
+
+  function renderFileTags() {
+    if (!fileTagContainer) return;
+    fileTagContainer.innerHTML = '';
+    formData.photos.forEach((photo, idx) => {
+      const tag = document.createElement('div');
+      tag.className = 'uploaded-file-tag';
+      tag.innerHTML = `
+        <span>📸 ${photo.name}</span>
+        <button class="uploaded-file-remove" type="button" data-index="${idx}">×</button>
+      `;
+      fileTagContainer.appendChild(tag);
+    });
+    
+    // Add remove handlers
+    qa('.uploaded-file-remove', fileTagContainer).forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.index, 10);
+        formData.photos.splice(idx, 1);
+        renderFileTags();
+      });
+    });
+  }
+
+  function showError(msg) {
+    if (errorMsg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+    }
+  }
+
+  function clearError() {
+    if (errorMsg) {
+      errorMsg.style.display = 'none';
+    }
+  }
+
+  // Check validation for current step
+  function validateStep(stepIdx) {
+    clearError();
+    if (stepIdx === 0 && !formData.service) {
+      showError("Please select a service type.");
+      return false;
+    }
+    if (stepIdx === 1 && !formData.size) {
+      showError("Please select a property size or enter exact square footage.");
+      return false;
+    }
+    if (stepIdx === 2 && !formData.condition) {
+      showError("Please select the current yard condition.");
+      return false;
+    }
+    if (stepIdx === 3 && !formData.access) {
+      showError("Please select the access complexity.");
+      return false;
+    }
+    if (stepIdx === 4 && !formData.frequency) {
+      showError("Please select the service frequency.");
+      return false;
+    }
+    if (stepIdx === 6) {
+      // Step 7 (index 6): contact form validation
+      const name = q('#cust-name').value.trim();
+      const phone = q('#cust-phone').value.trim();
+      const email = q('#cust-email').value.trim();
+      const address = q('#cust-address').value.trim();
+      const contactMethod = q('#contact-method').value;
+      const serviceDate = q('#service-date').value;
+      const notes = q('#special-notes').value.trim();
+      
+      if (!name || !phone || !email || !address) {
+        showError("Please fill out all required fields (Name, Phone, Email, Address).");
+        return false;
+      }
+      
+      formData.name = name;
+      formData.phone = phone;
+      formData.email = email;
+      formData.address = address;
+      formData.contactMethod = contactMethod;
+      formData.serviceDate = serviceDate;
+      formData.notes = notes;
+    }
+    return true;
+  }
+
+  function updateStepView() {
+    steps.forEach((step, idx) => {
+      step.classList.toggle('active', idx === currentStep);
+    });
+
+    // Update progress bar
+    const percent = ((currentStep + 1) / steps.length) * 100;
+    if (progressBar) progressBar.style.width = `${percent}%`;
+    if (progressText) progressText.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+
+    // Manage buttons
+    if (currentStep === 0) {
+      if (btnPrev) btnPrev.style.visibility = 'hidden';
+    } else {
+      if (btnPrev) btnPrev.style.visibility = 'visible';
+    }
+
+    if (currentStep === steps.length - 1) {
+      if (btnNext) btnNext.style.display = 'none';
+      if (btnSubmit) btnSubmit.style.display = 'inline-flex';
+    } else {
+      if (btnNext) btnNext.style.display = 'inline-flex';
+      if (btnSubmit) btnSubmit.style.display = 'none';
+      
+      // Auto enable/disable based on choices
+      let isStepCompleted = false;
+      if (currentStep === 0 && formData.service) isStepCompleted = true;
+      else if (currentStep === 1 && formData.size) isStepCompleted = true;
+      else if (currentStep === 2 && formData.condition) isStepCompleted = true;
+      else if (currentStep === 3 && formData.access) isStepCompleted = true;
+      else if (currentStep === 4 && formData.frequency) isStepCompleted = true;
+      else if (currentStep === 5) isStepCompleted = true; // Add-ons are optional
+      
+      if (btnNext) btnNext.disabled = !isStepCompleted;
+    }
+  }
+
+  if (btnNext) {
+    btnNext.addEventListener('click', () => {
+      if (validateStep(currentStep)) {
+        currentStep++;
+        updateStepView();
+      }
+    });
+  }
+
+  if (btnPrev) {
+    btnPrev.addEventListener('click', () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateStepView();
+      }
+    });
+  }
+
+  // Calculate pricing range
+  function calculateEstimate() {
+    const service = formData.service;
+    const size = formData.size;
+    
+    const base = serviceBasePrices[service];
+    if (!base) return { low: 0, high: 0, isCustom: true };
+    
+    const prices = base[size];
+    if (!prices) return { low: 0, high: 0, isCustom: true }; // Custom quote if xl null
+    
+    let low = prices[0];
+    let high = prices[1];
+    
+    // Multipliers
+    const condMult = conditionMultipliers[formData.condition] || 1.0;
+    const accessMult = accessMultipliers[formData.access] || 1.0;
+    
+    low *= condMult * accessMult;
+    high *= condMult * accessMult;
+    
+    // Add-ons
+    formData.addons.forEach(addonKey => {
+      const addonBase = addonPrices[addonKey];
+      if (addonBase) {
+        const addonRange = addonBase[size] || addonBase['medium']; // fallback
+        low += addonRange[0];
+        high += addonRange[1];
+      }
+    });
+    
+    // Round to nearest $5
+    low = Math.round(low / 5) * 5;
+    high = Math.round(high / 5) * 5;
+    
+    return { low, high, isCustom: false };
+  }
+
+  // Form submission handler
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!validateStep(currentStep)) return;
+      
+      // Check honeypot spam protection
+      const honeypot = q('#cust-honeypot', calc).value;
+      if (honeypot) {
+        console.warn("Honeypot filled, blocking submission.");
+        showSuccessScreen({ low: 0, high: 0, isCustom: true });
+        return;
+      }
+      
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Submitting Lead...";
+      
+      const pricing = calculateEstimate();
+      formData.estimated_low = pricing.low;
+      formData.estimated_high = pricing.high;
+      formData.isCustom = pricing.isCustom;
+      
+      // Save accessNotes
+      formData.accessNotes = q('#access-notes', calc).value.trim();
+      
+      try {
+        await fetch('/api/landscaping-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        
+        // Save submission to simulator localstorage
+        const submissions = JSON.parse(localStorage.getItem('landscaping_leads') || '[]');
+        submissions.push({
+          ...formData,
+          photosCount: formData.photos.length,
+          photos: formData.photos.map(p => p.name), // save names only in logs to save space
+          submission_date: new Date().toLocaleString()
+        });
+        localStorage.setItem('landscaping_leads', JSON.stringify(submissions));
+        
+        showSuccessScreen(pricing);
+      } catch (err) {
+        console.error("Submission failed:", err);
+        showError("We encountered a network error. However, your estimate was calculated successfully below!");
+        showSuccessScreen(pricing); // Still show estimate to preserve UX
+      }
+    });
+  }
+
+  function showSuccessScreen(pricing) {
+    // Hide calculator wizard structure
+    q('.calc-progress-container', calc).style.display = 'none';
+    qa('.calc-step', calc).forEach(s => s.classList.remove('active'));
+    q('.calc-nav-buttons', calc).style.display = 'none';
+    
+    // Show results step
+    const resultStep = q('#calc-step-result', calc);
+    resultStep.classList.add('active');
+    
+    // Render prices
+    const rangeValEl = q('#price-range-value', resultStep);
+    if (pricing.isCustom) {
+      rangeValEl.textContent = "Custom Quote";
+      rangeValEl.style.fontSize = "clamp(32px, 5vw, 56px)";
+    } else {
+      rangeValEl.textContent = `$${pricing.low} – $${pricing.high}`;
+    }
+
+    // Populate success lead summary on screen
+    q('#sum-service').textContent = q('.option-card[data-service].selected .option-card-title').textContent;
+    q('#sum-size').textContent = q('.option-card[data-size].selected .option-card-title').textContent + (formData.sqft ? ` (${formData.sqft} sq ft)` : '');
+    q('#sum-condition').textContent = q('.option-card[data-condition].selected .option-card-title').textContent;
+    q('#sum-frequency').textContent = q('.option-card[data-frequency].selected .option-card-title').textContent;
+    q('#sum-estimate').textContent = pricing.isCustom ? "Custom Quote Required" : `$${pricing.low} – $${pricing.high}`;
+    q('#sum-name').textContent = formData.name;
+    q('#sum-phone').textContent = formData.phone;
+    q('#sum-email').textContent = formData.email;
+    q('#sum-address').textContent = formData.address;
+    
+    // Render leads simulation list if exists
+    if (typeof renderSimulatedLeads === 'function') {
+      renderSimulatedLeads();
+    }
+  }
+
+  // Initialize
+  updateStepView();
+})();
