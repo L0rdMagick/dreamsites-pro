@@ -2,7 +2,17 @@ const q=(s,p=document)=>p.querySelector(s),qa=(s,p=document)=>[...p.querySelecto
 const menu=q('.menu'),mobile=q('.mobile-menu');menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));mobile.classList.toggle('open',!open);document.body.classList.toggle('lock',!open)});qa('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{menu.setAttribute('aria-expanded','false');mobile.classList.remove('open');document.body.classList.remove('lock')}));
 const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.1});qa('.reveal').forEach(el=>observer.observe(el));
 qa('.faq-item button').forEach(btn=>btn.addEventListener('click',()=>{const item=btn.closest('.faq-item'),was=item.classList.contains('open');qa('.faq-item').forEach(x=>{x.classList.remove('open');q('button',x).setAttribute('aria-expanded','false');q('button b',x).textContent='+'});if(!was){item.classList.add('open');btn.setAttribute('aria-expanded','true');q('b',btn).textContent='−'}}));
-const launch=q('.chat-launch'),chat=q('.chat'),close=q('.chat header button'),messages=q('.messages'),input=q('.chat form input');function setChat(open){chat.classList.toggle('open',open);chat.setAttribute('aria-hidden',String(!open));launch.setAttribute('aria-expanded',String(open));if(open)setTimeout(()=>input.focus(),200)}launch.addEventListener('click',()=>setChat(!chat.classList.contains('open')));close.addEventListener('click',()=>setChat(false));
+const launch=q('.chat-launch'),chat=q('.chat'),close=q('.chat header button'),messages=q('.messages'),input=q('.chat form input');
+function setChat(open){
+  if(chat && launch) {
+    chat.classList.toggle('open',open);
+    chat.setAttribute('aria-hidden',String(!open));
+    launch.setAttribute('aria-expanded',String(open));
+  }
+  if(open && input) setTimeout(()=>input.focus(),200);
+}
+if(launch) launch.addEventListener('click',()=>setChat(!chat.classList.contains('open')));
+if(close) close.addEventListener('click',()=>setChat(false));
 const chatHistory = [];
 function add(text,user=false){const p=document.createElement('p');p.textContent=text;if(user)p.className='user';messages.appendChild(p);messages.scrollTop=messages.scrollHeight}
 async function askAI(text) {
@@ -31,13 +41,16 @@ async function askAI(text) {
   }
 }
 qa('.replies button').forEach(b=>b.addEventListener('click',()=>askAI(b.textContent)));
-q('.chat form').addEventListener('submit',e=>{
-  e.preventDefault();
-  const text=input.value.trim();
-  if(!text)return;
-  askAI(text);
-  input.value='';
-});
+const chatForm = q('.chat form');
+if (chatForm) {
+  chatForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const text=input.value.trim();
+    if(!text)return;
+    askAI(text);
+    input.value='';
+  });
+}
 // Project Planner Step Navigation
 let currentStep = 1;
 const formSteps = qa('.form-step');
