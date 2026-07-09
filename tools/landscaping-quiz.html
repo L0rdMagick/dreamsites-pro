@@ -12,6 +12,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=block" rel="stylesheet">
   
   <style>
+    /* Grid Layout for Quiz and Results Screens */
+    .calc-grid-layout {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 30px !important;
+      align-items: start !important;
+    }
+    
+    @media (min-width: 992px) {
+      .calc-grid-layout {
+        grid-template-columns: 1.15fr 0.85fr !important;
+        gap: 50px !important;
+      }
+    }
+
     /* Compact, Responsive Grid Overrides for Quiz Option Cards */
     .options-grid.quiz-grid {
       display: grid !important;
@@ -42,9 +57,9 @@
       pointer-events: none !important;
     }
     
-    .option-card.quiz-card input[type="radio"],
-    .option-card.quiz-card input[type="checkbox"] {
-      display: none !important; /* Hide native controls to keep card clean */
+    .option-card.quiz-card:hover {
+      border-color: #999 !important;
+      transform: translateY(-2px) !important;
     }
     
     .option-card.quiz-card.selected {
@@ -100,7 +115,7 @@
       margin-bottom: 30px;
     }
     
-    @media (min-width: 769px) {
+    @media (min-width: 992px) {
       .report-sidebar {
         position: sticky !important;
         top: 110px !important;
@@ -218,16 +233,16 @@
             <div class="calc-step active" data-step="0">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What do you want to improve most about your outdoor space?</h3>
               <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make my yard look cleaner and more maintained" required><span>Make yard cleaner & maintained</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve curb appeal"><span>Improve curb appeal</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Replace dead or patchy grass"><span>Replace dead or patchy grass</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Add plants, flowers, or garden beds"><span>Add plants, flowers & beds</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Create a low-maintenance landscape"><span>Create low-maintenance yard</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Make the yard more drought-resistant"><span>Make yard drought-resistant</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Improve the backyard for relaxing or entertaining"><span>Improve yard for entertaining</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Fix drainage or muddy areas"><span>Fix drainage or muddy areas</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="Prepare the property to sell"><span>Prepare property to sell</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="goal" value="I’m not sure, I need recommendations"><span>I'm not sure, need advice</span></label>
+                <div class="option-card quiz-card" data-value="Make my yard look cleaner and more maintained"><span>Make yard cleaner & maintained</span></div>
+                <div class="option-card quiz-card" data-value="Improve curb appeal"><span>Improve curb appeal</span></div>
+                <div class="option-card quiz-card" data-value="Replace dead or patchy grass"><span>Replace dead or patchy grass</span></div>
+                <div class="option-card quiz-card" data-value="Add plants, flowers, or garden beds"><span>Add plants, flowers & beds</span></div>
+                <div class="option-card quiz-card" data-value="Create a low-maintenance landscape"><span>Create low-maintenance yard</span></div>
+                <div class="option-card quiz-card" data-value="Make the yard more drought-resistant"><span>Make yard drought-resistant</span></div>
+                <div class="option-card quiz-card" data-value="Improve the backyard for relaxing or entertaining"><span>Improve yard for entertaining</span></div>
+                <div class="option-card quiz-card" data-value="Fix drainage or muddy areas"><span>Fix drainage or muddy areas</span></div>
+                <div class="option-card quiz-card" data-value="Prepare the property to sell"><span>Prepare property to sell</span></div>
+                <div class="option-card quiz-card" data-value="I’m not sure, I need recommendations"><span>I'm not sure, need advice</span></div>
               </div>
             </div>
 
@@ -235,14 +250,14 @@
             <div class="calc-step" data-step="1">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">Which area needs the most attention?</h3>
               <div class="options-grid quiz-grid">
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Front yard"><span>Front Yard</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Backyard"><span>Backyard</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Side yard"><span>Side Yard</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Flower beds"><span>Flower Beds</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Lawn / grass areas"><span>Lawn / Grass Areas</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Trees and shrubs"><span>Trees & Shrubs</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Patio / outdoor living area"><span>Patio / Living Area</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="area" value="Entire property"><span>Entire Property</span></label>
+                <div class="option-card quiz-card" data-value="Front yard"><span>Front Yard</span></div>
+                <div class="option-card quiz-card" data-value="Backyard"><span>Backyard</span></div>
+                <div class="option-card quiz-card" data-value="Side yard"><span>Side Yard</span></div>
+                <div class="option-card quiz-card" data-value="Flower beds"><span>Flower Beds</span></div>
+                <div class="option-card quiz-card" data-value="Lawn / grass areas"><span>Lawn / Grass Areas</span></div>
+                <div class="option-card quiz-card" data-value="Trees and shrubs"><span>Trees & Shrubs</span></div>
+                <div class="option-card quiz-card" data-value="Patio / outdoor living area"><span>Patio / Living Area</span></div>
+                <div class="option-card quiz-card" data-value="Entire property"><span>Entire Property</span></div>
               </div>
             </div>
 
@@ -250,14 +265,14 @@
             <div class="calc-step" data-step="2">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How would you describe your yard right now?</h3>
               <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Well maintained, just needs improvements"><span>Well maintained, needs tweaks</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="A little overgrown"><span>A little overgrown</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Patchy or unhealthy lawn"><span>Patchy or unhealthy lawn</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Bare dirt or dead grass"><span>Bare dirt or dead grass</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Weeds are taking over"><span>Weeds are taking over</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Old landscaping needs a refresh"><span>Old landscaping needs refresh</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Drainage or erosion issues"><span>Drainage or erosion issues</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="condition" value="Very neglected / needs major cleanup"><span>Neglected / needs cleanup</span></label>
+                <div class="option-card quiz-card" data-value="Well maintained, just needs improvements"><span>Well maintained, needs tweaks</span></div>
+                <div class="option-card quiz-card" data-value="A little overgrown"><span>A little overgrown</span></div>
+                <div class="option-card quiz-card" data-value="Patchy or unhealthy lawn"><span>Patchy or unhealthy lawn</span></div>
+                <div class="option-card quiz-card" data-value="Bare dirt or dead grass"><span>Bare dirt or dead grass</span></div>
+                <div class="option-card quiz-card" data-value="Weeds are taking over"><span>Weeds are taking over</span></div>
+                <div class="option-card quiz-card" data-value="Old landscaping needs a refresh"><span>Old landscaping needs refresh</span></div>
+                <div class="option-card quiz-card" data-value="Drainage or erosion issues"><span>Drainage or erosion issues</span></div>
+                <div class="option-card quiz-card" data-value="Very neglected / needs major cleanup"><span>Neglected / needs cleanup</span></div>
               </div>
             </div>
 
@@ -265,17 +280,17 @@
             <div class="calc-step" data-step="3">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What style do you want your landscaping to have?</h3>
               <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Clean and simple"><span>Clean and simple</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Modern and minimal"><span>Modern and minimal</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Lush and colorful"><span>Lush and colorful</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Native and natural"><span>Native and natural</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Drought-resistant / xeriscape"><span>Drought-resistant / xeriscape</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Family-friendly"><span>Family-friendly</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Pet-friendly"><span>Pet-friendly</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Luxury curb appeal"><span>Luxury curb appeal</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Tropical"><span>Tropical</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Cottage garden"><span>Cottage garden</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="style" value="Not sure, recommend something"><span>Not sure, recommend style</span></label>
+                <div class="option-card quiz-card" data-value="Clean and simple"><span>Clean and simple</span></div>
+                <div class="option-card quiz-card" data-value="Modern and minimal"><span>Modern and minimal</span></div>
+                <div class="option-card quiz-card" data-value="Lush and colorful"><span>Lush and colorful</span></div>
+                <div class="option-card quiz-card" data-value="Native and natural"><span>Native and natural</span></div>
+                <div class="option-card quiz-card" data-value="Drought-resistant / xeriscape"><span>Drought-resistant / xeriscape</span></div>
+                <div class="option-card quiz-card" data-value="Family-friendly"><span>Family-friendly</span></div>
+                <div class="option-card quiz-card" data-value="Pet-friendly"><span>Pet-friendly</span></div>
+                <div class="option-card quiz-card" data-value="Luxury curb appeal"><span>Luxury curb appeal</span></div>
+                <div class="option-card quiz-card" data-value="Tropical"><span>Tropical</span></div>
+                <div class="option-card quiz-card" data-value="Cottage garden"><span>Cottage garden</span></div>
+                <div class="option-card quiz-card" data-value="Not sure, recommend something"><span>Not sure, recommend style</span></div>
               </div>
             </div>
 
@@ -283,11 +298,11 @@
             <div class="calc-step" data-step="4">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How much maintenance do you want after the work is done?</h3>
               <div class="options-grid quiz-grid">
-                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="Very low maintenance"><span>Very low maintenance</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="Moderate maintenance"><span>Moderate maintenance</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I enjoy gardening and upkeep"><span>I enjoy gardening & upkeep</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I want recurring professional maintenance"><span>I want professional care</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="maintenance" value="I’m not sure"><span>I'm not sure</span></label>
+                <div class="option-card quiz-card" data-value="Very low maintenance"><span>Very low maintenance</span></div>
+                <div class="option-card quiz-card" data-value="Moderate maintenance"><span>Moderate maintenance</span></div>
+                <div class="option-card quiz-card" data-value="I enjoy gardening and upkeep"><span>I enjoy gardening & upkeep</span></div>
+                <div class="option-card quiz-card" data-value="I want recurring professional maintenance"><span>I want professional care</span></div>
+                <div class="option-card quiz-card" data-value="I’m not sure"><span>I'm not sure</span></div>
               </div>
             </div>
 
@@ -295,11 +310,11 @@
             <div class="calc-step" data-step="5">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">How important is water conservation for your yard?</h3>
               <div class="options-grid quiz-grid">
-                <label class="option-card quiz-card"><input type="radio" name="water" value="Very important"><span>Very Important (Conservation)</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="water" value="Somewhat important"><span>Somewhat Important</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="water" value="Not a major concern"><span>Not a Major Concern</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="water" value="I want drought-resistant options"><span>Drought-Resistant Focus</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="water" value="I’m not sure"><span>I'm Not Sure</span></label>
+                <div class="option-card quiz-card" data-value="Very important"><span>Very Important (Conservation)</span></div>
+                <div class="option-card quiz-card" data-value="Somewhat important"><span>Somewhat Important</span></div>
+                <div class="option-card quiz-card" data-value="Not a major concern"><span>Not a Major Concern</span></div>
+                <div class="option-card quiz-card" data-value="I want drought-resistant options"><span>Drought-Resistant Focus</span></div>
+                <div class="option-card quiz-card" data-value="I’m not sure"><span>I'm Not Sure</span></div>
               </div>
             </div>
 
@@ -307,13 +322,13 @@
             <div class="calc-step" data-step="6">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">What budget range are you considering?</h3>
               <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="Under $500"><span>Under $500</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="$500–$1,500"><span>$500 – $1,500</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="$1,500–$3,500"><span>$1,500 – $3,500</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="$3,500–$7,500"><span>$3,500 – $7,500</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="$7,500–$15,000"><span>$7,500 – $15,000</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="$15,000+"><span>$15,000+</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="budget" value="I need help understanding costs"><span>Need cost guidance</span></label>
+                <div class="option-card quiz-card" data-value="Under $500"><span>Under $500</span></div>
+                <div class="option-card quiz-card" data-value="$500–$1,500"><span>$500 – $1,500</span></div>
+                <div class="option-card quiz-card" data-value="$1,500–$3,500"><span>$1,500 – $3,500</span></div>
+                <div class="option-card quiz-card" data-value="$3,500–$7,500"><span>$3,500 – $7,500</span></div>
+                <div class="option-card quiz-card" data-value="$7,500–$15,000"><span>$7,500 – $15,000</span></div>
+                <div class="option-card quiz-card" data-value="$15,000+"><span>$15,000+</span></div >
+                <div class="option-card quiz-card" data-value="I need help understanding costs"><span>Need cost guidance</span></div>
               </div>
             </div>
 
@@ -321,11 +336,11 @@
             <div class="calc-step" data-step="7">
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 20px;">When would you like to start this project?</h3>
               <div class="options-grid quiz-grid scrollable-options" style="max-height: 340px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card"><input type="radio" name="timeline" value="As soon as possible"><span>As soon as possible</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 2 weeks"><span>Within 2 weeks</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 30 days"><span>Within 30 days</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Within 2–3 months"><span>Within 2–3 months</span></label>
-                <label class="option-card quiz-card"><input type="radio" name="timeline" value="Just researching for now"><span>Just researching for now</span></label>
+                <div class="option-card quiz-card" data-value="As soon as possible"><span>As soon as possible</span></div>
+                <div class="option-card quiz-card" data-value="Within 2 weeks"><span>Within 2 weeks</span></div>
+                <div class="option-card quiz-card" data-value="Within 30 days"><span>Within 30 days</span></div>
+                <div class="option-card quiz-card" data-value="Within 2–3 months"><span>Within 2–3 months</span></div>
+                <div class="option-card quiz-card" data-value="Just researching for now"><span>Just researching for now</span></div>
               </div>
             </div>
 
@@ -334,21 +349,21 @@
               <h3 style="font-family: var(--serif); font-size: 26px; font-weight: normal; margin-bottom: 12px;">Do any of these matter to you?</h3>
               <p style="font-size: 11px; color: #666; margin-bottom: 15px;">Select all that apply:</p>
               <div class="options-grid quiz-grid scrollable-options" style="max-height: 290px; overflow-y: auto; padding-right: 8px;">
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Kid-friendly yard"><span>👶 Kid-friendly yard</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pet-friendly yard"><span>🐾 Pet-friendly yard</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="HOA-friendly design"><span>🏡 HOA-friendly design</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Privacy from neighbors"><span>🌳 Privacy screen</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Pollinator-friendly plants"><span>🐝 Pollinator plants</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Native plants"><span>🌱 Native species</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Shade improvement"><span>☂️ Shade control</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Outdoor entertaining"><span>🔥 Entertaining</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Fire pit area"><span>🪵 Fire pit area</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Garden beds"><span>🌸 Flower beds</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Less mowing"><span>✂️ Less mowing</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Better drainage"><span>💧 Better drainage</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="More color"><span>🎨 More color</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Easier maintenance"><span>🧹 Easy cleanup</span></label>
-                <label class="option-card quiz-card checkbox"><input type="checkbox" name="priorities" value="Higher home value"><span>📈 Higher value</span></label>
+                <div class="option-card quiz-card checkbox" data-value="Kid-friendly yard"><span>👶 Kid-friendly yard</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Pet-friendly yard"><span>🐾 Pet-friendly yard</span></div>
+                <div class="option-card quiz-card checkbox" data-value="HOA-friendly design"><span>🏡 HOA-friendly design</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Privacy from neighbors"><span>🌳 Privacy screen</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Pollinator-friendly plants"><span>🐝 Pollinator plants</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Native plants"><span>🌱 Native species</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Shade improvement"><span>☂️ Shade control</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Outdoor entertaining"><span>🔥 Entertaining</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Fire pit area"><span>🪵 Fire pit area</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Garden beds"><span>🌸 Flower beds</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Less mowing"><span>✂️ Less mowing</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Better drainage"><span>💧 Better drainage</span></div>
+                <div class="option-card quiz-card checkbox" data-value="More color"><span>🎨 More color</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Easier maintenance"><span>🧹 Easy cleanup</span></div>
+                <div class="option-card quiz-card checkbox" data-value="Higher home value"><span>📈 Higher value</span></div>
               </div>
             </div>
 
@@ -392,7 +407,7 @@
 
     <!-- Quiz Results & Lead Capture Section (Hidden initially) -->
     <section class="pad hero-calc-section" id="quiz-results" style="display: none;">
-      <div class="calc-grid-layout" style="grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: start;">
+      <div class="calc-grid-layout">
         
         <!-- Left: AI Generated Recommendation Report (Responsive Static/Sticky column) -->
         <div class="calc-headline-side report-sidebar">
@@ -730,38 +745,29 @@
         { headline: "Upload yard photos (Optional)", description: "Drag and drop images of your yard to help us evaluate turf patterns." }
       ];
 
-      // Option Card Clicks (Auto Next for Single Choice Radios)
+      // Option Card Click Selection Handler (div cards)
       form.querySelectorAll('.calc-step').forEach((stepEl, stepIdx) => {
-        if (stepIdx > 8) return; // Skip priorities, notes, photos
+        const cards = stepEl.querySelectorAll('.option-card');
         
-        const cards = stepEl.querySelectorAll('.option-card:not(.checkbox)');
         cards.forEach(card => {
-          const radio = card.querySelector('input[type="radio"]');
           card.addEventListener('click', () => {
-            cards.forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            radio.checked = true;
-            
-            // Auto advance
-            setTimeout(() => {
-              if (currentStep === stepIdx && currentStep < steps.length - 1) {
-                currentStep++;
-                updateStepView();
-              }
-            }, 250);
+            if (card.classList.contains('checkbox')) {
+              // Multi-select Priority Cards (Step 9)
+              card.classList.toggle('selected');
+            } else {
+              // Single-select Radio Cards
+              cards.forEach(c => c.classList.remove('selected'));
+              card.classList.add('selected');
+              
+              // Auto advance
+              setTimeout(() => {
+                if (currentStep === stepIdx && currentStep < steps.length - 1) {
+                  currentStep++;
+                  updateStepView();
+                }
+              }, 250);
+            }
           });
-        });
-      });
-
-      // Checkboxes selection highlighting
-      form.querySelectorAll('.option-card.checkbox').forEach(card => {
-        const cb = card.querySelector('input[type="checkbox"]');
-        card.addEventListener('click', (e) => {
-          // If clicked the text/span, toggle checkbox manually
-          if (e.target !== cb) {
-            cb.checked = !cb.checked;
-          }
-          card.classList.toggle('selected', cb.checked);
         });
       });
 
@@ -873,45 +879,47 @@
       function validateStep(stepIdx) {
         if (errorMsg) errorMsg.style.display = 'none';
         
+        const activeStep = steps[stepIdx];
+        
         if (stepIdx === 0) {
-          const val = form.querySelector('input[name="goal"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select a primary goal."); return false; }
-          quizData.goal = val.value;
+          quizData.goal = val.getAttribute('data-value');
         }
         if (stepIdx === 1) {
-          const val = form.querySelector('input[name="area"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select a property area."); return false; }
-          quizData.area = val.value;
+          quizData.area = val.getAttribute('data-value');
         }
         if (stepIdx === 2) {
-          const val = form.querySelector('input[name="condition"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select your yard condition."); return false; }
-          quizData.condition = val.value;
+          quizData.condition = val.getAttribute('data-value');
         }
         if (stepIdx === 3) {
-          const val = form.querySelector('input[name="style"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select your desired style."); return false; }
-          quizData.style = val.value;
+          quizData.style = val.getAttribute('data-value');
         }
         if (stepIdx === 4) {
-          const val = form.querySelector('input[name="maintenance"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select your maintenance preference."); return false; }
-          quizData.maintenance = val.value;
+          quizData.maintenance = val.getAttribute('data-value');
         }
         if (stepIdx === 5) {
-          const val = form.querySelector('input[name="water"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select your water conservation preference."); return false; }
-          quizData.water = val.value;
-        }
-        if (stepIdx === 7) {
-          const val = form.querySelector('input[name="timeline"]:checked');
-          if (!val) { showError("Please select a target timeline."); return false; }
-          quizData.timeline = val.value;
+          quizData.water = val.getAttribute('data-value');
         }
         if (stepIdx === 6) {
-          const val = form.querySelector('input[name="budget"]:checked');
+          const val = activeStep.querySelector('.option-card.selected');
           if (!val) { showError("Please select your budget range."); return false; }
-          quizData.budget = val.value;
+          quizData.budget = val.getAttribute('data-value');
+        }
+        if (stepIdx === 7) {
+          const val = activeStep.querySelector('.option-card.selected');
+          if (!val) { showError("Please select a target timeline."); return false; }
+          quizData.timeline = val.getAttribute('data-value');
         }
         return true;
       }
@@ -959,7 +967,7 @@
       // Rules-Based Recommendation Engine with rich, educational details
       function processQuizData() {
         // Collect multi-selects and texts
-        quizData.priorities = Array.from(form.querySelectorAll('input[name="priorities"]:checked')).map(cb => cb.value);
+        quizData.priorities = Array.from(steps[8].querySelectorAll('.option-card.selected')).map(card => card.getAttribute('data-value'));
         quizData.notes = document.getElementById('special-notes').value.trim();
         quizData.photos = uploadedPhotos;
 
