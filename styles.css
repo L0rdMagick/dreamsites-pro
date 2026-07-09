@@ -1003,8 +1003,9 @@
 .mobile-dropdown-trigger {
   background: none;
   border: none;
-  font-family: var(--serif);
-  font-size: 44px;
+  font-family: var(--serif) !important;
+  font-size: 44px !important;
+  font-weight: 400 !important; /* Force normal weight to match other links */
   color: var(--ink);
   cursor: pointer;
   display: inline-flex;
@@ -1029,17 +1030,22 @@
 .mobile-dropdown-menu {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s, visibility 0.25s;
   overflow: hidden;
   width: 80%;
   max-width: 320px;
   background: rgba(23, 32, 28, 0.04);
   border-radius: 14px;
-  margin: 8px auto 0;
+  margin: 0 auto; /* Remove margin when closed */
+  opacity: 0;
+  visibility: hidden;
 }
 
 .mobile-dropdown.open .mobile-dropdown-menu {
   grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  margin-top: 8px; /* Apply margin only when open */
 }
 
 .mobile-dropdown-menu-inner {
@@ -1771,6 +1777,6 @@
     width: 90%;
   }
   .mobile-dropdown-trigger {
-    font-size: 34px;
+    font-size: 34px !important;
   }
 }
