@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Portal & Spec Generator | DreamSites.pro</title>
+  <meta name="description" content="Interactive client portal and project spec questionnaire for DreamSites.pro clients and developers.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Portal Navigation Header -->
+  <header class="portal-header">
+    <a href="index.html" class="portal-brand">
+      <i>D</i> dreamsites<span>.pro</span>
+    </a>
+    <div class="portal-nav-right">
+      <div id="userBadge" class="user-badge" style="display:none;">
+        Logged in as: <strong id="userEmailLabel">client@example.com</strong>
+      </div>
+      <button id="logoutBtn" class="btn-portal-outline" style="display:none;">Sign Out</button>
+      <a href="index.html" class="btn-portal-outline">← Back to Main Site</a>
+    </div>
+  </header>
+
+  <main class="portal-container">
+
+    <!-- Designer Admin Toggle Banner (Shown for designer accounts or testing) -->
+    <div id="designerBanner" class="designer-banner" style="display:none;">
+      <div>
+        <strong>✦ Designer / Developer Mode Enabled</strong>
+        <span style="display:block; font-size:0.8rem; color:var(--text-muted);">
+          You can set line-item pricing, add scope notes, post follow-ups, and sign off on specs.
+        </span>
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+        <input type="checkbox" id="designerToggle" checked> Active
+      </label>
+    </div>
+
+    <!-- 1. Authentication View (Sign In / Password Protected Account Registration) -->
+    <section id="authSection" class="auth-box">
+      <h2>Project <em>Portal</em></h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">
+        Sign in or create an account to submit your website preferences, review line-item pricing, and collaborate on your Job Sheet.
+      </p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-mode="signin">Sign In</button>
+        <button class="auth-tab" data-mode="signup">Create Account</button>
+      </div>
+
+      <div id="authErrorMsg" class="alert-msg error" style="display:none;"></div>
+
+      <form id="authForm">
+        <input type="hidden" id="authMode" value="signin">
+
+        <div id="profileFieldsGroup" style="display:none;">
+          <div class="form-group">
+            <label for="fullNameInput">Your Full Name</label>
+            <input type="text" id="fullNameInput" class="form-control" placeholder="e.g. Jane Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="companyNameInput">Business / Project Name</label>
+            <input type="text" id="companyNameInput" class="form-control" placeholder="e.g. Acme Landscaping">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="emailInput">Email Address</label>
+          <input type="email" id="emailInput" class="form-control" placeholder="you@company.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <input type="password" id="passwordInput" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="authSubmitBtn" class="btn-portal" style="width: 100%; justify-content: center; padding: 12px;">
+          Sign In
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. Main Client & Designer Dashboard (Shown once logged in) -->
+    <section id="portalDashboard" style="display:none;">
+
+      <!-- Dashboard Navigation Tabs -->
+      <nav class="portal-tabs">
+        <button class="tab-btn active" data-tab="questionnaire">
+          <span>1. Website Preferences Questionnaire</span>
+        </button>
+        <button class="tab-btn" data-tab="specs">
+          <span>2. Spec Review, Q&A & Pricing Quote</span>
+        </button>
+        <button class="tab-btn" data-tab="jobplan">
+          <span>3. Final Agreed Job Sheet</span>
+        </button>
+      </nav>
+
+      <!-- TAB 1: Questionnaire Form -->
+      <div id="tabQuestionnaire" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <h3>Website & App Preferences Form</h3>
+            <p class="question-desc" style="margin-bottom:0;">
+              Answer these questions to help us understand your vision. Each response generates a spec item with a tag for line-item quote building.
+            </p>
+          </div>
+        </div>
+
+        <div id="questionnaireStatusMsg"></div>
+
+        <form id="questionnaireForm">
+          <div id="questionnaireFields">
+            <!-- Dynamic fields rendered by portal.js -->
+          </div>
+          <button type="submit" class="btn-portal" style="padding: 12px 28px; font-size: 1rem;">
+            Save Preferences & Generate Spec Sheet ↗
+          </button>
+        </form>
+      </div>
+
+      <!-- TAB 2: Interactive Spec Review, Q&A & Pricing Quote -->
+      <div id="tabSpecs" style="display:none;">
+
+        <!-- Total Quote Banner -->
+        <div class="quote-summary-box">
+          <div>
+            <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Estimated Overall Project Quote</span>
+            <div id="totalQuoteVal" class="quote-total-val">$0.00</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-top:4px;">
+              Calculated from agreed line-item specs below.
+            </p>
+          </div>
+          <button class="btn-portal" onclick="showTabSection('jobplan')" style="padding: 12px 24px;">
+            View Final Job Sheet ↗
+          </button>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-card-header">
+            <div>
+              <h3>Interactive Spec Review & Line Pricing</h3>
+              <p class="question-desc" style="margin-bottom:0;">
+                Review each answered specification, discuss follow-up questions in the thread, and agree upon specs to finalize your project quote.
+              </p>
+            </div>
+          </div>
+
+          <div id="specsReviewList">
+            <!-- Spec Items with Tags, Prices, Q&A Threads rendered by portal.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Agreed Job Sheet / Job Plan -->
+      <div id="tabJobPlan" style="display:none;" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <h3>Final Agreed Job Plan</h3>
+            <p class="question-desc" style="margin-bottom:0;">
+              This sheet synthesizes all agreed specifications and pricing. Both parties can add clarification notes directly below.
+            </p>
+          </div>
+        </div>
+
+        <div id="jobPlanContainer">
+          <!-- Job Sheet rendered by portal.js -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="portal.js"></script>
+</body>
+</html>

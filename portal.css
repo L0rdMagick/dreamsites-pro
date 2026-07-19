@@ -1,0 +1,485 @@
+/* DreamSites.pro - Client & Designer Portal Styles */
+:root {
+  --bg-dark: #0f1412;
+  --card-bg: #161e1a;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --coral-accent: #ff6b52;
+  --coral-hover: #e0553c;
+  --green-accent: #2eaf7d;
+  --text-main: #f4f1ea;
+  --text-muted: #9aa59e;
+  --input-bg: #0b0f0e;
+  --input-border: rgba(255, 255, 255, 0.12);
+  --tag-bg: rgba(255, 107, 82, 0.12);
+  --tag-border: rgba(255, 107, 82, 0.3);
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Header & Nav */
+.portal-header {
+  border-bottom: 1px solid var(--card-border);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(15, 20, 18, 0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.portal-brand {
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portal-brand i {
+  font-style: normal;
+  color: var(--coral-accent);
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+}
+
+.portal-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.user-badge strong {
+  color: var(--text-main);
+}
+
+.btn-portal {
+  background: var(--coral-accent);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-portal:hover {
+  background: var(--coral-hover);
+  transform: translateY(-1px);
+}
+
+.btn-portal-outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-portal-outline:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Container */
+.portal-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* Auth Card */
+.auth-box {
+  max-width: 440px;
+  margin: 60px auto;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.auth-box h2 {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.auth-box h2 em {
+  color: var(--coral-accent);
+  font-style: italic;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 20px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.auth-tab {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+}
+
+.auth-tab.active {
+  color: var(--coral-accent);
+  border-bottom-color: var(--coral-accent);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--coral-accent);
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Tabs & Dashboard Navigation */
+.portal-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 12px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-color: var(--coral-accent);
+}
+
+/* Cards & Layout */
+.portal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.portal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 16px;
+}
+
+.portal-card-header h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Questionnaire Form */
+.question-block {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.spec-badge {
+  display: inline-block;
+  background: var(--tag-bg);
+  border: 1px solid var(--tag-border);
+  color: var(--coral-accent);
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.question-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.question-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* Spec Line Item List */
+.spec-item-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: border-color 0.2s ease;
+}
+
+.spec-item-card.agreed {
+  border-color: rgba(46, 175, 125, 0.4);
+  background: rgba(46, 175, 125, 0.03);
+}
+
+.spec-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.status-badge.agreed {
+  background: rgba(46, 175, 125, 0.15);
+  color: var(--green-accent);
+  border: 1px solid rgba(46, 175, 125, 0.3);
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+/* Interactive Q&A Messaging Thread */
+.qa-thread {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--card-border);
+}
+
+.qa-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 85%;
+  font-size: 0.9rem;
+}
+
+.message-bubble.client {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  align-self: flex-start;
+}
+
+.message-bubble.designer {
+  background: rgba(255, 107, 82, 0.12);
+  border: 1px solid rgba(255, 107, 82, 0.25);
+  margin-left: auto;
+}
+
+.msg-sender {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.msg-sender.designer-name {
+  color: var(--coral-accent);
+}
+
+.msg-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+  text-align: right;
+}
+
+.qa-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Pricing Summary Box */
+.quote-summary-box {
+  background: linear-gradient(135deg, rgba(255, 107, 82, 0.1), rgba(22, 30, 26, 0.8));
+  border: 1px solid rgba(255, 107, 82, 0.3);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.quote-total-val {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  color: var(--coral-accent);
+  line-height: 1;
+}
+
+/* Job Sheet / Plan Table */
+.job-sheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.job-sheet-table th,
+.job-sheet-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.job-sheet-table th {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.job-sheet-table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Designer Admin Controls */
+.designer-banner {
+  background: rgba(255, 107, 82, 0.15);
+  border: 1px solid var(--coral-accent);
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.alert-msg {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+.alert-msg.error {
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #ff8a80;
+}
+.alert-msg.success {
+  background: rgba(46, 175, 125, 0.15);
+  border: 1px solid rgba(46, 175, 125, 0.3);
+  color: var(--green-accent);
+}
