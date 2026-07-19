@@ -15,50 +15,73 @@ let currentProfile = null;
 let currentProject = null;
 let currentSpecs = [];
 let isDesignerMode = false;
+let adminAllClients = [];
 
-// Standard Questionnaire Schema mapped to Spec Tags
+// Admin Account Identifier
+const ADMIN_USERNAME = "daxiel777";
+const ADMIN_EMAIL = "daxiel777@dreamsites.pro";
+
+// Standardized 10 Web Design Questionnaire Items
 const DEFAULT_QUESTIONS = [
   {
-    key: 'design_style',
-    title: 'Visual Design & Brand Vibe',
-    tag: '#Design-Style',
-    desc: 'What visual aesthetic fits your business best? (e.g. Sleek Dark Mode, Warm Minimalist, Bold & Vibrant, Modern Corporate)'
+    key: 'business_identity',
+    title: '1. Business Identity & Core Offerings',
+    tag: '#Brand-Identity',
+    desc: 'What is your business name, industry, primary services/products offered, and brand tagline?'
   },
   {
     key: 'target_audience',
-    title: 'Target Audience & Primary Action',
+    title: '2. Target Audience & Primary Call-to-Action',
     tag: '#Audience-Conversion',
-    desc: 'Who are your main clients and what is the #1 goal when they visit? (e.g., Book appointments, Call immediately, Request a Quote)'
+    desc: 'Who is your ideal customer, and what is the #1 action they should take on your website? (e.g. Call immediately, Book online, Request a Quote)'
   },
   {
-    key: 'pages_needed',
-    title: 'Pages & Content Scope',
+    key: 'design_aesthetic',
+    title: '3. Design Aesthetic & Benchmark Websites',
+    tag: '#Design-Aesthetic',
+    desc: 'What visual style do you prefer (e.g., Sleek Dark Mode, Warm Minimalist, Bold & Vibrant, Clean Corporate)? Please share 2-3 links of websites you love.'
+  },
+  {
+    key: 'content_pages',
+    title: '4. Site Architecture & Key Pages',
     tag: '#Content-Pages',
-    desc: 'Which key pages or sections do you require? (e.g., Home, Services, Pricing, About Us, Gallery, FAQ, Contact)'
+    desc: 'Which pages/sections do you require? (e.g. Home, About Us, Services, Portfolio/Gallery, Pricing, FAQ, Contact, Blog)'
   },
   {
     key: 'e_commerce',
-    title: 'E-Commerce & Online Payments',
+    title: '5. E-Commerce & Online Payments',
     tag: '#E-Commerce',
-    desc: 'Do you need to sell products, digital downloads, or collect online deposits/payments?'
+    desc: 'Do you need to sell physical or digital products, accept online deposit payments, or send client invoices?'
   },
   {
-    key: 'user_auth',
-    title: 'User Accounts & Client Portal',
-    tag: '#User-Auth',
-    desc: 'Do your customers need to register, log in, view orders, or access restricted member content?'
+    key: 'user_portal',
+    title: '6. User Logins & Client Portals',
+    tag: '#User-Portal',
+    desc: 'Do your customers need account registration, order tracking, downloadable files, or member-only restricted pages?'
   },
   {
-    key: 'ai_tools',
-    title: 'AI Chat, Scheduling & Smart Tools',
+    key: 'ai_automation',
+    title: '7. Smart AI Tools & Online Booking',
     tag: '#AI-Automation',
-    desc: 'Would you like to integrate AI Customer Chat, automated online booking calendars, or AI lead catchers?'
+    desc: 'Would you like to integrate an AI Customer Chatbot, automated online calendar scheduling, or AI call routing?'
   },
   {
-    key: 'domain_hosting',
-    title: 'Domain & Hosting Preferences',
-    tag: '#Hosting-Domain',
-    desc: 'Do you already own a custom domain? Do you need custom email setup (e.g., info@yourdomain.com)?'
+    key: 'content_assets',
+    title: '8. Copywriting & Media Assets',
+    tag: '#Content-Assets',
+    desc: 'Do you already have your logo, high-res photos, videos, and written text ready, or will you need copywriting and media asset creation?'
+  },
+  {
+    key: 'seo_marketing',
+    title: '9. Local SEO & Marketing Integrations',
+    tag: '#SEO-Marketing',
+    desc: 'What main keywords or local areas do you want to rank for in search results? Do you need Google Analytics or social media links connected?'
+  },
+  {
+    key: 'timeline_budget',
+    title: '10. Target Deadline & Investment Budget',
+    tag: '#Timeline-Budget',
+    desc: 'What is your target launch deadline and preferred budget range for this website/app project?'
   }
 ];
 
@@ -108,19 +131,21 @@ function setupEventListeners() {
     questionnaireForm.addEventListener('submit', handleQuestionnaireSave);
   }
 
-  // Designer Mode Toggle
-  const designerToggle = document.getElementById('designerToggle');
-  if (designerToggle) {
-    designerToggle.addEventListener('change', (e) => {
-      isDesignerMode = e.target.checked;
-      renderSpecsReview();
+  // Admin Client Selector Dropdown
+  const adminClientSelect = document.getElementById('adminClientSelect');
+  if (adminClientSelect) {
+    adminClientSelect.addEventListener('change', async (e) => {
+      const selectedProjectId = e.target.value;
+      if (selectedProjectId) {
+        await loadProjectById(selectedProjectId);
+      }
     });
   }
 }
 
 async function checkSession() {
   if (!db) {
-    showAuthError("Supabase client is loading or missing script tag.");
+    showAuthError("Supabase client missing.");
     return;
   }
 
@@ -138,41 +163,49 @@ async function handleAuthSubmit(e) {
   clearAuthError();
 
   const mode = document.getElementById('authMode').value;
-  const email = document.getElementById('emailInput').value.trim();
+  let emailInputVal = document.getElementById('emailInput').value.trim();
   const password = document.getElementById('passwordInput').value;
   const fullName = document.getElementById('fullNameInput') ? document.getElementById('fullNameInput').value.trim() : '';
   const companyName = document.getElementById('companyNameInput') ? document.getElementById('companyNameInput').value.trim() : '';
 
-  if (!email || !password) {
-    showAuthError("Please enter email and password.");
+  if (!emailInputVal || !password) {
+    showAuthError("Please enter email/username and password.");
     return;
+  }
+
+  // Format email if username 'Daxiel777' is entered
+  let formattedEmail = emailInputVal.toLowerCase();
+  if (formattedEmail === ADMIN_USERNAME) {
+    formattedEmail = ADMIN_EMAIL;
+  } else if (!formattedEmail.includes('@')) {
+    formattedEmail = `${formattedEmail}@dreamsites.pro`;
   }
 
   try {
     if (mode === 'signup') {
-      const { data, error } = await db.auth.signUp({ email, password });
+      const isAdminReg = formattedEmail === ADMIN_EMAIL;
+      const { data, error } = await db.auth.signUp({ email: formattedEmail, password });
       if (error) throw error;
-      
+
       if (data.user) {
-        // Create Profile in ds_profiles
         await db.from('ds_profiles').insert([{
           id: data.user.id,
-          email: email,
-          full_name: fullName || 'Client',
-          company_name: companyName || '',
-          role: 'client'
+          email: formattedEmail,
+          full_name: isAdminReg ? 'Designer / Admin' : (fullName || 'Client'),
+          company_name: isAdminReg ? 'DreamSites.pro' : (companyName || ''),
+          role: isAdminReg ? 'designer' : 'client'
         }]);
         currentUser = data.user;
         await loadUserProfile();
       }
     } else {
-      const { data, error } = await db.auth.signInWithPassword({ email, password });
+      const { data, error } = await db.auth.signInWithPassword({ email: formattedEmail, password });
       if (error) throw error;
       currentUser = data.user;
       await loadUserProfile();
     }
   } catch (err) {
-    showAuthError(err.message || "Authentication failed.");
+    showAuthError(err.message || "Authentication failed. Check your login details.");
   }
 }
 
@@ -184,27 +217,78 @@ async function loadUserProfile() {
       .eq('id', currentUser.id)
       .single();
 
+    const isAdminUser = (currentUser.email.toLowerCase() === ADMIN_EMAIL) || (profile && profile.role === 'designer');
+
     if (profile) {
       currentProfile = profile;
+      if (isAdminUser && currentProfile.role !== 'designer') {
+        currentProfile.role = 'designer';
+        await db.from('ds_profiles').update({ role: 'designer' }).eq('id', currentUser.id);
+      }
     } else {
-      // Fallback default profile if missing
-      currentProfile = { id: currentUser.id, email: currentUser.email, role: 'client', full_name: 'Client' };
+      currentProfile = { 
+        id: currentUser.id, 
+        email: currentUser.email, 
+        role: isAdminUser ? 'designer' : 'client', 
+        full_name: isAdminUser ? 'Designer / Admin' : 'Client' 
+      };
     }
 
     // Set UI Header Info
-    document.getElementById('userEmailLabel').textContent = currentProfile.full_name || currentUser.email;
+    document.getElementById('userEmailLabel').textContent = `${currentProfile.full_name || currentUser.email} (${currentProfile.role.toUpperCase()})`;
+    document.getElementById('userBadge').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
     document.getElementById('authSection').style.display = 'none';
     document.getElementById('portalDashboard').style.display = 'block';
 
-    // Check if user is Designer
+    // Admin Access Configuration
     if (currentProfile.role === 'designer') {
-      document.getElementById('designerBanner').style.display = 'flex';
       isDesignerMode = true;
+      document.getElementById('adminSelectorBar').style.display = 'flex';
+      await loadAdminClientList();
+    } else {
+      isDesignerMode = false;
+      document.getElementById('adminSelectorBar').style.display = 'none';
+      await loadUserProject();
     }
-
-    await loadUserProject();
   } catch (err) {
     console.error("Error loading user profile:", err);
+  }
+}
+
+async function loadAdminClientList() {
+  try {
+    const { data: projects, error } = await db
+      .from('ds_projects')
+      .select('*, ds_profiles(full_name, company_name, email)');
+
+    adminAllClients = projects || [];
+    const selectEl = document.getElementById('adminClientSelect');
+
+    if (!adminAllClients || adminAllClients.length === 0) {
+      selectEl.innerHTML = '<option value="">No client projects submitted yet</option>';
+      return;
+    }
+
+    selectEl.innerHTML = adminAllClients.map(p => {
+      const clientName = p.ds_profiles ? (p.ds_profiles.company_name || p.ds_profiles.full_name || p.ds_profiles.email) : 'Client Project';
+      return `<option value="${p.id}">${clientName} — ${p.project_name} ($${parseFloat(p.total_quote || 0).toFixed(2)})</option>`;
+    }).join('');
+
+    // Load first client project by default for admin
+    if (adminAllClients.length > 0) {
+      await loadProjectById(adminAllClients[0].id);
+    }
+  } catch (err) {
+    console.error("Error loading admin client list:", err);
+  }
+}
+
+async function loadProjectById(projectId) {
+  const { data: proj } = await db.from('ds_projects').select('*').eq('id', projectId).single();
+  if (proj) {
+    currentProject = proj;
+    await loadProjectSpecs();
   }
 }
 
@@ -216,7 +300,6 @@ async function loadUserProject() {
       .eq('client_id', currentUser.id);
 
     if (!projects || projects.length === 0) {
-      // Auto-create initial project for client
       const { data: newProj } = await db
         .from('ds_projects')
         .insert([{
@@ -266,7 +349,7 @@ function renderQuestionnaireForm() {
           <span class="spec-badge">${q.tag}</span>
         </div>
         <p class="question-desc">${q.desc}</p>
-        <textarea class="form-control" name="${q.key}" placeholder="Describe your preferences here...">${val}</textarea>
+        <textarea class="form-control" name="${q.key}" placeholder="Answer here..." ${isDesignerMode ? 'readonly' : ''}>${val}</textarea>
       </div>
     `;
   }).join('');
@@ -274,6 +357,11 @@ function renderQuestionnaireForm() {
 
 async function handleQuestionnaireSave(e) {
   e.preventDefault();
+  if (isDesignerMode) {
+    alert("Admin view is read-only for questionnaire submission. Switch client or edit pricing in Tab 2.");
+    return;
+  }
+
   const formData = new FormData(e.target);
   const statusMsg = document.getElementById('questionnaireStatusMsg');
   statusMsg.innerHTML = '<span style="color: var(--text-muted);">Saving your responses...</span>';
@@ -348,17 +436,17 @@ async function renderSpecsReview() {
         </div>
 
         <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px; margin-bottom: 14px;">
-          <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Client Response:</small>
+          <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Client Answer:</small>
           <p style="margin-top:4px;">${spec.client_answer || '<i>No answer provided yet.</i>'}</p>
         </div>
 
         ${isDesignerMode ? `
           <div style="background: rgba(255,107,82,0.06); border: 1px solid rgba(255,107,82,0.2); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
-            <h5 style="color:var(--coral-accent); margin-bottom: 10px; font-size:0.88rem;">DESIGNER CONTROLS:</h5>
+            <h5 style="color:var(--coral-accent); margin-bottom: 10px; font-size:0.88rem;">✦ DESIGNER CONTROLS:</h5>
             <div style="display:grid; grid-template-columns: 1fr 140px; gap:12px; margin-bottom:10px;">
               <div>
                 <label style="font-size:0.75rem; color:var(--text-muted);">Scope Notes / What this entails:</label>
-                <input type="text" class="form-control" id="scopeNote_${spec.id}" value="${spec.designer_scope_notes || ''}" placeholder="e.g. Includes custom database schema, 3 API endpoints, full UI testing.">
+                <input type="text" class="form-control" id="scopeNote_${spec.id}" value="${spec.designer_scope_notes || ''}" placeholder="e.g. Custom database schema, 3 API endpoints, full UI testing.">
               </div>
               <div>
                 <label style="font-size:0.75rem; color:var(--text-muted);">Line Cost ($):</label>
@@ -414,7 +502,6 @@ async function renderSpecsReview() {
   container.innerHTML = html;
   document.getElementById('totalQuoteVal').textContent = `$${totalQuote.toFixed(2)}`;
 
-  // Update total quote in ds_projects DB
   if (currentProject) {
     await db.from('ds_projects').update({ total_quote: totalQuote }).eq('id', currentProject.id);
   }
@@ -483,7 +570,6 @@ async function renderJobPlan() {
 
   let total = agreedSpecs.reduce((acc, s) => acc + parseFloat(s.line_item_cost || 0), 0);
 
-  // Fetch or sync Job Plan record
   let { data: plans } = await db
     .from('ds_job_plans')
     .select('*')
@@ -501,7 +587,6 @@ async function renderJobPlan() {
     planObj = plans[0];
   }
 
-  // Fetch post-agreement notes
   const { data: notes } = await db
     .from('ds_job_plan_notes')
     .select('*')
@@ -514,7 +599,6 @@ async function renderJobPlan() {
         <div>
           <span class="status-badge agreed">✓ OFFICIAL AGREED JOB PLAN</span>
           <h2 style="font-family:var(--font-serif); font-size:2rem; margin-top:6px;">${currentProject.project_name}</h2>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Client: ${currentProfile.full_name || currentProfile.email} (${currentProfile.company_name || 'N/A'})</p>
         </div>
         <div style="text-align:right;">
           <small style="color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Agreed Price Quote</small>

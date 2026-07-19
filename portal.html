@@ -21,7 +21,7 @@
     </a>
     <div class="portal-nav-right">
       <div id="userBadge" class="user-badge" style="display:none;">
-        Logged in as: <strong id="userEmailLabel">client@example.com</strong>
+        <span id="userEmailLabel">client@example.com</span>
       </div>
       <button id="logoutBtn" class="btn-portal-outline" style="display:none;">Sign Out</button>
       <a href="index.html" class="btn-portal-outline">← Back to Main Site</a>
@@ -30,24 +30,26 @@
 
   <main class="portal-container">
 
-    <!-- Designer Admin Toggle Banner (Shown for designer accounts or testing) -->
-    <div id="designerBanner" class="designer-banner" style="display:none;">
+    <!-- Admin Client Selector Bar (Automatically shown when logging in with Admin credentials) -->
+    <div id="adminSelectorBar" class="designer-banner" style="display:none;">
       <div>
-        <strong>✦ Designer / Developer Mode Enabled</strong>
-        <span style="display:block; font-size:0.8rem; color:var(--text-muted);">
-          You can set line-item pricing, add scope notes, post follow-ups, and sign off on specs.
-        </span>
+        <strong>✦ ADMIN DASHBOARD — Select Client Project to Review & Edit:</strong>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-top:2px;">
+          Choose any client from the list below to inspect their questionnaire responses, edit line-item costs, write scope notes, post follow-up questions, and sign off on specs.
+        </p>
       </div>
-      <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-        <input type="checkbox" id="designerToggle" checked> Active
-      </label>
+      <div style="min-width:320px;">
+        <select id="adminClientSelect" class="form-control" style="background:var(--bg-dark); color:var(--coral-accent); font-weight:700;">
+          <option value="">Loading client projects...</option>
+        </select>
+      </div>
     </div>
 
-    <!-- 1. Authentication View (Sign In / Password Protected Account Registration) -->
+    <!-- 1. Single Unified Authentication View (Sign In / Register) -->
     <section id="authSection" class="auth-box">
       <h2>Project <em>Portal</em></h2>
       <p style="color: var(--text-muted); font-size: 0.9rem;">
-        Sign in or create an account to submit your website preferences, review line-item pricing, and collaborate on your Job Sheet.
+        Sign in to submit your website preferences, review line-item pricing, and collaborate on your Job Sheet.
       </p>
 
       <div class="auth-tabs">
@@ -73,8 +75,8 @@
         </div>
 
         <div class="form-group">
-          <label for="emailInput">Email Address</label>
-          <input type="email" id="emailInput" class="form-control" placeholder="you@company.com" required>
+          <label for="emailInput">Username or Email Address</label>
+          <input type="text" id="emailInput" class="form-control" placeholder="Username or email" required>
         </div>
 
         <div class="form-group">
@@ -88,7 +90,7 @@
       </form>
     </section>
 
-    <!-- 2. Main Client & Designer Dashboard (Shown once logged in) -->
+    <!-- 2. Main Dashboard (Shown once signed in) -->
     <section id="portalDashboard" style="display:none;">
 
       <!-- Dashboard Navigation Tabs -->
@@ -108,9 +110,9 @@
       <div id="tabQuestionnaire" class="portal-card">
         <div class="portal-card-header">
           <div>
-            <h3>Website & App Preferences Form</h3>
+            <h3>Standardized Web Design & App Questionnaire</h3>
             <p class="question-desc" style="margin-bottom:0;">
-              Answer these questions to help us understand your vision. Each response generates a spec item with a tag for line-item quote building.
+              Answer these questions to help us understand your project vision. Each response generates a spec line item for quote building.
             </p>
           </div>
         </div>
