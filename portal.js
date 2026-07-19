@@ -16,6 +16,7 @@ let currentProject = null;
 let currentSpecs = [];
 let isDesignerMode = false;
 let adminAllClients = [];
+let openSpecIds = new Set(); // Accordion open state tracker
 
 // Admin Account Identifier
 const ADMIN_USERNAME = "daxiel777";
@@ -301,7 +302,6 @@ async function loadAdminClientList() {
       return `<option value="${p.id}">${clientName} — ${p.project_name} ($${parseFloat(p.total_quote || 0).toFixed(2)})</option>`;
     }).join('');
 
-    // Load first client project by default for admin
     if (adminAllClients.length > 0) {
       await loadProjectById(adminAllClients[0].id);
     }
@@ -355,6 +355,14 @@ async function loadProjectSpecs() {
     .eq('project_id', currentProject.id);
 
   currentSpecs = specs || [];
+
+  // STABLE SORT: Order specs strictly matching DEFAULT_QUESTIONS 1-10 sequence
+  currentSpecs.sort((a, b) => {
+    const idxA = DEFAULT_QUESTIONS.findIndex(q => q.key === a.question_key);
+    const idxB = DEFAULT_QUESTIONS.findIndex(q => q.key === b.question_key);
+    return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+  });
+
   renderQuestionnaireForm();
   renderSpecsReview();
   renderJobPlan();
@@ -439,7 +447,8 @@ async function renderSpecsReview() {
     totalQuote += cost;
     const isAgreed = spec.client_agreed && spec.designer_agreed;
     const statusClass = isAgreed ? 'agreed' : 'pending';
-    const statusText = isAgreed ? '✓ Agreed & Signed Off' : (spec.client_agreed || spec.designer_agreed ? 'Pending Dual Approval' : 'Under Review');
+    const statusText = isAgreed ? '✓ Agreed' : (spec.client_agreed || spec.designer_agreed ? 'Pending Sign-off' : 'Under Review');
+    const isOpen = openSpecIds.has(spec.id);
 
     // Fetch messages for this spec
     const { data: msgs } = await db
@@ -449,77 +458,85 @@ async function renderSpecsReview() {
       .order('created_at', { ascending: true });
 
     html += `
-      <div class="spec-item-card ${statusClass}">
-        <div class="spec-meta-row">
-          <div>
+      <div class="spec-item-card ${statusClass} ${isOpen ? 'open' : ''}" id="specCard_${spec.id}">
+        <!-- Collapsible Header -->
+        <div class="spec-item-header" onclick="toggleSpecAccordion('${spec.id}')">
+          <div class="spec-header-left">
+            <span class="spec-accordion-chevron">▼</span>
             <span class="spec-badge">${spec.spec_tag}</span>
-            <h4 style="margin-top:6px; font-size:1.1rem;">${spec.question_text}</h4>
+            <h4 style="margin:0; font-size:1rem; font-weight:600;">${spec.question_text}</h4>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
             <span class="status-badge ${statusClass}">${statusText}</span>
-            <b style="font-size:1.3rem; color:var(--coral-accent);">$${cost.toFixed(2)}</b>
+            <b style="font-size:1.15rem; color:var(--coral-accent);">$${cost.toFixed(2)}</b>
           </div>
         </div>
 
-        <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px; margin-bottom: 14px;">
-          <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Client Answer:</small>
-          <p style="margin-top:4px;">${spec.client_answer || '<i>No answer provided yet.</i>'}</p>
-        </div>
+        <!-- Collapsible Body -->
+        <div class="spec-body">
+          <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px; margin-bottom: 14px;">
+            <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Client Answer:</small>
+            <p style="margin-top:4px;">${spec.client_answer || '<i>No answer provided yet.</i>'}</p>
+          </div>
 
-        ${isDesignerMode ? `
-          <div style="background: rgba(255,107,82,0.06); border: 1px solid rgba(255,107,82,0.2); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
-            <h5 style="color:var(--coral-accent); margin-bottom: 10px; font-size:0.88rem;">✦ DESIGNER CONTROLS:</h5>
-            <div style="display:grid; grid-template-columns: 1fr 140px; gap:12px; margin-bottom:10px;">
-              <div>
-                <label style="font-size:0.75rem; color:var(--text-muted);">Scope Notes / What this entails:</label>
-                <input type="text" class="form-control" id="scopeNote_${spec.id}" value="${spec.designer_scope_notes || ''}" placeholder="e.g. Custom database schema, 3 API endpoints, full UI testing.">
+          ${isDesignerMode ? `
+            <div style="background: rgba(255,107,82,0.06); border: 1px solid rgba(255,107,82,0.2); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+              <div style="display:flex; align-items:center; justify-space-between; margin-bottom: 10px;">
+                <h5 style="color:var(--coral-accent); font-size:0.88rem; margin:0;">✦ DESIGNER PRICING & SCOPE:</h5>
+                <span id="saveFeedback_${spec.id}"></span>
               </div>
-              <div>
-                <label style="font-size:0.75rem; color:var(--text-muted);">Line Cost ($):</label>
-                <input type="number" step="10" class="form-control" id="cost_${spec.id}" value="${cost.toFixed(2)}">
+              <div style="display:grid; grid-template-columns: 1fr 140px; gap:12px; margin-bottom:10px;">
+                <div>
+                  <label style="font-size:0.75rem; color:var(--text-muted);">Scope Notes / What this entails:</label>
+                  <input type="text" class="form-control" id="scopeNote_${spec.id}" value="${spec.designer_scope_notes || ''}" placeholder="e.g. Custom schema, 3 API endpoints, UI design.">
+                </div>
+                <div>
+                  <label style="font-size:0.75rem; color:var(--text-muted);">Line Cost ($):</label>
+                  <input type="number" step="10" class="form-control" id="cost_${spec.id}" value="${cost.toFixed(2)}">
+                </div>
               </div>
+              <button class="btn-portal" onclick="saveDesignerSpecUpdate('${spec.id}')">Save Price & Scope Notes</button>
             </div>
-            <button class="btn-portal" onclick="saveDesignerSpecUpdate('${spec.id}')">Save Price & Scope Notes</button>
-          </div>
-        ` : `
-          ${spec.designer_scope_notes ? `
-            <div style="background: rgba(255,107,82,0.05); border-left: 3px solid var(--coral-accent); padding: 12px; border-radius: 4px; margin-bottom: 14px;">
-              <small style="color:var(--coral-accent); font-weight:700;">Designer Scope Notes:</small>
-              <p style="margin-top:2px; font-size:0.9rem;">${spec.designer_scope_notes}</p>
-            </div>
-          ` : ''}
-        `}
-
-        <!-- Interactive Spec Q&A Thread -->
-        <div class="qa-thread">
-          <div class="qa-title">💬 Interactive Discussion & Clarifications:</div>
-          <div id="msgContainer_${spec.id}">
-            ${(msgs && msgs.length > 0) ? msgs.map(m => `
-              <div class="message-bubble ${m.sender_role}">
-                <span class="msg-sender ${m.sender_role === 'designer' ? 'designer-name' : ''}">
-                  ${m.sender_role === 'designer' ? '✦ Designer/Developer' : '👤 Client'}
-                </span>
-                <div>${m.message_text}</div>
-                <span class="msg-time">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+          ` : `
+            ${spec.designer_scope_notes ? `
+              <div style="background: rgba(255,107,82,0.05); border-left: 3px solid var(--coral-accent); padding: 12px; border-radius: 4px; margin-bottom: 14px;">
+                <small style="color:var(--coral-accent); font-weight:700;">Designer Scope Notes:</small>
+                <p style="margin-top:2px; font-size:0.9rem;">${spec.designer_scope_notes}</p>
               </div>
-            `).join('') : '<p style="font-size:0.85rem; color:var(--text-muted);">No notes or follow-up questions posted yet.</p>'}
+            ` : ''}
+          `}
+
+          <!-- Interactive Spec Q&A Thread -->
+          <div class="qa-thread">
+            <div class="qa-title">💬 Interactive Discussion & Clarifications:</div>
+            <div id="msgContainer_${spec.id}">
+              ${(msgs && msgs.length > 0) ? msgs.map(m => `
+                <div class="message-bubble ${m.sender_role}">
+                  <span class="msg-sender ${m.sender_role === 'designer' ? 'designer-name' : ''}">
+                    ${m.sender_role === 'designer' ? '✦ Designer/Developer' : '👤 Client'}
+                  </span>
+                  <div>${m.message_text}</div>
+                  <span class="msg-time">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+              `).join('') : '<p style="font-size:0.85rem; color:var(--text-muted);">No notes or follow-up questions posted yet.</p>'}
+            </div>
+
+            <div class="qa-input-row">
+              <input type="text" class="form-control" id="msgInput_${spec.id}" placeholder="Ask a question or post a note on this spec...">
+              <button class="btn-portal" onclick="sendSpecMessage('${spec.id}')">Send</button>
+            </div>
           </div>
 
-          <div class="qa-input-row">
-            <input type="text" class="form-control" id="msgInput_${spec.id}" placeholder="Ask a question or post a note on this spec...">
-            <button class="btn-portal" onclick="sendSpecMessage('${spec.id}')">Send</button>
+          <!-- Spec Agreement Button -->
+          <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--card-border); padding-top:14px;">
+            <span style="font-size:0.85rem; color:var(--text-muted);">
+              Client Sign-off: <strong>${spec.client_agreed ? '✓ Yes' : 'Pending'}</strong> | 
+              Designer Sign-off: <strong>${spec.designer_agreed ? '✓ Yes' : 'Pending'}</strong>
+            </span>
+            <button class="btn-portal-outline" onclick="toggleSpecSignOff('${spec.id}', ${isDesignerMode ? "'designer'" : "'client'"})">
+              ${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? '✓ Spec Agreed' : 'Agree to Spec'}
+            </button>
           </div>
-        </div>
-
-        <!-- Spec Agreement Button -->
-        <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--card-border); padding-top:14px;">
-          <span style="font-size:0.85rem; color:var(--text-muted);">
-            Client Sign-off: <strong>${spec.client_agreed ? '✓ Yes' : 'Pending'}</strong> | 
-            Designer Sign-off: <strong>${spec.designer_agreed ? '✓ Yes' : 'Pending'}</strong>
-          </span>
-          <button class="btn-portal-outline" onclick="toggleSpecSignOff('${spec.id}', ${isDesignerMode ? "'designer'" : "'client'"})">
-            ${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? '✓ Spec Agreed' : 'Agree to Spec'}
-          </button>
         </div>
       </div>
     `;
@@ -533,17 +550,53 @@ async function renderSpecsReview() {
   }
 }
 
+window.toggleSpecAccordion = function(specId) {
+  const card = document.getElementById(`specCard_${specId}`);
+  if (!card) return;
+
+  if (openSpecIds.has(specId)) {
+    openSpecIds.delete(specId);
+    card.classList.remove('open');
+  } else {
+    openSpecIds.add(specId);
+    card.classList.add('open');
+  }
+};
+
 window.saveDesignerSpecUpdate = async function(specId) {
-  const scopeNotes = document.getElementById(`scopeNote_${specId}`).value;
-  const cost = parseFloat(document.getElementById(`cost_${specId}`).value || 0);
+  const scopeNotesEl = document.getElementById(`scopeNote_${specId}`);
+  const costEl = document.getElementById(`cost_${specId}`);
+  const feedbackEl = document.getElementById(`saveFeedback_${specId}`);
 
-  await db.from('ds_questionnaire_specs').update({
-    designer_scope_notes: scopeNotes,
-    line_item_cost: cost,
-    updated_at: new Date()
-  }).eq('id', specId);
+  if (!scopeNotesEl || !costEl) return;
 
-  await loadProjectSpecs();
+  const scopeNotes = scopeNotesEl.value;
+  const cost = parseFloat(costEl.value || 0);
+
+  try {
+    if (feedbackEl) feedbackEl.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">Saving...</span>';
+
+    const { error } = await db.from('ds_questionnaire_specs').update({
+      designer_scope_notes: scopeNotes,
+      line_item_cost: cost,
+      updated_at: new Date()
+    }).eq('id', specId);
+
+    if (error) throw error;
+
+    // Ensure card stays open after saving
+    openSpecIds.add(specId);
+
+    if (feedbackEl) {
+      feedbackEl.innerHTML = `<span style="color:var(--green-accent); font-size:0.85rem; font-weight:700;">✓ Saved $${cost.toFixed(2)}!</span>`;
+      setTimeout(() => { feedbackEl.innerHTML = ''; }, 3000);
+    }
+
+    await loadProjectSpecs();
+  } catch (err) {
+    console.error("Error updating spec:", err);
+    if (feedbackEl) feedbackEl.innerHTML = `<span style="color:#ff8a80; font-size:0.85rem;">Error: ${err.message}</span>`;
+  }
 };
 
 window.sendSpecMessage = async function(specId) {
@@ -560,6 +613,7 @@ window.sendSpecMessage = async function(specId) {
     message_text: text
   }]);
 
+  openSpecIds.add(specId);
   input.value = '';
   await renderSpecsReview();
 };
@@ -572,6 +626,7 @@ window.toggleSpecSignOff = async function(specId, role) {
     ? { designer_agreed: !spec.designer_agreed }
     : { client_agreed: !spec.client_agreed };
 
+  openSpecIds.add(specId);
   await db.from('ds_questionnaire_specs').update(updateObj).eq('id', specId);
   await loadProjectSpecs();
 };
