@@ -199,7 +199,25 @@ async function handleAuthSubmit(e) {
         await loadUserProfile();
       }
     } else {
-      const { data, error } = await db.auth.signInWithPassword({ email: formattedEmail, password });
+      let { data, error } = await db.auth.signInWithPassword({ email: formattedEmail, password });
+      
+      // Auto-provision Daxiel777 Admin account in Supabase if it doesn't exist yet
+      if (error && formattedEmail === ADMIN_EMAIL) {
+        const signUpRes = await db.auth.signUp({ email: formattedEmail, password });
+        if (signUpRes.data && signUpRes.data.user) {
+          await db.from('ds_profiles').upsert([{
+            id: signUpRes.data.user.id,
+            email: formattedEmail,
+            full_name: 'Designer / Admin',
+            company_name: 'DreamSites.pro',
+            role: 'designer'
+          }]);
+          currentUser = signUpRes.data.user;
+          await loadUserProfile();
+          return;
+        }
+      }
+
       if (error) throw error;
       currentUser = data.user;
       await loadUserProfile();
