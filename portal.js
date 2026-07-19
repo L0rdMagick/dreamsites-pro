@@ -184,7 +184,11 @@ async function handleAuthSubmit(e) {
   try {
     if (mode === 'signup') {
       const isAdminReg = formattedEmail === ADMIN_EMAIL;
-      const { data, error } = await db.auth.signUp({ email: formattedEmail, password });
+      const { data, error } = await db.auth.signUp({ 
+        email: formattedEmail, 
+        password: password,
+        options: { emailRedirectTo: 'https://dreamsites.pro/portal.html' }
+      });
       if (error) throw error;
 
       if (data.user) {
@@ -203,7 +207,11 @@ async function handleAuthSubmit(e) {
       
       // Auto-provision Daxiel777 Admin account in Supabase if it doesn't exist yet
       if (error && formattedEmail === ADMIN_EMAIL) {
-        const signUpRes = await db.auth.signUp({ email: formattedEmail, password });
+        const signUpRes = await db.auth.signUp({ 
+          email: formattedEmail, 
+          password: password,
+          options: { emailRedirectTo: 'https://dreamsites.pro/portal.html' }
+        });
         if (signUpRes.data && signUpRes.data.user) {
           await db.from('ds_profiles').upsert([{
             id: signUpRes.data.user.id,
