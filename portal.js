@@ -203,7 +203,14 @@ const APP_QUESTIONS = [
 
 function getQuestionsForProject(proj) {
   if (!proj) return WEBSITE_QUESTIONS;
-  const pType = (proj.project_type || '').toLowerCase();
+  let pType = (proj.project_type || '').toLowerCase();
+  if (!pType && proj.id) {
+    pType = (localStorage.getItem(`ds_proj_type_${proj.id}`) || '').toLowerCase();
+  }
+  if (!pType && currentSpecs && currentSpecs.length > 0) {
+    const isApp = currentSpecs.some(s => APP_QUESTIONS.some(aq => aq.key === s.question_key));
+    if (isApp) pType = 'application';
+  }
   if (pType === 'application' || pType === 'app') {
     return APP_QUESTIONS;
   }
@@ -615,25 +622,21 @@ async function handleCreateProjectSubmit(e) {
 
   try {
     let newProj = null;
-    try {
-      const { data, error } = await db
-        .from('ds_projects')
-        .insert([{
-          client_id: currentUser.id,
-          project_name: title,
-          project_type: projectType,
-          status: 'questionnaire_in_progress',
-          total_quote: 0
-        }])
-        .select()
-        .single();
-      if (!error && data) newProj = data;
-    } catch (dbErr) {
-      console.warn("Retrying project insert without project_type column:", dbErr.message);
-    }
+    const res = await db
+      .from('ds_projects')
+      .insert([{
+        client_id: currentUser.id,
+        project_name: title,
+        project_type: projectType,
+        status: 'questionnaire_in_progress',
+        total_quote: 0
+      }])
+      .select();
 
-    if (!newProj) {
-      const { data, error } = await db
+    if (res.data && res.data.length > 0) {
+      newProj = res.data[0];
+    } else {
+      const fallbackRes = await db
         .from('ds_projects')
         .insert([{
           client_id: currentUser.id,
@@ -641,13 +644,37 @@ async function handleCreateProjectSubmit(e) {
           status: 'questionnaire_in_progress',
           total_quote: 0
         }])
-        .select()
-        .single();
-      if (error) throw error;
-      newProj = data;
+        .select();
+
+      if (fallbackRes.data && fallbackRes.data.length > 0) {
+        newProj = fallbackRes.data[0];
+      } else if (fallbackRes.error) {
+        throw fallbackRes.error;
+      }
     }
 
-    if (newProj) newProj.project_type = projectType;
+    if (newProj) {
+      newProj.project_type = projectType;
+      localStorage.setItem(`ds_proj_type_${newProj.id}`, projectType);
+
+      const initialQuestions = projectType === 'application' ? APP_QUESTIONS : WEBSITE_QUESTIONS;
+      const firstQ = initialQuestions[0];
+      try {
+        await db.from('ds_questionnaire_specs').insert([{
+          project_id: newProj.id,
+          question_key: firstQ.key,
+          question_text: firstQ.title,
+          spec_tag: firstQ.tag,
+          client_answer: ''
+        }]);
+      } catch (specErr) {
+        console.warn("Could not seed first spec:", specErr.message);
+      }
+
+      if (userProjects) {
+        userProjects.unshift(newProj);
+      }
+    }
 
     toggleCreateProjectForm(false);
     showToastOverlay('✓ Project Created!');
@@ -668,8 +695,16 @@ async function openUserProject(projectId) {
     }
 
     if (proj) {
+      if (!proj.project_type) {
+        proj.project_type = localStorage.getItem(`ds_proj_type_${proj.id}`);
+      }
       currentProject = proj;
-      const isApp = (currentProject.project_type || '').toLowerCase() === 'application';
+      const questions = getQuestionsForProject(currentProject);
+      const isApp = (questions === APP_QUESTIONS);
+      if (!currentProject.project_type) {
+        currentProject.project_type = isApp ? 'application' : 'website';
+      }
+
       const titleEl = document.getElementById('activeProjectTitle');
       if (titleEl) {
         const typeBadge = isApp ? '📱 Application' : '🌐 Website';
@@ -1024,6 +1059,12 @@ async function renderQuestionnaireSpecs() {
   let html = '';
 
   const activeQuestions = getQuestionsForProject(currentProject);
+  const isApp = (activeQuestions === APP_QUESTIONS);
+  const qTitleEl = document.getElementById('questionnaireHeaderTitle');
+  if (qTitleEl) {
+    qTitleEl.innerHTML = isApp ? '📱 Application Specs & Architecture Questionnaire' : '🌐 Website Design Specs & Questionnaire';
+  }
+
   for (const q of activeQuestions) {
     const spec = currentSpecs.find(s => s.question_key === q.key);
     const specId = spec ? spec.id : null;
