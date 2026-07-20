@@ -23,7 +23,7 @@ let openSpecIds = new Set(); // Accordion open state tracker
 const ADMIN_USERNAME = "daxiel777";
 const ADMIN_EMAIL = "daxiel777@dreamsites.pro";
 
-// Standardized 10 Web Design Questionnaire Items
+// Standardized Web Design Questionnaire Items
 const DEFAULT_QUESTIONS = [
   {
     key: 'business_identity',
@@ -110,6 +110,106 @@ const DEFAULT_QUESTIONS = [
     desc: 'Does your website need to support multiple languages or adhere to formal accessibility standards (WCAG 2.1 / ADA compliance)?'
   }
 ];
+
+const WEBSITE_QUESTIONS = DEFAULT_QUESTIONS;
+
+// Standardized Application Development Questionnaire Items
+const APP_QUESTIONS = [
+  {
+    key: 'app_scope_type',
+    title: '1. Application Type & Scope',
+    tag: '#App-Scope',
+    desc: 'Is this a standalone web or mobile application, a SaaS product, or a custom application module/widget to be integrated into an existing website?'
+  },
+  {
+    key: 'core_purpose_features',
+    title: '2. Core Purpose & Key Features',
+    tag: '#Core-Features',
+    desc: 'What primary business problem does this application solve, and what are its 3 to 5 essential user features?'
+  },
+  {
+    key: 'target_users_roles',
+    title: '3. Target Users & Access Roles',
+    tag: '#User-Roles',
+    desc: 'Who will use the application (e.g. general public, paying clients, internal staff, admins)? What permission levels or role restrictions are needed?'
+  },
+  {
+    key: 'user_auth_profiles',
+    title: '4. Authentication & User Profiles',
+    tag: '#Auth-Profiles',
+    desc: 'How will users sign up and log in (e.g., Email/Password, Google/OAuth, SSO, Magic Links)? What user profile data and account settings are stored?'
+  },
+  {
+    key: 'data_management_schema',
+    title: '5. Data Management & Database Schema',
+    tag: '#Data-Schema',
+    desc: 'What data does the application capture, calculate, or display? Do you have existing database systems, APIs, or spreadsheets to import?'
+  },
+  {
+    key: 'ui_ux_platform',
+    title: '6. UI/UX & Platform Requirements',
+    tag: '#UX-Platform',
+    desc: 'Is this application designed primarily for desktop web, mobile web, or responsive cross-platform? Do you have design preferences or benchmark apps?'
+  },
+  {
+    key: 'workflows_business_logic',
+    title: '7. Workflows & Business Logic',
+    tag: '#App-Logic',
+    desc: 'Describe step-by-step user workflows, automated calculations, background tasks, or notification triggers (email, SMS, push notifications).'
+  },
+  {
+    key: 'api_integrations',
+    title: '8. Third-Party APIs & System Integrations',
+    tag: '#API-Integrations',
+    desc: 'Which external APIs or software must connect to your app? (e.g. Stripe, Twilio, OpenAI/LLMs, Google Maps, CRM, Zapier, custom webhooks)'
+  },
+  {
+    key: 'ecommerce_monetization',
+    title: '9. E-Commerce, Subscriptions & Payments',
+    tag: '#Monetization',
+    desc: 'Will the application process one-time payments, recurring subscription billing, usage-based fees, or generate invoices for clients?'
+  },
+  {
+    key: 'admin_dashboard',
+    title: '10. Admin Dashboard & Operations',
+    tag: '#Admin-Dashboard',
+    desc: 'What admin controls, reporting charts, user management tools, or content approval workflows are needed behind the scenes?'
+  },
+  {
+    key: 'security_compliance',
+    title: '11. Security, Privacy & Data Compliance',
+    tag: '#Security-Compliance',
+    desc: 'Does the application handle sensitive data subject to compliance standards (e.g. HIPAA, PCI-DSS payment security, GDPR privacy, encryption)?'
+  },
+  {
+    key: 'hosting_cloud_infrastructure',
+    title: '12. Cloud Hosting & Infrastructure',
+    tag: '#Hosting-Cloud',
+    desc: 'Do you have preferred server infrastructure (e.g. Vercel, AWS, Firebase, Supabase), or do you need complete backend setup and deployment?'
+  },
+  {
+    key: 'timeline_budget_app',
+    title: '13. Target Deadline & Investment Budget',
+    tag: '#Timeline-Budget',
+    desc: 'What is your target launch deadline for the MVP/app and preferred budget range for building this application?'
+  },
+  {
+    key: 'maintenance_scaling',
+    title: '14. Post-Launch Maintenance & Scaling',
+    tag: '#Maintenance-Scaling',
+    desc: 'Will you require ongoing server maintenance, bug fixes, feature scaling, or SLA technical support post-launch?'
+  }
+];
+
+function getQuestionsForProject(proj) {
+  if (!proj) return WEBSITE_QUESTIONS;
+  const pType = (proj.project_type || '').toLowerCase();
+  if (pType === 'application' || pType === 'app') {
+    return APP_QUESTIONS;
+  }
+  return WEBSITE_QUESTIONS;
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
@@ -447,7 +547,12 @@ function renderProjectCards() {
       return `
         <div class="project-card-item" onclick="openUserProject('${p.id}')">
           <div>
-            <div class="project-card-title">${escapeHtml(p.project_name || 'Untitled Project')}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <div class="project-card-title" style="margin-bottom:0;">${escapeHtml(p.project_name || 'Untitled Project')}</div>
+              <span style="font-size:0.75rem; padding:2px 8px; border-radius:10px; font-weight:600; background:rgba(255,255,255,0.06); color:${(p.project_type === 'application' ? 'var(--coral-accent)' : 'var(--text-muted)')}; font-family:'DM Sans', sans-serif;">
+                ${p.project_type === 'application' ? '📱 Application' : '🌐 Website'}
+              </span>
+            </div>
             <span class="spec-tag ${statusObj.tagClass}">${statusObj.text}</span>
             <div class="project-card-quote">$${quoteVal}</div>
           </div>
@@ -505,19 +610,44 @@ async function handleCreateProjectSubmit(e) {
   const title = titleInput ? titleInput.value.trim() : '';
   if (!title) return;
 
-  try {
-    const { data: newProj, error } = await db
-      .from('ds_projects')
-      .insert([{
-        client_id: currentUser.id,
-        project_name: title,
-        status: 'questionnaire_in_progress',
-        total_quote: 0
-      }])
-      .select()
-      .single();
+  const typeEl = document.querySelector('input[name="projectTypeChoice"]:checked');
+  const projectType = typeEl ? typeEl.value : 'website';
 
-    if (error) throw error;
+  try {
+    let newProj = null;
+    try {
+      const { data, error } = await db
+        .from('ds_projects')
+        .insert([{
+          client_id: currentUser.id,
+          project_name: title,
+          project_type: projectType,
+          status: 'questionnaire_in_progress',
+          total_quote: 0
+        }])
+        .select()
+        .single();
+      if (!error && data) newProj = data;
+    } catch (dbErr) {
+      console.warn("Retrying project insert without project_type column:", dbErr.message);
+    }
+
+    if (!newProj) {
+      const { data, error } = await db
+        .from('ds_projects')
+        .insert([{
+          client_id: currentUser.id,
+          project_name: title,
+          status: 'questionnaire_in_progress',
+          total_quote: 0
+        }])
+        .select()
+        .single();
+      if (error) throw error;
+      newProj = data;
+    }
+
+    if (newProj) newProj.project_type = projectType;
 
     toggleCreateProjectForm(false);
     showToastOverlay('✓ Project Created!');
@@ -539,9 +669,11 @@ async function openUserProject(projectId) {
 
     if (proj) {
       currentProject = proj;
+      const isApp = (currentProject.project_type || '').toLowerCase() === 'application';
       const titleEl = document.getElementById('activeProjectTitle');
       if (titleEl) {
-        titleEl.textContent = currentProject.project_name || 'Project Workspace';
+        const typeBadge = isApp ? '📱 Application' : '🌐 Website';
+        titleEl.innerHTML = `${escapeHtml(currentProject.project_name || 'Project Workspace')} <span style="font-size:0.8rem; padding:2px 8px; border-radius:12px; font-weight:600; background:rgba(255,255,255,0.08); color:var(--text-muted); margin-left:6px;">${typeBadge}</span>`;
       }
 
       document.getElementById('projectsSection').style.display = 'none';
@@ -669,10 +801,11 @@ async function loadProjectSpecs() {
 
   currentSpecs = specs || [];
 
-  // STABLE SORT: Order specs strictly matching DEFAULT_QUESTIONS 1-10 sequence
+  const activeQuestions = getQuestionsForProject(currentProject);
+  // STABLE SORT: Order specs strictly matching activeQuestions sequence
   currentSpecs.sort((a, b) => {
-    const idxA = DEFAULT_QUESTIONS.findIndex(q => q.key === a.question_key);
-    const idxB = DEFAULT_QUESTIONS.findIndex(q => q.key === b.question_key);
+    const idxA = activeQuestions.findIndex(q => q.key === a.question_key);
+    const idxB = activeQuestions.findIndex(q => q.key === b.question_key);
     return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
   });
 
@@ -890,7 +1023,8 @@ async function renderQuestionnaireSpecs() {
   let totalQuote = 0;
   let html = '';
 
-  for (const q of DEFAULT_QUESTIONS) {
+  const activeQuestions = getQuestionsForProject(currentProject);
+  for (const q of activeQuestions) {
     const spec = currentSpecs.find(s => s.question_key === q.key);
     const specId = spec ? spec.id : null;
     const cost = spec ? parseFloat(spec.line_item_cost || 0) : 0;
@@ -1170,7 +1304,8 @@ async function processSpecFileUpload(file, qKey, specId) {
       let existingSpec = currentSpecs.find(s => s.question_key === qKey);
 
       if (!existingSpec && !activeSpecId) {
-        const qObj = DEFAULT_QUESTIONS.find(q => q.key === qKey);
+        const activeQuestions = getQuestionsForProject(currentProject);
+        const qObj = activeQuestions.find(q => q.key === qKey);
         const { data: ins } = await db.from('ds_questionnaire_specs').insert([{
           project_id: currentProject.id,
           question_key: qKey,
@@ -1318,7 +1453,8 @@ window.saveSpecAnswerVersion = async function(qKey, specId) {
   if (!inputEl) return;
 
   const newAnswerText = inputEl.value.trim();
-  const qObj = DEFAULT_QUESTIONS.find(q => q.key === qKey);
+  const activeQuestions = getQuestionsForProject(currentProject);
+  const qObj = activeQuestions.find(q => q.key === qKey);
 
   try {
     if (feedbackEl) feedbackEl.innerHTML = '<span style="color:var(--text-muted);">Saving version...</span>';
