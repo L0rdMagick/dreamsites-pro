@@ -13,6 +13,7 @@ if (window.supabase) {
 let currentUser = null;
 let currentProfile = null;
 let currentProject = null;
+let userProjects = [];
 let currentSpecs = [];
 let isDesignerMode = false;
 let adminAllClients = [];
@@ -130,6 +131,30 @@ function setupEventListeners() {
   const questionnaireForm = document.getElementById('questionnaireForm');
   if (questionnaireForm) {
     questionnaireForm.addEventListener('submit', handleQuestionnaireSave);
+  }
+
+  // Create Project Button & Form
+  const createProjectHeaderBtn = document.getElementById('createProjectHeaderBtn');
+  if (createProjectHeaderBtn) {
+    createProjectHeaderBtn.addEventListener('click', () => toggleCreateProjectForm(true));
+  }
+
+  const cancelCreateProjectBtn = document.getElementById('cancelCreateProjectBtn');
+  if (cancelCreateProjectBtn) {
+    cancelCreateProjectBtn.addEventListener('click', () => toggleCreateProjectForm(false));
+  }
+
+  const createProjectForm = document.getElementById('createProjectForm');
+  if (createProjectForm) {
+    createProjectForm.addEventListener('submit', handleCreateProjectSubmit);
+  }
+
+  // Back to All Projects Button
+  const btnBackToProjects = document.getElementById('btnBackToProjects');
+  if (btnBackToProjects) {
+    btnBackToProjects.addEventListener('click', async () => {
+      await loadUserProjectsList();
+    });
   }
 
   // Admin Client Selector Dropdown
@@ -305,20 +330,191 @@ async function loadUserProfile() {
     }
 
     document.getElementById('authSection').style.display = 'none';
-    document.getElementById('portalDashboard').style.display = 'block';
 
     // Admin Access Configuration
     if (currentProfile.role === 'designer') {
       isDesignerMode = true;
       document.getElementById('adminSelectorBar').style.display = 'flex';
+      document.getElementById('projectsSection').style.display = 'none';
+      document.getElementById('portalDashboard').style.display = 'block';
       await loadAdminClientList();
     } else {
       isDesignerMode = false;
       document.getElementById('adminSelectorBar').style.display = 'none';
-      await loadUserProject();
+      await loadUserProjectsList();
     }
   } catch (err) {
     console.error("Error loading user profile:", err);
+  }
+}
+
+async function loadUserProjectsList() {
+  try {
+    document.getElementById('projectsSection').style.display = 'block';
+    document.getElementById('portalDashboard').style.display = 'none';
+
+    let { data: projects, error } = await db
+      .from('ds_projects')
+      .select('*')
+      .eq('client_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error fetching projects:", error);
+    }
+
+    userProjects = projects || [];
+
+    // If client has no projects yet, auto-create a default project
+    if (userProjects.length === 0) {
+      const defaultName = (currentProfile.company_name ? currentProfile.company_name + ' Website' : 'My Website Project');
+      const { data: newProj, error: createErr } = await db
+        .from('ds_projects')
+        .insert([{
+          client_id: currentUser.id,
+          project_name: defaultName,
+          status: 'questionnaire_in_progress',
+          total_quote: 0
+        }])
+        .select()
+        .single();
+
+      if (!createErr && newProj) {
+        userProjects = [newProj];
+      }
+    }
+
+    renderProjectCards();
+  } catch (err) {
+    console.error("Error in loadUserProjectsList:", err);
+  }
+}
+
+function renderProjectCards() {
+  const gridEl = document.getElementById('projectsGrid');
+  if (!gridEl) return;
+
+  let html = `
+    <div class="create-project-card-item" id="createProjectCardBtn">
+      <div class="create-project-icon">+</div>
+      <strong style="color:var(--text-main); font-size:1.05rem;">Create New Project</strong>
+      <span style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Start a new website or app spec</span>
+    </div>
+  `;
+
+  if (userProjects.length > 0) {
+    html += userProjects.map(p => {
+      const createdDate = p.created_at ? new Date(p.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+      const quoteVal = parseFloat(p.total_quote || 0).toFixed(2);
+      const statusObj = formatProjectStatus(p.status);
+
+      return `
+        <div class="project-card-item" onclick="openUserProject('${p.id}')">
+          <div>
+            <div class="project-card-title">${escapeHtml(p.project_name || 'Untitled Project')}</div>
+            <span class="spec-tag ${statusObj.tagClass}">${statusObj.text}</span>
+            <div class="project-card-quote">$${quoteVal}</div>
+          </div>
+          <div class="project-card-meta">
+            <span>Created: ${createdDate}</span>
+            <span style="color:var(--coral-accent); font-weight:600;">Open Workspace →</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  gridEl.innerHTML = html;
+
+  const cardBtn = document.getElementById('createProjectCardBtn');
+  if (cardBtn) {
+    cardBtn.addEventListener('click', () => {
+      toggleCreateProjectForm(true);
+    });
+  }
+}
+
+function formatProjectStatus(status) {
+  switch (status) {
+    case 'specs_agreed':
+      return { text: 'Specs Agreed', tagClass: 'agreed' };
+    case 'questionnaire_in_progress':
+      return { text: 'In Progress', tagClass: 'pending' };
+    default:
+      return { text: 'Active', tagClass: 'pending' };
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function toggleCreateProjectForm(show) {
+  const formCard = document.getElementById('newProjectCard');
+  if (!formCard) return;
+  formCard.style.display = show ? 'block' : 'none';
+  if (show) {
+    const input = document.getElementById('newProjectTitleInput');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  }
+}
+
+async function handleCreateProjectSubmit(e) {
+  e.preventDefault();
+  const titleInput = document.getElementById('newProjectTitleInput');
+  const title = titleInput ? titleInput.value.trim() : '';
+  if (!title) return;
+
+  try {
+    const { data: newProj, error } = await db
+      .from('ds_projects')
+      .insert([{
+        client_id: currentUser.id,
+        project_name: title,
+        status: 'questionnaire_in_progress',
+        total_quote: 0
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    toggleCreateProjectForm(false);
+    showToastOverlay('✓ Project Created!');
+
+    await openUserProject(newProj.id);
+  } catch (err) {
+    console.error("Error creating project:", err);
+    alert("Could not create project. Please try again.");
+  }
+}
+
+async function openUserProject(projectId) {
+  try {
+    let proj = userProjects.find(p => p.id === projectId);
+    if (!proj) {
+      const { data } = await db.from('ds_projects').select('*').eq('id', projectId).single();
+      proj = data;
+    }
+
+    if (proj) {
+      currentProject = proj;
+      const titleEl = document.getElementById('activeProjectTitle');
+      if (titleEl) {
+        titleEl.textContent = currentProject.project_name || 'Project Workspace';
+      }
+
+      document.getElementById('projectsSection').style.display = 'none';
+      document.getElementById('portalDashboard').style.display = 'block';
+
+      await loadProjectSpecs();
+    }
+  } catch (err) {
+    console.error("Error opening project:", err);
   }
 }
 
@@ -353,35 +549,11 @@ async function loadProjectById(projectId) {
   const { data: proj } = await db.from('ds_projects').select('*').eq('id', projectId).single();
   if (proj) {
     currentProject = proj;
-    await loadProjectSpecs();
-  }
-}
-
-async function loadUserProject() {
-  try {
-    let { data: projects } = await db
-      .from('ds_projects')
-      .select('*')
-      .eq('client_id', currentUser.id);
-
-    if (!projects || projects.length === 0) {
-      const { data: newProj } = await db
-        .from('ds_projects')
-        .insert([{
-          client_id: currentUser.id,
-          project_name: (currentProfile.company_name ? currentProfile.company_name + ' Website' : 'My Website Project'),
-          status: 'questionnaire_in_progress'
-        }])
-        .select()
-        .single();
-      currentProject = newProj;
-    } else {
-      currentProject = projects[0];
+    const titleEl = document.getElementById('activeProjectTitle');
+    if (titleEl) {
+      titleEl.textContent = currentProject.project_name || 'Project Workspace';
     }
-
     await loadProjectSpecs();
-  } catch (err) {
-    console.error("Error loading project:", err);
   }
 }
 

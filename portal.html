@@ -106,8 +106,54 @@
       </form>
     </section>
 
-    <!-- 2. Main Dashboard (Shown once signed in) -->
+    <!-- 2. Projects Dashboard (Shown once signed in) -->
+    <section id="projectsSection" style="display:none;" class="portal-card">
+      <div class="projects-section-header">
+        <div>
+          <h2 style="margin:0 0 4px 0; font-size:1.6rem; color:var(--text-main);">My <em>Projects</em></h2>
+          <p style="color:var(--text-muted); font-size:0.92rem; margin:0;">
+            Select a project card to view & edit its questionnaire, specs, and job sheet, or create a new project.
+          </p>
+        </div>
+        <button id="createProjectHeaderBtn" class="btn-portal" style="padding: 10px 20px;">
+          + Create New Project
+        </button>
+      </div>
+
+      <!-- New Project Form Card (Hidden by default) -->
+      <div id="newProjectCard" class="create-project-form-box" style="display:none; margin-top:20px; margin-bottom: 24px; padding:20px; background:var(--card-bg); border-radius:12px; border: 1px solid var(--coral-accent);">
+        <h4 style="margin-top:0; margin-bottom:12px; color:var(--coral-accent); font-size:1.1rem;">Create New Project</h4>
+        <form id="createProjectForm">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label for="newProjectTitleInput" style="display:block; margin-bottom:6px; font-weight:600;">Project Name / Business Title</label>
+            <input type="text" id="newProjectTitleInput" class="form-control" placeholder="e.g. Acme Landscaping Redesign" required>
+          </div>
+          <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button type="button" id="cancelCreateProjectBtn" class="btn-portal-outline" style="padding: 8px 16px;">Cancel</button>
+            <button type="submit" class="btn-portal" style="padding: 8px 20px;">Save & Open Project ↗</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Project Cards Grid -->
+      <div id="projectsGrid" class="projects-grid" style="margin-top:24px;">
+        <!-- Rendered dynamically by portal.js -->
+      </div>
+    </section>
+
+    <!-- 3. Main Dashboard (Shown once a project is opened) -->
     <section id="portalDashboard" style="display:none;">
+
+      <!-- Project Navigation Bar -->
+      <div class="project-header-bar">
+        <button id="btnBackToProjects" class="btn-portal-outline" style="padding: 8px 16px; font-size:0.88rem;">
+          ← Back to All Projects
+        </button>
+        <div class="active-project-info">
+          <span style="color:var(--text-muted); font-size:0.88rem;">Active Project:</span>
+          <strong id="activeProjectTitle" style="color:var(--coral-accent); font-size:1.1rem; font-family:'DM Sans', sans-serif;">Project Title</strong>
+        </div>
+      </div>
 
       <!-- Dashboard Navigation Tabs -->
       <nav class="portal-tabs">
