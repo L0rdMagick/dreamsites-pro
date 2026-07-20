@@ -859,7 +859,31 @@ async function renderQuestionnaireSpecs() {
                 📎 Attached Brand Assets & Files (${uniqueSpecFiles.length})
               </small>
               <span id="fileUploadStatus_${q.key}" style="font-size:0.8rem;"></span>
-            </div>
+window.openImageLightbox = function(src, name, dim) {
+  const modal = document.getElementById('imageLightboxModal');
+  const img = document.getElementById('lightboxImg');
+  const title = document.getElementById('lightboxTitle');
+  const meta = document.getElementById('lightboxMeta');
+  const dlBtn = document.getElementById('lightboxDownloadBtn');
+
+  if (!modal || !img) return;
+
+  img.src = src;
+  if (title) title.textContent = name || 'Image Preview';
+  if (meta) meta.textContent = dim ? `Image Dimensions: ${dim}` : '';
+  if (dlBtn) {
+    dlBtn.href = src;
+    dlBtn.download = name || 'image';
+  }
+
+  modal.classList.add('active');
+};
+
+window.closeImageLightbox = function(e) {
+  if (e) e.stopPropagation();
+  const modal = document.getElementById('imageLightboxModal');
+  if (modal) modal.classList.remove('active');
+};
 
             <div class="attached-files-container">
               ${uniqueSpecFiles.map(f => {
@@ -867,12 +891,12 @@ async function renderQuestionnaireSpecs() {
                 const icon = isImg ? '🖼️' : (f.file_type && f.file_type.includes('pdf') ? '📄' : '📦');
                 return `
                   <div class="attached-file-chip">
-                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview">` : `<span style="font-size:1.2rem;">${icon}</span>`}
+                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` : `<span style="font-size:1.2rem;">${icon}</span>`}
                     <div class="file-chip-info">
                       <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="file-chip-name" title="${escapeHtml(f.file_name)}">
                         ${escapeHtml(f.file_name)}
                       </a>
-                      <span class="file-chip-meta">${f.file_size || ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</span>
+                      <span class="file-chip-meta">${f.file_size || ''}${f.file_dimensions ? ` • ${f.file_dimensions}` : ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</span>
                     </div>
                     <button class="file-delete-btn" onclick="deleteSpecFile('${f.id}', '${q.key}')" title="Delete file">✕</button>
                   </div>
@@ -880,14 +904,14 @@ async function renderQuestionnaireSpecs() {
               }).join('')}
             </div>
 
-            <input type="file" id="fileInput_${q.key}" style="display:none;" onchange="handleSpecFileInputChange(event, '${q.key}', '${specId || ''}')">
+            <input type="file" id="fileInput_${q.key}" multiple style="display:none;" onchange="handleSpecFileInputChange(event, '${q.key}', '${specId || ''}')">
             
             <div class="file-dropzone" id="dropzone_${q.key}" 
                  onclick="document.getElementById('fileInput_${q.key}').click()" 
                  ondragover="event.preventDefault(); this.classList.add('dragover');" 
                  ondragleave="this.classList.remove('dragover');" 
                  ondrop="handleSpecFileDrop(event, '${q.key}', '${specId || ''}')">
-              <div class="dropzone-title">📁 Drag & Drop Brand Assets or Click to Upload</div>
+              <div class="dropzone-title">📁 Drag & Drop Brand Assets or Click to Upload (Multiple Files Supported)</div>
               <div class="dropzone-sub">Logos, High-res Images, PDFs, Brand Guidelines, Docs (PNG, JPG, PDF, ZIP)</div>
             </div>
           </div>
@@ -999,8 +1023,8 @@ async function renderQuestionnaireSpecs() {
 
 // File Upload Handlers
 window.handleSpecFileInputChange = async function(e, qKey, specId) {
-  const file = e.target.files && e.target.files[0];
-  if (file) {
+  const files = e.target.files ? Array.from(e.target.files) : [];
+  for (const file of files) {
     await processSpecFileUpload(file, qKey, specId);
   }
 };
@@ -1010,8 +1034,8 @@ window.handleSpecFileDrop = async function(e, qKey, specId) {
   const dropzone = document.getElementById(`dropzone_${qKey}`);
   if (dropzone) dropzone.classList.remove('dragover');
 
-  const file = e.dataTransfer.files && e.dataTransfer.files[0];
-  if (file) {
+  const files = e.dataTransfer.files ? Array.from(e.dataTransfer.files) : [];
+  for (const file of files) {
     await processSpecFileUpload(file, qKey, specId);
   }
 };
@@ -1022,6 +1046,15 @@ function formatBytes(bytes) {
   const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+function getImageDimensions(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(`${img.naturalWidth}×${img.naturalHeight} px`);
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
 }
 
 async function processSpecFileUpload(file, qKey, specId) {
@@ -1038,6 +1071,11 @@ async function processSpecFileUpload(file, qKey, specId) {
       const dataUrl = e.target.result;
       const role = isDesignerMode ? 'designer' : 'client';
       const senderName = isDesignerMode ? '✦ Admin' : '👤 Client';
+
+      let dimensions = null;
+      if (file.type && file.type.startsWith('image/')) {
+        dimensions = await getImageDimensions(dataUrl);
+      }
 
       let activeSpecId = specId && specId !== 'null' && specId !== 'undefined' ? specId : null;
       let existingSpec = currentSpecs.find(s => s.question_key === qKey);
@@ -1063,6 +1101,7 @@ async function processSpecFileUpload(file, qKey, specId) {
         question_key: qKey,
         file_name: file.name,
         file_size: sizeStr,
+        file_dimensions: dimensions,
         file_type: file.type || 'application/octet-stream',
         file_data: dataUrl,
         uploaded_by_role: role,
@@ -1082,7 +1121,8 @@ async function processSpecFileUpload(file, qKey, specId) {
 
       // Insert log entry in chat thread with interactive download link
       if (activeSpecId) {
-        const chatLinkMsg = `📎 ${senderName} uploaded file: <a href="${dataUrl}" download="${escapeHtml(file.name)}" target="_blank" style="color:var(--coral-accent); font-weight:700; text-decoration:underline;">⬇ Download ${escapeHtml(file.name)} (${sizeStr})</a>`;
+        const dimLabel = dimensions ? ` • ${dimensions}` : '';
+        const chatLinkMsg = `📎 ${senderName} uploaded file: <a href="${dataUrl}" download="${escapeHtml(file.name)}" target="_blank" style="color:var(--coral-accent); font-weight:700; text-decoration:underline;">⬇ Download ${escapeHtml(file.name)} (${sizeStr}${dimLabel})</a>`;
         await db.from('ds_spec_messages').insert([{
           spec_id: activeSpecId,
           sender_id: currentUser ? currentUser.id : 'anon',
@@ -1102,6 +1142,8 @@ async function processSpecFileUpload(file, qKey, specId) {
   } catch (err) {
     console.error("Error uploading file:", err);
     if (statusEl) statusEl.innerHTML = `<span style="color:#ff8a80;">Error: ${err.message}</span>`;
+  }
+};tusEl.innerHTML = `<span style="color:#ff8a80;">Error: ${err.message}</span>`;
   }
 }
 
@@ -1373,12 +1415,12 @@ async function renderJobPlan() {
               return `
                 <div class="asset-locker-card">
                   <div style="display:flex; align-items:center; gap:10px;">
-                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset">` : `<span style="font-size:1.5rem;">${isImg ? '🖼️' : '📄'}</span>`}
+                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` : `<span style="font-size:1.5rem;">${isImg ? '🖼️' : '📄'}</span>`}
                     <div style="overflow:hidden;">
                       <strong style="font-size:0.88rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color);" title="${escapeHtml(f.file_name)}">
                         ${escapeHtml(f.file_name)}
                       </strong>
-                      <small style="color:var(--text-muted); font-size:0.75rem;">${f.file_size || ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</small>
+                      <small style="color:var(--text-muted); font-size:0.75rem;">${f.file_size || ''}${f.file_dimensions ? ` • ${f.file_dimensions}` : ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</small>
                     </div>
                   </div>
                   <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:6px 12px; font-size:0.8rem; text-align:center; margin-top:6px; text-decoration:none;">

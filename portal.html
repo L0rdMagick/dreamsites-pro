@@ -218,7 +218,22 @@
 
     </section>
 
-  </main>
+  <!-- Image Lightbox Modal -->
+  <div id="imageLightboxModal" class="lightbox-modal" onclick="closeImageLightbox(event)">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <button class="lightbox-close-btn" onclick="closeImageLightbox(event)">✕</button>
+      <img id="lightboxImg" src="" alt="Enlarged preview" class="lightbox-img">
+      <div class="lightbox-footer">
+        <div>
+          <strong id="lightboxTitle" style="color:#fff; font-size:1rem; display:block;"></strong>
+          <small id="lightboxMeta" style="color:var(--text-muted); font-size:0.8rem;"></small>
+        </div>
+        <a id="lightboxDownloadBtn" href="" download="" target="_blank" class="btn-portal" style="padding:8px 20px; font-size:0.88rem; text-decoration:none;">
+          ⬇ Download Image ↗
+        </a>
+      </div>
+    </div>
+  </div>
 
   <script src="portal.js"></script>
 </body>
