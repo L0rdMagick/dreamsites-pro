@@ -158,41 +158,15 @@
       <!-- Dashboard Navigation Tabs -->
       <nav class="portal-tabs">
         <button class="tab-btn active" data-tab="questionnaire">
-          <span>1. Questionnaire</span>
-        </button>
-        <button class="tab-btn" data-tab="specs">
-          <span>2. Specs & Quote</span>
+          <span>1. Questionnaire & Specs</span>
         </button>
         <button class="tab-btn" data-tab="jobplan">
-          <span>3. Job Sheet</span>
+          <span>2. Job Sheet</span>
         </button>
       </nav>
 
-      <!-- TAB 1: Questionnaire Form -->
-      <div id="tabQuestionnaire" class="portal-card">
-        <div class="portal-card-header">
-          <div>
-            <h3>Standardized Web Design & App Questionnaire</h3>
-            <p class="question-desc" style="margin-bottom:0;">
-              Answer these questions to help us understand your project vision. Each response generates a spec line item for quote building.
-            </p>
-          </div>
-        </div>
-
-        <div id="questionnaireStatusMsg"></div>
-
-        <form id="questionnaireForm">
-          <div id="questionnaireFields">
-            <!-- Dynamic fields rendered by portal.js -->
-          </div>
-          <button type="submit" class="btn-portal" style="padding: 12px 28px; font-size: 1rem;">
-            Save Preferences & Generate Spec Sheet ↗
-          </button>
-        </form>
-      </div>
-
-      <!-- TAB 2: Interactive Spec Review, Q&A & Pricing Quote -->
-      <div id="tabSpecs" style="display:none;">
+      <!-- TAB 1: Hybrid Questionnaire, Specs & Quote Review -->
+      <div id="tabQuestionnaire">
 
         <!-- Total Quote Banner -->
         <div class="quote-summary-box">
@@ -211,15 +185,17 @@
         <div class="portal-card">
           <div class="portal-card-header">
             <div>
-              <h3>Interactive Spec Review & Line Pricing</h3>
+              <h3>Interactive Questionnaire, Specs & Quote Review</h3>
               <p class="question-desc" style="margin-bottom:0;">
-                Review each answered specification, discuss follow-up questions in the thread, and agree upon specs to finalize your project quote.
+                Answer or update specifications below, save your answer versions, discuss updates in the real-time thread, and agree upon line-item pricing.
               </p>
             </div>
           </div>
 
+          <div id="questionnaireStatusMsg"></div>
+
           <div id="specsReviewList">
-            <!-- Spec Items with Tags, Prices, Q&A Threads rendered by portal.js -->
+            <!-- Dynamic Hybrid Question/Spec Cards with Versioning & Discussion Threads rendered by portal.js -->
           </div>
         </div>
       </div>

@@ -648,6 +648,28 @@ textarea.form-control {
   margin-left: auto;
 }
 
+.message-bubble.version-save {
+  background: rgba(46, 204, 113, 0.08);
+  border: 1px dashed rgba(46, 204, 113, 0.4);
+  border-left: 4px solid #2ecc71;
+  width: 100%;
+  max-width: 100%;
+  margin: 12px 0;
+  box-sizing: border-box;
+}
+
+.version-badge-tag {
+  display: inline-block;
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
 .msg-sender {
   font-size: 0.75rem;
   font-weight: 700;

@@ -652,132 +652,84 @@ async function loadProjectSpecs() {
     return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
   });
 
-  renderQuestionnaireForm();
-  renderSpecsReview();
+  await renderQuestionnaireSpecs();
   renderJobPlan();
 }
 
 let openQuestionKeys = new Set([DEFAULT_QUESTIONS[0].key]);
 
-function renderQuestionnaireForm() {
-  const container = document.getElementById('questionnaireFields');
-  if (!container) return;
-
-  container.innerHTML = DEFAULT_QUESTIONS.map(q => {
-    const existing = currentSpecs.find(s => s.question_key === q.key);
-    const val = existing ? existing.client_answer : '';
-    const isOpen = openQuestionKeys.has(q.key);
-    const isAnswered = val && val.trim().length > 0;
-
-    return `
-      <div class="question-block ${isOpen ? 'open' : ''}" id="qBlock_${q.key}">
-        <div class="question-header" onclick="toggleQuestionAccordion('${q.key}')">
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            <span class="spec-accordion-chevron">▼</span>
-            <span class="question-title">${q.title}</span>
-            <span class="spec-badge">${q.tag}</span>
-          </div>
-          ${isAnswered ? '<span class="status-badge agreed" style="font-size:0.75rem;">✓ Answered</span>' : '<span class="status-badge pending" style="font-size:0.75rem;">Pending</span>'}
-        </div>
-        <div class="question-body">
-          <p class="question-desc">${q.desc}</p>
-          <textarea class="form-control" name="${q.key}" placeholder="Answer here..." ${isDesignerMode ? 'readonly' : ''}>${val}</textarea>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
 window.toggleQuestionAccordion = function(qKey) {
-  const block = document.getElementById(`qBlock_${qKey}`);
+  const block = document.getElementById(`specCard_${qKey}`);
   if (!block) return;
 
-  if (openQuestionKeys.has(qKey)) {
-    openQuestionKeys.delete(qKey);
+  if (openSpecIds.has(qKey)) {
+    openSpecIds.delete(qKey);
     block.classList.remove('open');
   } else {
-    openQuestionKeys.add(qKey);
+    openSpecIds.add(qKey);
     block.classList.add('open');
   }
 };
 
-async function handleQuestionnaireSave(e) {
-  e.preventDefault();
-  if (isDesignerMode) {
-    alert("Admin view is read-only for questionnaire submission. Switch client or edit pricing in Tab 2.");
-    return;
+window.toggleSpecAccordion = function(key) {
+  const card = document.getElementById(`specCard_${key}`);
+  if (!card) return;
+
+  if (openSpecIds.has(key)) {
+    openSpecIds.delete(key);
+    card.classList.remove('open');
+  } else {
+    openSpecIds.add(key);
+    card.classList.add('open');
   }
+};
 
-  const formData = new FormData(e.target);
-  const statusMsg = document.getElementById('questionnaireStatusMsg');
-  statusMsg.innerHTML = '<span style="color: var(--text-muted);">Saving your responses...</span>';
-
-  try {
-    for (const q of DEFAULT_QUESTIONS) {
-      const answer = formData.get(q.key) || '';
-      const existing = currentSpecs.find(s => s.question_key === q.key);
-
-      if (existing) {
-        await db.from('ds_questionnaire_specs').update({
-          client_answer: answer,
-          updated_at: new Date()
-        }).eq('id', existing.id);
-      } else {
-        await db.from('ds_questionnaire_specs').insert([{
-          project_id: currentProject.id,
-          question_key: q.key,
-          question_text: q.title,
-          spec_tag: q.tag,
-          client_answer: answer
-        }]);
-      }
-    }
-
-    statusMsg.innerHTML = '<div class="alert-msg success">✓ Questionnaire saved! Your answers are ready for spec review & line-item pricing.</div>';
-    showToastOverlay("✓ Questionnaire Answers Saved!");
-    await loadProjectSpecs();
-    setTimeout(() => { statusMsg.innerHTML = ''; }, 3000);
-  } catch (err) {
-    statusMsg.innerHTML = `<div class="alert-msg error">Error saving: ${err.message}</div>`;
-  }
-}
-
-async function renderSpecsReview() {
+async function renderQuestionnaireSpecs() {
   const container = document.getElementById('specsReviewList');
   if (!container) return;
-
-  if (!currentSpecs || currentSpecs.length === 0) {
-    container.innerHTML = '<p class="question-desc">No answered questionnaire specs yet. Please complete the Questionnaire tab first.</p>';
-    document.getElementById('totalQuoteVal').textContent = '$0.00';
-    return;
-  }
 
   let totalQuote = 0;
   let html = '';
 
-  for (const spec of currentSpecs) {
-    const cost = parseFloat(spec.line_item_cost || 0);
+  for (const q of DEFAULT_QUESTIONS) {
+    const spec = currentSpecs.find(s => s.question_key === q.key);
+    const specId = spec ? spec.id : null;
+    const cost = spec ? parseFloat(spec.line_item_cost || 0) : 0;
     totalQuote += cost;
-    const isAgreed = spec.client_agreed && spec.designer_agreed;
-    const statusClass = isAgreed ? 'agreed' : 'pending';
-    const statusText = isAgreed ? '✓ Agreed' : (spec.client_agreed || spec.designer_agreed ? 'Pending Sign-off' : 'Under Review');
-    const isOpen = openSpecIds.has(spec.id);
 
-    // Fetch messages for this spec
-    const { data: msgs } = await db
-      .from('ds_spec_messages')
-      .select('*')
-      .eq('spec_id', spec.id)
-      .order('created_at', { ascending: true });
+    const isAgreed = spec ? (spec.client_agreed && spec.designer_agreed) : false;
+    const statusClass = isAgreed ? 'agreed' : 'pending';
+    const isAnswered = spec && spec.client_answer && spec.client_answer.trim().length > 0;
+    const statusText = isAgreed ? '✓ Agreed' : (isAnswered ? (spec.client_agreed || spec.designer_agreed ? 'Pending Sign-off' : 'Under Review') : 'Pending Answer');
+
+    const accordionKey = specId || q.key;
+    const isOpen = openSpecIds.has(accordionKey) || openSpecIds.has(q.key);
+
+    // Fetch messages for this spec if it exists
+    let msgs = [];
+    if (specId) {
+      const { data } = await db
+        .from('ds_spec_messages')
+        .select('*')
+        .eq('spec_id', specId)
+        .order('created_at', { ascending: true });
+      msgs = data || [];
+    }
+
+    // Determine latest answer version count
+    const versionSaveMsgs = msgs.filter(m => m.message_text && m.message_text.includes('saved answer version'));
+    const currentVersionNum = versionSaveMsgs.length > 0 
+      ? versionSaveMsgs.length 
+      : (isAnswered ? 1 : 0);
 
     html += `
-      <div class="spec-item-card ${statusClass} ${isOpen ? 'open' : ''}" id="specCard_${spec.id}">
+      <div class="spec-item-card ${statusClass} ${isOpen ? 'open' : ''}" id="specCard_${accordionKey}">
         <!-- Collapsible Header -->
-        <div class="spec-item-header" onclick="toggleSpecAccordion('${spec.id}')">
+        <div class="spec-item-header" onclick="toggleSpecAccordion('${accordionKey}')">
           <div class="spec-header-left">
             <span class="spec-accordion-chevron">▼</span>
-            <span class="spec-badge">${spec.spec_tag}</span>
-            <h4 style="margin:0; font-size:1rem; font-weight:600;">${spec.question_text}</h4>
+            <span class="spec-badge">${q.tag}</span>
+            <h4 style="margin:0; font-size:1rem; font-weight:600;">${q.title}</h4>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
             <span class="status-badge ${statusClass}">${statusText}</span>
@@ -787,31 +739,44 @@ async function renderSpecsReview() {
 
         <!-- Collapsible Body -->
         <div class="spec-body">
-          <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px; margin-bottom: 14px;">
-            <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">Client Answer:</small>
-            <p style="margin-top:4px;">${spec.client_answer || '<i>No answer provided yet.</i>'}</p>
+          <p class="question-desc" style="margin-bottom:12px;">${q.desc}</p>
+
+          <!-- Main Answer Input & Versioning -->
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--card-border); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 8px;">
+              <small style="color:var(--coral-accent); font-weight:700; text-transform:uppercase; font-size:0.75rem;">
+                Main Specification Answer ${currentVersionNum > 0 ? `(Current Version ${currentVersionNum})` : '(Version 1 Draft)'}
+              </small>
+              <span id="ansSaveFeedback_${q.key}" style="font-size:0.82rem;"></span>
+            </div>
+            <textarea class="form-control" id="ansInput_${q.key}" rows="3" placeholder="Type or update main answer here...">${spec ? (spec.client_answer || '') : ''}</textarea>
+            <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+              <button class="btn-portal" onclick="saveSpecAnswerVersion('${q.key}', '${specId || ''}')" style="padding:8px 18px; font-size:0.88rem;">
+                💾 Save Answer ${currentVersionNum > 0 ? `Version ${currentVersionNum + 1}` : 'Version 1'} ↗
+              </button>
+            </div>
           </div>
 
-          ${isDesignerMode ? `
+          ${isDesignerMode && specId ? `
             <div style="background: rgba(255,107,82,0.06); border: 1px solid rgba(255,107,82,0.2); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
-              <div style="display:flex; align-items:center; justify-space-between; margin-bottom: 10px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px;">
                 <h5 style="color:var(--coral-accent); font-size:0.88rem; margin:0;">✦ DESIGNER PRICING & SCOPE:</h5>
-                <span id="saveFeedback_${spec.id}"></span>
+                <span id="saveFeedback_${specId}"></span>
               </div>
               <div style="display:grid; grid-template-columns: 1fr 140px; gap:12px; margin-bottom:10px;">
                 <div>
                   <label style="font-size:0.75rem; color:var(--text-muted);">Scope Notes / What this entails:</label>
-                  <input type="text" class="form-control" id="scopeNote_${spec.id}" value="${spec.designer_scope_notes || ''}" placeholder="e.g. Custom schema, 3 API endpoints, UI design.">
+                  <input type="text" class="form-control" id="scopeNote_${specId}" value="${spec.designer_scope_notes || ''}" placeholder="e.g. Custom schema, 3 API endpoints, UI design.">
                 </div>
                 <div>
                   <label style="font-size:0.75rem; color:var(--text-muted);">Line Cost ($):</label>
-                  <input type="number" step="10" class="form-control" id="cost_${spec.id}" value="${cost.toFixed(2)}">
+                  <input type="number" step="10" class="form-control" id="cost_${specId}" value="${cost.toFixed(2)}">
                 </div>
               </div>
-              <button class="btn-portal" onclick="saveDesignerSpecUpdate('${spec.id}')">Save Price & Scope Notes</button>
+              <button class="btn-portal" onclick="saveDesignerSpecUpdate('${specId}')">Save Price & Scope Notes</button>
             </div>
           ` : `
-            ${spec.designer_scope_notes ? `
+            ${spec && spec.designer_scope_notes ? `
               <div style="background: rgba(255,107,82,0.05); border-left: 3px solid var(--coral-accent); padding: 12px; border-radius: 4px; margin-bottom: 14px;">
                 <small style="color:var(--coral-accent); font-weight:700;">Designer Scope Notes:</small>
                 <p style="margin-top:2px; font-size:0.9rem;">${spec.designer_scope_notes}</p>
@@ -819,60 +784,147 @@ async function renderSpecsReview() {
             ` : ''}
           `}
 
-          <!-- Interactive Spec Q&A Thread -->
+          <!-- Interactive Spec Q&A & Dialogue Thread -->
           <div class="qa-thread">
-            <div class="qa-title">💬 Interactive Discussion & Clarifications:</div>
-            <div id="msgContainer_${spec.id}">
-              ${(msgs && msgs.length > 0) ? msgs.map(m => `
-                <div class="message-bubble ${m.sender_role}">
-                  <span class="msg-sender ${m.sender_role === 'designer' ? 'designer-name' : ''}">
-                    ${m.sender_role === 'designer' ? '✦ Designer/Developer' : '👤 Client'}
-                  </span>
-                  <div>${m.message_text}</div>
-                  <span class="msg-time">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>
-              `).join('') : '<p style="font-size:0.85rem; color:var(--text-muted);">No notes or follow-up questions posted yet.</p>'}
+            <div class="qa-title">💬 Interactive Discussion & Dialogue Thread:</div>
+            <div id="msgContainer_${accordionKey}">
+              ${(msgs && msgs.length > 0) ? msgs.map(m => {
+                const isVersionSave = m.message_text && m.message_text.includes('has saved answer version');
+                if (isVersionSave) {
+                  return `
+                    <div class="message-bubble version-save">
+                      <span class="msg-sender" style="color:#2ecc71;">
+                        📌 ${escapeHtml(m.sender_role === 'designer' ? '✦ Admin / Designer' : '👤 Client')} 
+                        <span class="version-badge-tag">Answer Update</span>
+                      </span>
+                      <div style="white-space: pre-wrap; font-weight:500; margin-top:4px;">${escapeHtml(m.message_text)}</div>
+                      <span class="msg-time">${new Date(m.created_at).toLocaleString([], {month:'short', day:'numeric', hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                  `;
+                }
+                return `
+                  <div class="message-bubble ${m.sender_role}">
+                    <span class="msg-sender ${m.sender_role === 'designer' ? 'designer-name' : ''}">
+                      ${m.sender_role === 'designer' ? '✦ Designer/Developer' : '👤 Client'}
+                    </span>
+                    <div>${escapeHtml(m.message_text)}</div>
+                    <span class="msg-time">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                  </div>
+                `;
+              }).join('') : '<p style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">No notes or follow-up questions posted yet.</p>'}
             </div>
 
-            <div class="qa-input-row">
-              <input type="text" class="form-control" id="msgInput_${spec.id}" placeholder="Ask a question or post a note on this spec...">
-              <button class="btn-portal" onclick="sendSpecMessage('${spec.id}')">Send</button>
-            </div>
+            ${specId ? `
+              <div class="qa-input-row" style="margin-top:10px;">
+                <input type="text" class="form-control" id="msgInput_${specId}" placeholder="Ask a question or comment on this spec..." onkeydown="if(event.key==='Enter') sendSpecMessage('${specId}')">
+                <button class="btn-portal" onclick="sendSpecMessage('${specId}')">Send</button>
+              </div>
+            ` : `
+              <p style="font-size:0.82rem; color:var(--text-muted); margin-top:8px;">Save an answer above to activate discussion thread on this specification.</p>
+            `}
           </div>
 
-          <!-- Spec Agreement Button -->
-          <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--card-border); padding-top:14px;">
-            <span style="font-size:0.85rem; color:var(--text-muted);">
-              Client Sign-off: <strong>${spec.client_agreed ? '✓ Yes' : 'Pending'}</strong> | 
-              Designer Sign-off: <strong>${spec.designer_agreed ? '✓ Yes' : 'Pending'}</strong>
-            </span>
-            <button class="btn-portal-outline" onclick="toggleSpecSignOff('${spec.id}', ${isDesignerMode ? "'designer'" : "'client'"})">
-              ${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? '✓ Spec Agreed' : 'Agree to Spec'}
-            </button>
-          </div>
+          ${specId ? `
+            <!-- Spec Agreement Button -->
+            <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--card-border); padding-top:14px;">
+              <span style="font-size:0.85rem; color:var(--text-muted);">
+                Client Sign-off: <strong>${spec.client_agreed ? '✓ Yes' : 'Pending'}</strong> | 
+                Designer Sign-off: <strong>${spec.designer_agreed ? '✓ Yes' : 'Pending'}</strong>
+              </span>
+              <button class="btn-portal-outline" onclick="toggleSpecSignOff('${specId}', ${isDesignerMode ? "'designer'" : "'client'"})">
+                ${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? '✓ Spec Agreed' : 'Agree to Spec'}
+              </button>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
   }
 
   container.innerHTML = html;
-  document.getElementById('totalQuoteVal').textContent = `$${totalQuote.toFixed(2)}`;
+  const totalQuoteEl = document.getElementById('totalQuoteVal');
+  if (totalQuoteEl) totalQuoteEl.textContent = `$${totalQuote.toFixed(2)}`;
 
   if (currentProject) {
     await db.from('ds_projects').update({ total_quote: totalQuote }).eq('id', currentProject.id);
   }
 }
 
-window.toggleSpecAccordion = function(specId) {
-  const card = document.getElementById(`specCard_${specId}`);
-  if (!card) return;
+window.saveSpecAnswerVersion = async function(qKey, specId) {
+  if (!currentProject) return;
 
-  if (openSpecIds.has(specId)) {
-    openSpecIds.delete(specId);
-    card.classList.remove('open');
-  } else {
-    openSpecIds.add(specId);
-    card.classList.add('open');
+  const inputEl = document.getElementById(`ansInput_${qKey}`);
+  const feedbackEl = document.getElementById(`ansSaveFeedback_${qKey}`);
+  if (!inputEl) return;
+
+  const newAnswerText = inputEl.value.trim();
+  const qObj = DEFAULT_QUESTIONS.find(q => q.key === qKey);
+
+  try {
+    if (feedbackEl) feedbackEl.innerHTML = '<span style="color:var(--text-muted);">Saving version...</span>';
+
+    let activeSpecId = specId && specId !== 'null' && specId !== 'undefined' ? specId : null;
+    let existingSpec = currentSpecs.find(s => s.question_key === qKey);
+
+    if (existingSpec && existingSpec.id) {
+      activeSpecId = existingSpec.id;
+      await db.from('ds_questionnaire_specs').update({
+        client_answer: newAnswerText,
+        updated_at: new Date()
+      }).eq('id', activeSpecId);
+    } else {
+      const { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
+        project_id: currentProject.id,
+        question_key: qKey,
+        question_text: qObj ? qObj.title : qKey,
+        spec_tag: qObj ? qObj.tag : '#Spec',
+        client_answer: newAnswerText
+      }]).select();
+
+      if (insErr) throw insErr;
+      if (inserted && inserted[0]) {
+        activeSpecId = inserted[0].id;
+      }
+    }
+
+    // Determine version number from existing spec messages
+    let versionNum = 1;
+    if (activeSpecId) {
+      const { data: msgs } = await db
+        .from('ds_spec_messages')
+        .select('*')
+        .eq('spec_id', activeSpecId);
+
+      const versionMsgs = (msgs || []).filter(m => m.message_text && m.message_text.includes('saved answer version'));
+      versionNum = versionMsgs.length + 1;
+    }
+
+    const senderRole = isDesignerMode ? 'designer' : 'client';
+    const senderName = isDesignerMode ? 'admin' : 'client';
+    const versionSaveMessage = `${senderName} has saved answer version ${versionNum}:\n"${newAnswerText}"`;
+
+    if (activeSpecId) {
+      await db.from('ds_spec_messages').insert([{
+        spec_id: activeSpecId,
+        sender_id: currentUser ? currentUser.id : 'anon',
+        sender_role: senderRole,
+        message_text: versionSaveMessage
+      }]);
+    }
+
+    openSpecIds.add(activeSpecId || qKey);
+    openSpecIds.add(qKey);
+
+    if (feedbackEl) {
+      feedbackEl.innerHTML = `<span style="color:#2ecc71; font-weight:700;">✓ Saved Version ${versionNum}!</span>`;
+      setTimeout(() => { feedbackEl.innerHTML = ''; }, 3000);
+    }
+
+    showToastOverlay(`✓ Answer Version ${versionNum} Saved!`);
+    await loadProjectSpecs();
+  } catch (err) {
+    console.error("Error saving answer version:", err);
+    if (feedbackEl) feedbackEl.innerHTML = `<span style="color:#ff8a80;">Error: ${err.message}</span>`;
   }
 };
 
@@ -897,7 +949,6 @@ window.saveDesignerSpecUpdate = async function(specId) {
 
     if (error) throw error;
 
-    // Ensure card stays open after saving
     openSpecIds.add(specId);
 
     if (feedbackEl) {
@@ -915,6 +966,7 @@ window.saveDesignerSpecUpdate = async function(specId) {
 
 window.sendSpecMessage = async function(specId) {
   const input = document.getElementById(`msgInput_${specId}`);
+  if (!input) return;
   const text = input.value.trim();
   if (!text) return;
 
@@ -922,7 +974,7 @@ window.sendSpecMessage = async function(specId) {
 
   await db.from('ds_spec_messages').insert([{
     spec_id: specId,
-    sender_id: currentUser.id,
+    sender_id: currentUser ? currentUser.id : 'anon',
     sender_role: role,
     message_text: text
   }]);
@@ -930,7 +982,7 @@ window.sendSpecMessage = async function(specId) {
   openSpecIds.add(specId);
   input.value = '';
   showToastOverlay("✓ Discussion Note Posted!");
-  await renderSpecsReview();
+  await loadProjectSpecs();
 };
 
 window.toggleSpecSignOff = async function(specId, role) {
@@ -1073,9 +1125,12 @@ window.addJobPlanNote = async function(jobPlanId) {
 };
 
 function showTabSection(tabKey) {
-  document.getElementById('tabQuestionnaire').style.display = tabKey === 'questionnaire' ? 'block' : 'none';
-  document.getElementById('tabSpecs').style.display = tabKey === 'specs' ? 'block' : 'none';
-  document.getElementById('tabJobPlan').style.display = tabKey === 'jobplan' ? 'block' : 'none';
+  const qTab = document.getElementById('tabQuestionnaire');
+  const sTab = document.getElementById('tabSpecs');
+  const jTab = document.getElementById('tabJobPlan');
+  if (qTab) qTab.style.display = (tabKey === 'questionnaire' || tabKey === 'specs') ? 'block' : 'none';
+  if (sTab) sTab.style.display = 'none';
+  if (jTab) jTab.style.display = tabKey === 'jobplan' ? 'block' : 'none';
 }
 
 function handleLogout() {
