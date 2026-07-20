@@ -981,12 +981,11 @@ async function renderQuestionnaireSpecs() {
                   <div class="attached-file-chip">
                     ${isImg && f.file_data 
                       ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` 
-                      : `<span style="font-size:1.3rem;">${icon}</span>`
+                      : `<div class="file-thumb-fallback">${icon}</div>`
                     }
-                    <div class="file-chip-info">
-                      <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:4px 10px; font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                        ⬇ Download Asset
-                      </a>
+                    <div class="asset-card-actions">
+                      <span class="asset-action-link" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')">View</span>
+                      <a href="${f.file_data || '#'}" download="${escapeHtml(f.file_name)}" class="asset-action-link" target="_blank">Download</a>
                     </div>
                     <button class="file-delete-btn" onclick="deleteSpecFile('${f.id}', '${q.key}')" title="Delete file">✕</button>
                   </div>
@@ -1562,12 +1561,11 @@ async function renderJobPlan() {
                 <div class="asset-locker-card">
                   ${isImg && f.file_data 
                     ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` 
-                    : `<span style="font-size:1.4rem;">${icon}</span>`
+                    : `<div class="file-thumb-fallback">${icon}</div>`
                   }
-                  <div class="file-chip-info">
-                    <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:4px 10px; font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                      ⬇ Download Asset
-                    </a>
+                  <div class="asset-card-actions">
+                    <span class="asset-action-link" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')">View</span>
+                    <a href="${f.file_data || '#'}" download="${escapeHtml(f.file_name)}" class="asset-action-link" target="_blank">Download</a>
                   </div>
                 </div>
               `;
