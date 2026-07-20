@@ -127,12 +127,6 @@ function setupEventListeners() {
     });
   });
 
-  // Questionnaire Save Form
-  const questionnaireForm = document.getElementById('questionnaireForm');
-  if (questionnaireForm) {
-    questionnaireForm.addEventListener('submit', handleQuestionnaireSave);
-  }
-
   // Create Project Button & Form
   const createProjectHeaderBtn = document.getElementById('createProjectHeaderBtn');
   if (createProjectHeaderBtn) {
@@ -872,11 +866,8 @@ window.saveAnswerVersion = async function(specId, questionKey) {
     await loadProjectSpecs();
   } catch (err) {
     console.error("Error saving answer version:", err);
-    alert("Could not save answer version: " + err.message);
   }
-};).eq('id', currentProject.id);
-  }
-}
+};
 
 window.toggleSpecAccordion = function(specId) {
   const card = document.getElementById(`specCard_${specId}`);
