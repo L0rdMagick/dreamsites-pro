@@ -261,20 +261,45 @@ textarea.form-control {
   font-weight: 600;
 }
 
-/* Questionnaire Form */
+/* Questionnaire Form Accordion */
 .question-block {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
 
 .question-header {
+  padding: 16px 20px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  user-select: none;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.2s ease;
+}
+
+.question-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.question-body {
+  display: none;
+  padding: 20px;
+  border-top: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.question-block.open .question-body {
+  display: block;
+}
+
+.question-block.open .spec-accordion-chevron {
+  transform: rotate(180deg);
+  color: var(--coral-accent);
 }
 
 .spec-badge {
@@ -292,13 +317,100 @@ textarea.form-control {
 .question-title {
   font-size: 1.05rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 .question-desc {
   font-size: 0.88rem;
   color: var(--text-muted);
   margin-bottom: 14px;
+}
+
+/* Mobile Responsive Optimization */
+@media (max-width: 768px) {
+  .portal-container {
+    padding: 20px 12px 60px;
+  }
+
+  .portal-header {
+    padding: 14px 16px;
+  }
+
+  /* Compact 3-button tab navigation fitting on 1 mobile screen */
+  .portal-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding-bottom: 8px;
+    overflow-x: visible;
+  }
+
+  .tab-btn {
+    padding: 10px 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    justify-content: center;
+    text-align: center;
+    border-radius: 6px;
+  }
+
+  .portal-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .spec-item-header {
+    padding: 16px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .spec-header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .spec-body {
+    padding: 16px 14px;
+  }
+
+  /* Stack designer scope notes & price inputs vertically on mobile to prevent cramming */
+  .designer-banner {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .designer-banner select {
+    width: 100% !important;
+  }
+
+  .quote-summary-box {
+    padding: 20px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .quote-total-val {
+    font-size: 2.4rem;
+  }
+
+  .message-bubble {
+    max-width: 95%;
+  }
+
+  .qa-input-row {
+    flex-direction: column;
+  }
+
+  .job-sheet-table th,
+  .job-sheet-table td {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+  }
 }
 
 /* Spec Line Item List & Accordion */

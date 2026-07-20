@@ -368,6 +368,8 @@ async function loadProjectSpecs() {
   renderJobPlan();
 }
 
+let openQuestionKeys = new Set([DEFAULT_QUESTIONS[0].key]);
+
 function renderQuestionnaireForm() {
   const container = document.getElementById('questionnaireFields');
   if (!container) return;
@@ -375,19 +377,40 @@ function renderQuestionnaireForm() {
   container.innerHTML = DEFAULT_QUESTIONS.map(q => {
     const existing = currentSpecs.find(s => s.question_key === q.key);
     const val = existing ? existing.client_answer : '';
+    const isOpen = openQuestionKeys.has(q.key);
+    const isAnswered = val && val.trim().length > 0;
 
     return `
-      <div class="question-block">
-        <div class="question-header">
-          <span class="question-title">${q.title}</span>
-          <span class="spec-badge">${q.tag}</span>
+      <div class="question-block ${isOpen ? 'open' : ''}" id="qBlock_${q.key}">
+        <div class="question-header" onclick="toggleQuestionAccordion('${q.key}')">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span class="spec-accordion-chevron">▼</span>
+            <span class="question-title">${q.title}</span>
+            <span class="spec-badge">${q.tag}</span>
+          </div>
+          ${isAnswered ? '<span class="status-badge agreed" style="font-size:0.75rem;">✓ Answered</span>' : '<span class="status-badge pending" style="font-size:0.75rem;">Pending</span>'}
         </div>
-        <p class="question-desc">${q.desc}</p>
-        <textarea class="form-control" name="${q.key}" placeholder="Answer here..." ${isDesignerMode ? 'readonly' : ''}>${val}</textarea>
+        <div class="question-body">
+          <p class="question-desc">${q.desc}</p>
+          <textarea class="form-control" name="${q.key}" placeholder="Answer here..." ${isDesignerMode ? 'readonly' : ''}>${val}</textarea>
+        </div>
       </div>
     `;
   }).join('');
 }
+
+window.toggleQuestionAccordion = function(qKey) {
+  const block = document.getElementById(`qBlock_${qKey}`);
+  if (!block) return;
+
+  if (openQuestionKeys.has(qKey)) {
+    openQuestionKeys.delete(qKey);
+    block.classList.remove('open');
+  } else {
+    openQuestionKeys.add(qKey);
+    block.classList.add('open');
+  }
+};
 
 async function handleQuestionnaireSave(e) {
   e.preventDefault();
