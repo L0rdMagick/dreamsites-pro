@@ -859,31 +859,7 @@ async function renderQuestionnaireSpecs() {
                 📎 Attached Brand Assets & Files (${uniqueSpecFiles.length})
               </small>
               <span id="fileUploadStatus_${q.key}" style="font-size:0.8rem;"></span>
-window.openImageLightbox = function(src, name, dim) {
-  const modal = document.getElementById('imageLightboxModal');
-  const img = document.getElementById('lightboxImg');
-  const title = document.getElementById('lightboxTitle');
-  const meta = document.getElementById('lightboxMeta');
-  const dlBtn = document.getElementById('lightboxDownloadBtn');
-
-  if (!modal || !img) return;
-
-  img.src = src;
-  if (title) title.textContent = name || 'Image Preview';
-  if (meta) meta.textContent = dim ? `Image Dimensions: ${dim}` : '';
-  if (dlBtn) {
-    dlBtn.href = src;
-    dlBtn.download = name || 'image';
-  }
-
-  modal.classList.add('active');
-};
-
-window.closeImageLightbox = function(e) {
-  if (e) e.stopPropagation();
-  const modal = document.getElementById('imageLightboxModal');
-  if (modal) modal.classList.remove('active');
-};
+            </div>
 
             <div class="attached-files-container">
               ${uniqueSpecFiles.map(f => {
@@ -1143,9 +1119,34 @@ async function processSpecFileUpload(file, qKey, specId) {
     console.error("Error uploading file:", err);
     if (statusEl) statusEl.innerHTML = `<span style="color:#ff8a80;">Error: ${err.message}</span>`;
   }
-};tusEl.innerHTML = `<span style="color:#ff8a80;">Error: ${err.message}</span>`;
-  }
 }
+
+// Lightbox Modal Handlers
+window.openImageLightbox = function(src, name, dim) {
+  const modal = document.getElementById('imageLightboxModal');
+  const img = document.getElementById('lightboxImg');
+  const title = document.getElementById('lightboxTitle');
+  const meta = document.getElementById('lightboxMeta');
+  const dlBtn = document.getElementById('lightboxDownloadBtn');
+
+  if (!modal || !img) return;
+
+  img.src = src;
+  if (title) title.textContent = name || 'Image Preview';
+  if (meta) meta.textContent = dim ? `Image Dimensions: ${dim}` : '';
+  if (dlBtn) {
+    dlBtn.href = src;
+    dlBtn.download = name || 'image';
+  }
+
+  modal.classList.add('active');
+};
+
+window.closeImageLightbox = function(e) {
+  if (e) e.stopPropagation();
+  const modal = document.getElementById('imageLightboxModal');
+  if (modal) modal.classList.remove('active');
+};
 
 window.deleteSpecFile = async function(fileId, qKey) {
   if (!confirm("Are you sure you want to remove this attached file?")) return;
