@@ -708,9 +708,34 @@ window.toggleSpecAccordion = function(key) {
   }
 };
 
+let projectSpecFilesMap = {};
+
+async function loadSpecFilesForProject() {
+  if (!currentProject) return;
+  try {
+    const { data: files } = await db
+      .from('ds_spec_files')
+      .select('*')
+      .eq('project_id', currentProject.id);
+
+    projectSpecFilesMap = {};
+    if (files) {
+      files.forEach(f => {
+        const key = f.question_key || f.spec_id;
+        if (!projectSpecFilesMap[key]) projectSpecFilesMap[key] = [];
+        projectSpecFilesMap[key].push(f);
+      });
+    }
+  } catch (err) {
+    console.warn("ds_spec_files table check:", err.message);
+  }
+}
+
 async function renderQuestionnaireSpecs() {
   const container = document.getElementById('specsReviewList');
   if (!container) return;
+
+  await loadSpecFilesForProject();
 
   let totalQuote = 0;
   let html = '';
@@ -739,6 +764,9 @@ async function renderQuestionnaireSpecs() {
         .order('created_at', { ascending: true });
       msgs = data || [];
     }
+
+    // Determine attached files for this spec question
+    const specFiles = (projectSpecFilesMap[q.key] || []).concat(specId ? (projectSpecFilesMap[specId] || []) : []);
 
     // Determine latest answer version count
     const versionSaveMsgs = msgs.filter(m => m.message_text && m.message_text.includes('saved answer version'));
@@ -778,6 +806,46 @@ async function renderQuestionnaireSpecs() {
               <button class="btn-portal" onclick="saveSpecAnswerVersion('${q.key}', '${specId || ''}')" style="padding:8px 18px; font-size:0.88rem;">
                 💾 Save Answer ${currentVersionNum > 0 ? `Version ${currentVersionNum + 1}` : 'Version 1'} ↗
               </button>
+            </div>
+          </div>
+
+          <!-- Attached Brand Assets & File Upload Dropzone -->
+          <div style="margin-bottom:16px; background: rgba(0,0,0,0.2); padding: 14px; border-radius: 10px; border: 1px solid var(--card-border);">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+              <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">
+                📎 Attached Brand Assets & Files (${specFiles.length})
+              </small>
+              <span id="fileUploadStatus_${q.key}" style="font-size:0.8rem;"></span>
+            </div>
+
+            <div class="attached-files-container">
+              ${specFiles.map(f => {
+                const isImg = f.file_type && f.file_type.startsWith('image/');
+                const icon = isImg ? '🖼️' : (f.file_type && f.file_type.includes('pdf') ? '📄' : '📦');
+                return `
+                  <div class="attached-file-chip">
+                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview">` : `<span style="font-size:1.2rem;">${icon}</span>`}
+                    <div class="file-chip-info">
+                      <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="file-chip-name" title="${escapeHtml(f.file_name)}">
+                        ${escapeHtml(f.file_name)}
+                      </a>
+                      <span class="file-chip-meta">${f.file_size || ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</span>
+                    </div>
+                    <button class="file-delete-btn" onclick="deleteSpecFile('${f.id}', '${q.key}')" title="Delete file">✕</button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <input type="file" id="fileInput_${q.key}" style="display:none;" onchange="handleSpecFileInputChange(event, '${q.key}', '${specId || ''}')">
+            
+            <div class="file-dropzone" id="dropzone_${q.key}" 
+                 onclick="document.getElementById('fileInput_${q.key}').click()" 
+                 ondragover="event.preventDefault(); this.classList.add('dragover');" 
+                 ondragleave="this.classList.remove('dragover');" 
+                 ondrop="handleSpecFileDrop(event, '${q.key}', '${specId || ''}')">
+              <div class="dropzone-title">📁 Drag & Drop Brand Assets or Click to Upload</div>
+              <div class="dropzone-sub">Logos, High-res Images, PDFs, Brand Guidelines, Docs (PNG, JPG, PDF, ZIP)</div>
             </div>
           </div>
 
@@ -873,6 +941,128 @@ async function renderQuestionnaireSpecs() {
     await db.from('ds_projects').update({ total_quote: totalQuote }).eq('id', currentProject.id);
   }
 }
+
+// File Upload Handlers
+window.handleSpecFileInputChange = async function(e, qKey, specId) {
+  const file = e.target.files && e.target.files[0];
+  if (file) {
+    await processSpecFileUpload(file, qKey, specId);
+  }
+};
+
+window.handleSpecFileDrop = async function(e, qKey, specId) {
+  e.preventDefault();
+  const dropzone = document.getElementById(`dropzone_${qKey}`);
+  if (dropzone) dropzone.classList.remove('dragover');
+
+  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (file) {
+    await processSpecFileUpload(file, qKey, specId);
+  }
+};
+
+function formatBytes(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+async function processSpecFileUpload(file, qKey, specId) {
+  if (!currentProject) return;
+
+  const statusEl = document.getElementById(`fileUploadStatus_${qKey}`);
+  if (statusEl) statusEl.innerHTML = '<span style="color:var(--text-muted);">Uploading file...</span>';
+
+  try {
+    const sizeStr = formatBytes(file.size);
+    const reader = new FileReader();
+
+    reader.onload = async function(e) {
+      const dataUrl = e.target.result;
+      const role = isDesignerMode ? 'designer' : 'client';
+      const senderName = isDesignerMode ? '✦ Admin' : '👤 Client';
+
+      let activeSpecId = specId && specId !== 'null' && specId !== 'undefined' ? specId : null;
+      let existingSpec = currentSpecs.find(s => s.question_key === qKey);
+
+      if (!existingSpec && !activeSpecId) {
+        const qObj = DEFAULT_QUESTIONS.find(q => q.key === qKey);
+        const { data: ins } = await db.from('ds_questionnaire_specs').insert([{
+          project_id: currentProject.id,
+          question_key: qKey,
+          question_text: qObj ? qObj.title : qKey,
+          spec_tag: qObj ? qObj.tag : '#Spec',
+          client_answer: ''
+        }]).select();
+        if (ins && ins[0]) activeSpecId = ins[0].id;
+      } else if (existingSpec) {
+        activeSpecId = existingSpec.id;
+      }
+
+      const fileObj = {
+        id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        project_id: currentProject.id,
+        spec_id: activeSpecId,
+        question_key: qKey,
+        file_name: file.name,
+        file_size: sizeStr,
+        file_type: file.type || 'application/octet-stream',
+        file_data: dataUrl,
+        uploaded_by_role: role,
+        created_at: new Date()
+      };
+
+      try {
+        await db.from('ds_spec_files').insert([fileObj]);
+      } catch (err) {
+        console.warn("Database storage fallback for ds_spec_files:", err.message);
+      }
+
+      if (!projectSpecFilesMap[qKey]) projectSpecFilesMap[qKey] = [];
+      projectSpecFilesMap[qKey].push(fileObj);
+
+      // Insert log entry in chat thread
+      if (activeSpecId) {
+        await db.from('ds_spec_messages').insert([{
+          spec_id: activeSpecId,
+          sender_id: currentUser ? currentUser.id : 'anon',
+          sender_role: role,
+          message_text: `📎 ${senderName} uploaded file: "${file.name}" (${sizeStr})`
+        }]);
+      }
+
+      openSpecIds.add(activeSpecId || qKey);
+      openSpecIds.add(qKey);
+
+      showToastOverlay(`✓ File "${file.name}" Uploaded!`);
+      await loadProjectSpecs();
+    };
+
+    reader.readAsDataURL(file);
+  } catch (err) {
+    console.error("Error uploading file:", err);
+    if (statusEl) statusEl.innerHTML = `<span style="color:#ff8a80;">Error: ${err.message}</span>`;
+  }
+}
+
+window.deleteSpecFile = async function(fileId, qKey) {
+  if (!confirm("Are you sure you want to remove this attached file?")) return;
+
+  try {
+    await db.from('ds_spec_files').delete().eq('id', fileId);
+  } catch (err) {
+    console.warn("Delete file fallback:", err.message);
+  }
+
+  if (projectSpecFilesMap[qKey]) {
+    projectSpecFilesMap[qKey] = projectSpecFilesMap[qKey].filter(f => f.id !== fileId);
+  }
+
+  showToastOverlay("✓ File Attachment Removed");
+  await loadProjectSpecs();
+};
 
 window.saveSpecAnswerVersion = async function(qKey, specId) {
   if (!currentProject) return;
@@ -1100,6 +1290,46 @@ async function renderJobPlan() {
           `).join('')}
         </tbody>
       </table>
+
+      <!-- Aggregated Project Asset Locker -->
+      <div style="margin-top:32px; border-top:1px solid var(--card-border); padding-top:20px;">
+        <h4 style="font-size:1.05rem; margin-bottom:12px;">📁 Project Asset Locker & Uploaded Files</h4>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">
+          All brand logos, guidelines, images, and documents uploaded across project specifications.
+        </p>
+        <div class="asset-locker-grid">
+          ${(() => {
+            let allFiles = [];
+            Object.keys(projectSpecFilesMap).forEach(key => {
+              allFiles = allFiles.concat(projectSpecFilesMap[key] || []);
+            });
+
+            if (allFiles.length === 0) {
+              return '<p style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">No project assets uploaded yet.</p>';
+            }
+
+            return allFiles.map(f => {
+              const isImg = f.file_type && f.file_type.startsWith('image/');
+              return `
+                <div class="asset-locker-card">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset">` : `<span style="font-size:1.5rem;">${isImg ? '🖼️' : '📄'}</span>`}
+                    <div style="overflow:hidden;">
+                      <strong style="font-size:0.88rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color);" title="${escapeHtml(f.file_name)}">
+                        ${escapeHtml(f.file_name)}
+                      </strong>
+                      <small style="color:var(--text-muted); font-size:0.75rem;">${f.file_size || ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</small>
+                    </div>
+                  </div>
+                  <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:6px 12px; font-size:0.8rem; text-align:center; margin-top:6px; text-decoration:none;">
+                    ⬇ Download Asset
+                  </a>
+                </div>
+              `;
+            }).join('');
+          })()}
+        </div>
+      </div>
 
       <!-- Post-Agreement Job Plan Clarification Notes -->
       <div class="qa-thread" style="margin-top:32px;">
