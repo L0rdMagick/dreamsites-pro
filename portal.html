@@ -19,14 +19,30 @@
     <a href="index.html" class="portal-brand">
       <i>D</i> dreamsites<span>.pro</span>
     </a>
-    <div class="portal-nav-right">
+    <div class="portal-nav-right desktop-only">
       <div id="userBadge" class="user-badge" style="display:none;">
         <span id="userEmailLabel">client@example.com</span>
       </div>
       <button id="logoutBtn" class="btn-portal-outline" style="display:none;">Sign Out</button>
       <a href="index.html" class="btn-portal-outline">← Back to Main Site</a>
     </div>
+    <!-- Mobile Hamburger Toggle -->
+    <button id="mobileMenuBtn" class="mobile-hamburger-btn" aria-label="Toggle Menu">☰</button>
   </header>
+
+  <!-- Mobile Dropdown Menu Drawer -->
+  <div id="portalMobileMenu" class="portal-mobile-menu">
+    <div id="mobileUserBadge" class="user-badge" style="display:none; margin-bottom:12px; text-align:center;">
+      <span id="mobileUserEmailLabel">client@example.com</span>
+    </div>
+    <a href="index.html" class="btn-portal-outline" style="display:block; text-align:center; margin-bottom:8px;">← Back to Main Site</a>
+    <button id="mobileLogoutBtn" class="btn-portal" style="width:100%; justify-content:center; display:none;">Sign Out</button>
+  </div>
+
+  <!-- Global Fading Toast Overlay Notification -->
+  <div id="toastOverlay" class="toast-overlay">
+    <span id="toastText">✓ Action Saved!</span>
+  </div>
 
   <main class="portal-container">
 

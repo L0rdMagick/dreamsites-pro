@@ -635,3 +635,64 @@ textarea.form-control {
   border: 1px solid rgba(46, 175, 125, 0.3);
   color: var(--green-accent);
 }
+
+/* Mobile Hamburger Button & Drawer */
+.mobile-hamburger-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  font-size: 1.4rem;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.portal-mobile-menu {
+  display: none;
+  background: rgba(22, 30, 26, 0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--card-border);
+  padding: 16px 20px;
+  position: sticky;
+  top: 65px;
+  z-index: 99;
+}
+
+.portal-mobile-menu.open {
+  display: block;
+}
+
+/* 2-Second Fading Toast Overlay Notification */
+.toast-overlay {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #17221d;
+  border: 1px solid var(--coral-accent);
+  color: var(--text-main);
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-overlay.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-hamburger-btn {
+    display: block !important;
+  }
+}

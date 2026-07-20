@@ -110,7 +110,7 @@ function setupEventListeners() {
     authForm.addEventListener('submit', handleAuthSubmit);
   }
 
-  // Logout
+  // Desktop Logout
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', handleLogout);
@@ -142,6 +142,35 @@ function setupEventListeners() {
       }
     });
   }
+
+  // Mobile Hamburger Menu Toggle
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('portalMobileMenu');
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+  }
+
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  if (mobileLogoutBtn) {
+    mobileLogoutBtn.addEventListener('click', handleLogout);
+  }
+}
+
+let toastTimer = null;
+function showToastOverlay(message) {
+  const el = document.getElementById('toastOverlay');
+  const txt = document.getElementById('toastText');
+  if (!el || !txt) return;
+
+  txt.textContent = message;
+  el.classList.add('show');
+
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    el.classList.remove('show');
+  }, 2000);
 }
 
 async function checkSession() {
@@ -262,9 +291,19 @@ async function loadUserProfile() {
     }
 
     // Set UI Header Info
-    document.getElementById('userEmailLabel').textContent = `${currentProfile.full_name || currentUser.email} (${currentProfile.role.toUpperCase()})`;
+    const labelTxt = `${currentProfile.full_name || currentUser.email} (${currentProfile.role.toUpperCase()})`;
+    document.getElementById('userEmailLabel').textContent = labelTxt;
     document.getElementById('userBadge').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
+
+    if (document.getElementById('mobileUserEmailLabel')) {
+      document.getElementById('mobileUserEmailLabel').textContent = labelTxt;
+      document.getElementById('mobileUserBadge').style.display = 'block';
+    }
+    if (document.getElementById('mobileLogoutBtn')) {
+      document.getElementById('mobileLogoutBtn').style.display = 'flex';
+    }
+
     document.getElementById('authSection').style.display = 'none';
     document.getElementById('portalDashboard').style.display = 'block';
 
@@ -445,6 +484,7 @@ async function handleQuestionnaireSave(e) {
     }
 
     statusMsg.innerHTML = '<div class="alert-msg success">✓ Questionnaire saved! Your answers are ready for spec review & line-item pricing.</div>';
+    showToastOverlay("✓ Questionnaire Answers Saved!");
     await loadProjectSpecs();
     setTimeout(() => { statusMsg.innerHTML = ''; }, 3000);
   } catch (err) {
@@ -615,6 +655,7 @@ window.saveDesignerSpecUpdate = async function(specId) {
       setTimeout(() => { feedbackEl.innerHTML = ''; }, 3000);
     }
 
+    showToastOverlay(`✓ Price Saved ($${cost.toFixed(2)})!`);
     await loadProjectSpecs();
   } catch (err) {
     console.error("Error updating spec:", err);
@@ -638,6 +679,7 @@ window.sendSpecMessage = async function(specId) {
 
   openSpecIds.add(specId);
   input.value = '';
+  showToastOverlay("✓ Discussion Note Posted!");
   await renderSpecsReview();
 };
 
@@ -651,6 +693,7 @@ window.toggleSpecSignOff = async function(specId, role) {
 
   openSpecIds.add(specId);
   await db.from('ds_questionnaire_specs').update(updateObj).eq('id', specId);
+  showToastOverlay("✓ Spec Agreement Updated!");
   await loadProjectSpecs();
 };
 
@@ -775,6 +818,7 @@ window.addJobPlanNote = async function(jobPlanId) {
   }]);
 
   input.value = '';
+  showToastOverlay("✓ Job Plan Note Added!");
   await renderJobPlan();
 };
 
