@@ -710,25 +710,63 @@ window.toggleSpecAccordion = function(key) {
 
 let projectSpecFilesMap = {};
 
-async function loadSpecFilesForProject() {
+function getLocalProjectFiles() {
+  if (!currentProject) return [];
+  try {
+    const raw = localStorage.getItem('ds_files_' + currentProject.id);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLocalProjectFile(fileObj) {
   if (!currentProject) return;
   try {
-    const { data: files } = await db
+    const files = getLocalProjectFiles();
+    files.push(fileObj);
+    localStorage.setItem('ds_files_' + currentProject.id, JSON.stringify(files));
+  } catch (e) {
+    console.warn("localStorage save error:", e);
+  }
+}
+
+function deleteLocalProjectFile(fileId) {
+  if (!currentProject) return;
+  try {
+    const files = getLocalProjectFiles().filter(f => f.id !== fileId);
+    localStorage.setItem('ds_files_' + currentProject.id, JSON.stringify(files));
+  } catch (e) {}
+}
+
+async function loadSpecFilesForProject() {
+  if (!currentProject) return;
+
+  const localFiles = getLocalProjectFiles();
+  let dbFiles = [];
+
+  try {
+    const { data } = await db
       .from('ds_spec_files')
       .select('*')
       .eq('project_id', currentProject.id);
-
-    projectSpecFilesMap = {};
-    if (files) {
-      files.forEach(f => {
-        const key = f.question_key || f.spec_id;
-        if (!projectSpecFilesMap[key]) projectSpecFilesMap[key] = [];
-        projectSpecFilesMap[key].push(f);
-      });
-    }
+    dbFiles = data || [];
   } catch (err) {
     console.warn("ds_spec_files table check:", err.message);
   }
+
+  // Merge localFiles and dbFiles by ID
+  const mapById = new Map();
+  localFiles.forEach(f => mapById.set(f.id, f));
+  dbFiles.forEach(f => mapById.set(f.id, f));
+  const mergedFiles = Array.from(mapById.values());
+
+  projectSpecFilesMap = {};
+  mergedFiles.forEach(f => {
+    const key = f.question_key || f.spec_id;
+    if (!projectSpecFilesMap[key]) projectSpecFilesMap[key] = [];
+    projectSpecFilesMap[key].push(f);
+  });
 }
 
 async function renderQuestionnaireSpecs() {
@@ -767,6 +805,11 @@ async function renderQuestionnaireSpecs() {
 
     // Determine attached files for this spec question
     const specFiles = (projectSpecFilesMap[q.key] || []).concat(specId ? (projectSpecFilesMap[specId] || []) : []);
+    
+    // Deduplicate specFiles by id
+    const uniqueSpecFilesMap = new Map();
+    specFiles.forEach(f => uniqueSpecFilesMap.set(f.id, f));
+    const uniqueSpecFiles = Array.from(uniqueSpecFilesMap.values());
 
     // Determine latest answer version count
     const versionSaveMsgs = msgs.filter(m => m.message_text && m.message_text.includes('saved answer version'));
@@ -813,13 +856,13 @@ async function renderQuestionnaireSpecs() {
           <div style="margin-bottom:16px; background: rgba(0,0,0,0.2); padding: 14px; border-radius: 10px; border: 1px solid var(--card-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
               <small style="color:var(--text-muted); font-weight:700; text-transform:uppercase; font-size:0.75rem;">
-                📎 Attached Brand Assets & Files (${specFiles.length})
+                📎 Attached Brand Assets & Files (${uniqueSpecFiles.length})
               </small>
               <span id="fileUploadStatus_${q.key}" style="font-size:0.8rem;"></span>
             </div>
 
             <div class="attached-files-container">
-              ${specFiles.map(f => {
+              ${uniqueSpecFiles.map(f => {
                 const isImg = f.file_type && f.file_type.startsWith('image/');
                 const icon = isImg ? '🖼️' : (f.file_type && f.file_type.includes('pdf') ? '📄' : '📦');
                 return `
@@ -882,6 +925,7 @@ async function renderQuestionnaireSpecs() {
             <div id="msgContainer_${accordionKey}">
               ${(msgs && msgs.length > 0) ? msgs.map(m => {
                 const isVersionSave = m.message_text && m.message_text.includes('has saved answer version');
+                const isFileUpload = m.message_text && m.message_text.includes('uploaded file:');
                 if (isVersionSave) {
                   return `
                     <div class="message-bubble version-save">
@@ -891,6 +935,17 @@ async function renderQuestionnaireSpecs() {
                       </span>
                       <div style="white-space: pre-wrap; font-weight:500; margin-top:4px;">${escapeHtml(m.message_text)}</div>
                       <span class="msg-time">${new Date(m.created_at).toLocaleString([], {month:'short', day:'numeric', hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                  `;
+                }
+                if (isFileUpload) {
+                  return `
+                    <div class="message-bubble ${m.sender_role}" style="border: 1px solid rgba(255, 107, 82, 0.3); background: rgba(255, 107, 82, 0.08);">
+                      <span class="msg-sender ${m.sender_role === 'designer' ? 'designer-name' : ''}">
+                        ${m.sender_role === 'designer' ? '✦ Designer/Developer' : '👤 Client'}
+                      </span>
+                      <div style="margin-top:4px; font-size:0.92rem;">${m.message_text}</div>
+                      <span class="msg-time">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                     </div>
                   `;
                 }
@@ -1014,6 +1069,8 @@ async function processSpecFileUpload(file, qKey, specId) {
         created_at: new Date()
       };
 
+      saveLocalProjectFile(fileObj);
+
       try {
         await db.from('ds_spec_files').insert([fileObj]);
       } catch (err) {
@@ -1023,13 +1080,14 @@ async function processSpecFileUpload(file, qKey, specId) {
       if (!projectSpecFilesMap[qKey]) projectSpecFilesMap[qKey] = [];
       projectSpecFilesMap[qKey].push(fileObj);
 
-      // Insert log entry in chat thread
+      // Insert log entry in chat thread with interactive download link
       if (activeSpecId) {
+        const chatLinkMsg = `📎 ${senderName} uploaded file: <a href="${dataUrl}" download="${escapeHtml(file.name)}" target="_blank" style="color:var(--coral-accent); font-weight:700; text-decoration:underline;">⬇ Download ${escapeHtml(file.name)} (${sizeStr})</a>`;
         await db.from('ds_spec_messages').insert([{
           spec_id: activeSpecId,
           sender_id: currentUser ? currentUser.id : 'anon',
           sender_role: role,
-          message_text: `📎 ${senderName} uploaded file: "${file.name}" (${sizeStr})`
+          message_text: chatLinkMsg
         }]);
       }
 
@@ -1049,6 +1107,8 @@ async function processSpecFileUpload(file, qKey, specId) {
 
 window.deleteSpecFile = async function(fileId, qKey) {
   if (!confirm("Are you sure you want to remove this attached file?")) return;
+
+  deleteLocalProjectFile(fileId);
 
   try {
     await db.from('ds_spec_files').delete().eq('id', fileId);
