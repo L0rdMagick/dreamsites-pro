@@ -710,6 +710,63 @@ window.toggleSpecAccordion = function(key) {
 
 let projectSpecFilesMap = {};
 
+// High-Capacity IndexedDB File Storage Engine
+function openFileIndexedDB() {
+  return new Promise((resolve) => {
+    if (!window.indexedDB) return resolve(null);
+    const req = window.indexedDB.open('DreamSitesFilesDB', 1);
+    req.onupgradeneeded = function(e) {
+      const dbInstance = e.target.result;
+      if (!dbInstance.objectStoreNames.contains('files')) {
+        dbInstance.createObjectStore('files', { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = (e) => resolve(e.target.result);
+    req.onerror = () => resolve(null);
+  });
+}
+
+async function saveIndexedDBFile(fileObj) {
+  try {
+    const idb = await openFileIndexedDB();
+    if (!idb) return;
+    const tx = idb.transaction('files', 'readwrite');
+    const store = tx.objectStore('files');
+    store.put(fileObj);
+  } catch (e) {
+    console.warn("IndexedDB save error:", e);
+  }
+}
+
+async function getIndexedDBFiles(projectId) {
+  try {
+    const idb = await openFileIndexedDB();
+    if (!idb) return [];
+    return new Promise((resolve) => {
+      const tx = idb.transaction('files', 'readonly');
+      const store = tx.objectStore('files');
+      const req = store.getAll();
+      req.onsuccess = () => {
+        const all = req.result || [];
+        resolve(all.filter(f => f.project_id === projectId));
+      };
+      req.onerror = () => resolve([]);
+    });
+  } catch (e) {
+    return [];
+  }
+}
+
+async function deleteIndexedDBFile(fileId) {
+  try {
+    const idb = await openFileIndexedDB();
+    if (!idb) return;
+    const tx = idb.transaction('files', 'readwrite');
+    const store = tx.objectStore('files');
+    store.delete(fileId);
+  } catch (e) {}
+}
+
 function getLocalProjectFiles() {
   if (!currentProject) return [];
   try {
@@ -722,17 +779,19 @@ function getLocalProjectFiles() {
 
 function saveLocalProjectFile(fileObj) {
   if (!currentProject) return;
+  saveIndexedDBFile(fileObj);
   try {
     const files = getLocalProjectFiles();
     files.push(fileObj);
     localStorage.setItem('ds_files_' + currentProject.id, JSON.stringify(files));
   } catch (e) {
-    console.warn("localStorage save error:", e);
+    console.warn("localStorage quota exceeded, preserved in IndexedDB:", e);
   }
 }
 
 function deleteLocalProjectFile(fileId) {
   if (!currentProject) return;
+  deleteIndexedDBFile(fileId);
   try {
     const files = getLocalProjectFiles().filter(f => f.id !== fileId);
     localStorage.setItem('ds_files_' + currentProject.id, JSON.stringify(files));
@@ -743,6 +802,7 @@ async function loadSpecFilesForProject() {
   if (!currentProject) return;
 
   const localFiles = getLocalProjectFiles();
+  const idbFiles = await getIndexedDBFiles(currentProject.id);
   let dbFiles = [];
 
   try {
@@ -755,17 +815,69 @@ async function loadSpecFilesForProject() {
     console.warn("ds_spec_files table check:", err.message);
   }
 
-  // Merge localFiles and dbFiles by ID
+  // FAIL-SAFE CHAT MESSAGES PARSER: Recover uploaded files directly from ds_spec_messages
+  let recoveredChatFiles = [];
+  try {
+    const specIds = currentSpecs.map(s => s.id);
+    if (specIds.length > 0) {
+      const { data: msgs } = await db
+        .from('ds_spec_messages')
+        .select('*')
+        .in('spec_id', specIds);
+
+      (msgs || []).forEach(m => {
+        if (m.message_text && m.message_text.includes('uploaded file:')) {
+          const specObj = currentSpecs.find(s => s.id === m.spec_id);
+          const qKey = specObj ? specObj.question_key : null;
+
+          const hrefMatch = m.message_text.match(/href="([^"]+)"/);
+          const downloadMatch = m.message_text.match(/download="([^"]+)"/);
+          const textMatch = m.message_text.match(/⬇ Download ([^\(]+)\s*\(([^\)]+)\)/);
+
+          if (hrefMatch && hrefMatch[1] && downloadMatch && downloadMatch[1]) {
+            const dataUrl = hrefMatch[1];
+            const fileName = downloadMatch[1];
+            const metaStr = textMatch ? textMatch[2] : '';
+            const sizeStr = metaStr.split('•')[0] ? metaStr.split('•')[0].trim() : 'Asset';
+            const dimStr = metaStr.split('•')[1] ? metaStr.split('•')[1].trim() : null;
+
+            recoveredChatFiles.push({
+              id: 'chat_file_' + m.id,
+              project_id: currentProject.id,
+              spec_id: m.spec_id,
+              question_key: qKey,
+              file_name: fileName,
+              file_size: sizeStr,
+              file_dimensions: dimStr,
+              file_type: fileName.toLowerCase().endsWith('.png') ? 'image/png' : (fileName.toLowerCase().endsWith('.jpg') || fileName.toLowerCase().endsWith('.jpeg') ? 'image/jpeg' : 'image/*'),
+              file_data: dataUrl,
+              uploaded_by_role: m.sender_role,
+              created_at: m.created_at
+            });
+          }
+        }
+      });
+    }
+  } catch (err) {
+    console.warn("Chat file recovery check:", err.message);
+  }
+
+  // Merge localFiles, idbFiles, dbFiles, and recoveredChatFiles by unique key
   const mapById = new Map();
-  localFiles.forEach(f => mapById.set(f.id, f));
-  dbFiles.forEach(f => mapById.set(f.id, f));
+  localFiles.forEach(f => mapById.set(f.file_data ? f.file_data.substr(0, 100) + '_' + f.file_name : f.id, f));
+  idbFiles.forEach(f => mapById.set(f.file_data ? f.file_data.substr(0, 100) + '_' + f.file_name : f.id, f));
+  dbFiles.forEach(f => mapById.set(f.file_data ? f.file_data.substr(0, 100) + '_' + f.file_name : f.id, f));
+  recoveredChatFiles.forEach(f => mapById.set(f.file_data ? f.file_data.substr(0, 100) + '_' + f.file_name : f.id, f));
+
   const mergedFiles = Array.from(mapById.values());
 
   projectSpecFilesMap = {};
   mergedFiles.forEach(f => {
     const key = f.question_key || f.spec_id;
-    if (!projectSpecFilesMap[key]) projectSpecFilesMap[key] = [];
-    projectSpecFilesMap[key].push(f);
+    if (key) {
+      if (!projectSpecFilesMap[key]) projectSpecFilesMap[key] = [];
+      projectSpecFilesMap[key].push(f);
+    }
   });
 }
 
