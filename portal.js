@@ -750,6 +750,17 @@ async function openUserProject(projectId) {
         titleEl.innerHTML = `${escapeHtml(currentProject.project_name || 'Project Workspace')} <span style="font-size:0.8rem; padding:2px 8px; border-radius:12px; font-weight:600; background:rgba(255,255,255,0.08); color:var(--text-muted); margin-left:6px;">${typeBadge}</span>`;
       }
 
+      const specsContainer = document.getElementById('specsReviewList');
+      if (specsContainer) {
+        specsContainer.innerHTML = `
+          <div style="padding:40px 20px; text-align:center; color:var(--text-muted);">
+            <div style="font-size:1.8rem; margin-bottom:10px;">⏳</div>
+            <strong style="display:block; color:var(--text-main); font-size:1.05rem;">Loading Workspace Specifications...</strong>
+            <span style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Retrieving answers, files, and discussion threads...</span>
+          </div>
+        `;
+      }
+
       document.getElementById('projectsSection').style.display = 'none';
       document.getElementById('portalDashboard').style.display = 'block';
 
@@ -1111,6 +1122,28 @@ async function renderQuestionnaireSpecs() {
     qTitleEl.innerHTML = isApp ? '📱 Application Specs & Architecture Questionnaire' : '🌐 Website Design Specs & Questionnaire';
   }
 
+  // BATCH QUERY: Fetch all discussion messages for active specs in 1 single network request
+  const allSpecIds = currentSpecs.map(s => s.id).filter(Boolean);
+  const specMessagesMap = {};
+  if (allSpecIds.length > 0) {
+    try {
+      const { data: allMsgs } = await db
+        .from('ds_spec_messages')
+        .select('*')
+        .in('spec_id', allSpecIds)
+        .order('created_at', { ascending: true });
+
+      if (allMsgs) {
+        allMsgs.forEach(m => {
+          if (!specMessagesMap[m.spec_id]) specMessagesMap[m.spec_id] = [];
+          specMessagesMap[m.spec_id].push(m);
+        });
+      }
+    } catch (msgErr) {
+      console.warn("Batch spec message fetch error:", msgErr.message);
+    }
+  }
+
   for (const q of activeQuestions) {
     const spec = currentSpecs.find(s => s.question_key === q.key);
     const specId = spec ? spec.id : null;
@@ -1125,16 +1158,8 @@ async function renderQuestionnaireSpecs() {
     const accordionKey = specId || q.key;
     const isOpen = openSpecIds.has(accordionKey) || openSpecIds.has(q.key);
 
-    // Fetch messages for this spec if it exists
-    let msgs = [];
-    if (specId) {
-      const { data } = await db
-        .from('ds_spec_messages')
-        .select('*')
-        .eq('spec_id', specId)
-        .order('created_at', { ascending: true });
-      msgs = data || [];
-    }
+    // Look up messages instantly from batched specMessagesMap
+    const msgs = specId ? (specMessagesMap[specId] || []) : [];
 
     // Determine attached files for this spec question
     const specFiles = (projectSpecFilesMap[q.key] || []).concat(specId ? (projectSpecFilesMap[specId] || []) : []);
