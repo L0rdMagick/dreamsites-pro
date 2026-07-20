@@ -84,6 +84,30 @@ const DEFAULT_QUESTIONS = [
     title: '10. Target Deadline & Investment Budget',
     tag: '#Timeline-Budget',
     desc: 'What is your target launch deadline and preferred budget range for this website/app project?'
+  },
+  {
+    key: 'domain_hosting',
+    title: '11. Domain, Hosting & Infrastructure',
+    tag: '#Domain-Hosting',
+    desc: 'Do you already own your domain name and web hosting (e.g. GoDaddy, Namecheap, Cloudflare), or do you need assistance purchasing, configuring DNS, and setting up SSL certificates?'
+  },
+  {
+    key: 'third_party_integrations',
+    title: '12. Third-Party Software & API Integrations',
+    tag: '#Integrations-APIs',
+    desc: 'Which existing business software tools must connect to your site? (e.g. CRM like HubSpot/Salesforce, Email Marketing like Mailchimp/Klaviyo, Calendly, Zapier, ERP, or payment gateways)'
+  },
+  {
+    key: 'maintenance_care',
+    title: '13. Post-Launch Maintenance & Technical Care',
+    tag: '#Maintenance-Care',
+    desc: 'Do you require ongoing post-launch support, monthly security updates, automated backups, speed optimization, or a content update retainer?'
+  },
+  {
+    key: 'multilingual_accessibility',
+    title: '14. Multilingual & ADA Accessibility Compliance',
+    tag: '#Multilingual-ADA',
+    desc: 'Does your website need to support multiple languages or adhere to formal accessibility standards (WCAG 2.1 / ADA compliance)?'
   }
 ];
 
