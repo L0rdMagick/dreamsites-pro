@@ -153,7 +153,11 @@ function setupEventListeners() {
   const btnBackToProjects = document.getElementById('btnBackToProjects');
   if (btnBackToProjects) {
     btnBackToProjects.addEventListener('click', async () => {
-      await loadUserProjectsList();
+      if (isDesignerMode) {
+        await loadAdminClientList();
+      } else {
+        await loadUserProjectsList();
+      }
     });
   }
 
@@ -163,7 +167,7 @@ function setupEventListeners() {
     adminClientSelect.addEventListener('change', async (e) => {
       const selectedProjectId = e.target.value;
       if (selectedProjectId) {
-        await loadProjectById(selectedProjectId);
+        await selectAdminProject(selectedProjectId);
       }
     });
   }
@@ -353,6 +357,14 @@ async function loadUserProjectsList() {
     document.getElementById('projectsSection').style.display = 'block';
     document.getElementById('portalDashboard').style.display = 'none';
 
+    const titleHeader = document.getElementById('projectsTitleHeader');
+    const subtitleHeader = document.getElementById('projectsSubtitleHeader');
+    if (titleHeader) titleHeader.innerHTML = 'My <em>Projects</em>';
+    if (subtitleHeader) subtitleHeader.textContent = 'Select a project card to view & edit its questionnaire, specs, and job sheet, or create a new project.';
+
+    const createBtn = document.getElementById('createProjectHeaderBtn');
+    if (createBtn) createBtn.style.display = 'inline-flex';
+
     let { data: projects, error } = await db
       .from('ds_projects')
       .select('*')
@@ -522,37 +534,103 @@ async function loadAdminClientList() {
   try {
     const { data: projects, error } = await db
       .from('ds_projects')
-      .select('*, ds_profiles(full_name, company_name, email)');
+      .select('*, ds_profiles(full_name, company_name, email)')
+      .order('created_at', { ascending: false });
 
     adminAllClients = projects || [];
     const selectEl = document.getElementById('adminClientSelect');
 
     if (!adminAllClients || adminAllClients.length === 0) {
       selectEl.innerHTML = '<option value="">No client projects submitted yet</option>';
-      return;
+    } else {
+      selectEl.innerHTML = adminAllClients.map(p => {
+        const clientName = p.ds_profiles ? (p.ds_profiles.company_name || p.ds_profiles.full_name || p.ds_profiles.email) : 'Client Project';
+        return `<option value="${p.id}">${clientName} — ${p.project_name} ($${parseFloat(p.total_quote || 0).toFixed(2)})</option>`;
+      }).join('');
     }
 
-    selectEl.innerHTML = adminAllClients.map(p => {
-      const clientName = p.ds_profiles ? (p.ds_profiles.company_name || p.ds_profiles.full_name || p.ds_profiles.email) : 'Client Project';
-      return `<option value="${p.id}">${clientName} — ${p.project_name} ($${parseFloat(p.total_quote || 0).toFixed(2)})</option>`;
-    }).join('');
+    // Update Headers for Admin Mode
+    const titleHeader = document.getElementById('projectsTitleHeader');
+    const subtitleHeader = document.getElementById('projectsSubtitleHeader');
+    if (titleHeader) titleHeader.innerHTML = 'All Client <em>Projects</em>';
+    if (subtitleHeader) subtitleHeader.textContent = 'Select any client project card below or use the top dropdown to review & edit specs.';
 
-    if (adminAllClients.length > 0) {
-      await loadProjectById(adminAllClients[0].id);
-    }
+    const createBtn = document.getElementById('createProjectHeaderBtn');
+    if (createBtn) createBtn.style.display = 'none';
+
+    // Show projects cards section by default for admin
+    document.getElementById('projectsSection').style.display = 'block';
+    document.getElementById('portalDashboard').style.display = 'none';
+
+    renderAdminProjectCards();
   } catch (err) {
     console.error("Error loading admin client list:", err);
   }
 }
 
+function renderAdminProjectCards() {
+  const gridEl = document.getElementById('projectsGrid');
+  if (!gridEl) return;
+
+  if (adminAllClients.length === 0) {
+    gridEl.innerHTML = '<p style="color:var(--text-muted);">No client projects found.</p>';
+    return;
+  }
+
+  gridEl.innerHTML = adminAllClients.map(p => {
+    const clientName = p.ds_profiles ? (p.ds_profiles.company_name || p.ds_profiles.full_name || p.ds_profiles.email) : 'Client Project';
+    const createdDate = p.created_at ? new Date(p.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    const quoteVal = parseFloat(p.total_quote || 0).toFixed(2);
+    const statusObj = formatProjectStatus(p.status);
+
+    return `
+      <div class="project-card-item" onclick="selectAdminProject('${p.id}')">
+        <div>
+          <span class="project-card-client">✦ ${escapeHtml(clientName)}</span>
+          <div class="project-card-title">${escapeHtml(p.project_name || 'Untitled Project')}</div>
+          <span class="spec-tag ${statusObj.tagClass}">${statusObj.text}</span>
+          <div class="project-card-quote">$${quoteVal}</div>
+        </div>
+        <div class="project-card-meta">
+          <span>Created: ${createdDate}</span>
+          <span style="color:var(--coral-accent); font-weight:600;">Review Project →</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function selectAdminProject(projectId) {
+  const selectEl = document.getElementById('adminClientSelect');
+  if (selectEl) {
+    selectEl.value = projectId;
+  }
+  await loadProjectById(projectId);
+}
+
 async function loadProjectById(projectId) {
-  const { data: proj } = await db.from('ds_projects').select('*').eq('id', projectId).single();
+  let proj = adminAllClients.find(p => p.id === projectId);
+  if (!proj) {
+    const { data } = await db.from('ds_projects').select('*').eq('id', projectId).single();
+    proj = data;
+  }
+
   if (proj) {
     currentProject = proj;
     const titleEl = document.getElementById('activeProjectTitle');
     if (titleEl) {
       titleEl.textContent = currentProject.project_name || 'Project Workspace';
     }
+
+    const selectEl = document.getElementById('adminClientSelect');
+    if (selectEl && selectEl.value !== projectId) {
+      selectEl.value = projectId;
+    }
+
+    // Switch screen view to project workspace
+    document.getElementById('projectsSection').style.display = 'none';
+    document.getElementById('portalDashboard').style.display = 'block';
+
     await loadProjectSpecs();
   }
 }

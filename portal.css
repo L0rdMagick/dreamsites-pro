@@ -865,6 +865,19 @@ textarea.form-control {
   opacity: 1;
 }
 
+.project-card-client {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--coral-accent);
+  background: rgba(255, 107, 74, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
 .project-card-title {
   font-size: 1.25rem;
   font-weight: 700;
