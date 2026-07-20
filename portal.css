@@ -854,22 +854,45 @@ textarea.form-control {
   background: rgba(255, 107, 82, 0.15);
 }
 
+.attached-file-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--card-border);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  max-width: 100%;
+}
+
+.attached-file-chip:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.45);
+}
+
 /* Asset Locker on Job Sheet */
 .asset-locker-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 14px;
   margin-top: 14px;
 }
 
 .asset-locker-card {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.35);
   border: 1px solid var(--card-border);
-  padding: 14px;
+  padding: 12px 14px;
   border-radius: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.asset-locker-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .msg-sender {

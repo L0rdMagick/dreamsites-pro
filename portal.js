@@ -867,12 +867,14 @@ async function renderQuestionnaireSpecs() {
                 const icon = isImg ? '🖼️' : (f.file_type && f.file_type.includes('pdf') ? '📄' : '📦');
                 return `
                   <div class="attached-file-chip">
-                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` : `<span style="font-size:1.2rem;">${icon}</span>`}
+                    ${isImg && f.file_data 
+                      ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` 
+                      : `<span style="font-size:1.3rem;">${icon}</span>`
+                    }
                     <div class="file-chip-info">
-                      <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="file-chip-name" title="${escapeHtml(f.file_name)}">
-                        ${escapeHtml(f.file_name)}
+                      <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:4px 10px; font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                        ⬇ Download Asset
                       </a>
-                      <span class="file-chip-meta">${f.file_size || ''}${f.file_dimensions ? ` • ${f.file_dimensions}` : ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</span>
                     </div>
                     <button class="file-delete-btn" onclick="deleteSpecFile('${f.id}', '${q.key}')" title="Delete file">✕</button>
                   </div>
@@ -1122,7 +1124,7 @@ async function processSpecFileUpload(file, qKey, specId) {
 }
 
 // Lightbox Modal Handlers
-window.openImageLightbox = function(src, name, dim) {
+window.openImageLightbox = function(src, name, size, type, dim) {
   const modal = document.getElementById('imageLightboxModal');
   const img = document.getElementById('lightboxImg');
   const title = document.getElementById('lightboxTitle');
@@ -1133,11 +1135,41 @@ window.openImageLightbox = function(src, name, dim) {
 
   img.src = src;
   if (title) title.textContent = name || 'Image Preview';
-  if (meta) meta.textContent = dim ? `Image Dimensions: ${dim}` : '';
   if (dlBtn) {
     dlBtn.href = src;
     dlBtn.download = name || 'image';
   }
+
+  // Determine user-friendly file format
+  let typeLabel = 'Image';
+  if (type) {
+    if (type.includes('png')) typeLabel = 'PNG Image';
+    else if (type.includes('jpeg') || type.includes('jpg')) typeLabel = 'JPEG Image';
+    else if (type.includes('svg')) typeLabel = 'SVG Vector';
+    else if (type.includes('webp')) typeLabel = 'WebP Image';
+    else if (type.includes('gif')) typeLabel = 'GIF Image';
+    else typeLabel = type.split('/')[1] ? type.split('/')[1].toUpperCase() : 'Image';
+  } else if (name && name.includes('.')) {
+    typeLabel = name.split('.').pop().toUpperCase() + ' File';
+  }
+
+  const updateMetaDisplay = (dimensionsStr) => {
+    let parts = [];
+    if (dimensionsStr) parts.push(`<b>Dimensions:</b> ${dimensionsStr}`);
+    if (size) parts.push(`<b>Size:</b> ${size}`);
+    if (typeLabel) parts.push(`<b>Type:</b> ${typeLabel}`);
+    if (meta) meta.innerHTML = parts.join(' &nbsp;|&nbsp; ');
+  };
+
+  updateMetaDisplay(dim);
+
+  // Dynamic on-the-fly dimension detection when image loads
+  img.onload = function() {
+    if (img.naturalWidth && img.naturalHeight) {
+      const calcDim = `${img.naturalWidth} × ${img.naturalHeight} px`;
+      updateMetaDisplay(calcDim);
+    }
+  };
 
   modal.classList.add('active');
 };
@@ -1413,20 +1445,18 @@ async function renderJobPlan() {
 
             return allFiles.map(f => {
               const isImg = f.file_type && f.file_type.startsWith('image/');
+              const icon = isImg ? '🖼️' : (f.file_type && f.file_type.includes('pdf') ? '📄' : '📦');
               return `
                 <div class="asset-locker-card">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    ${isImg && f.file_data ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` : `<span style="font-size:1.5rem;">${isImg ? '🖼️' : '📄'}</span>`}
-                    <div style="overflow:hidden;">
-                      <strong style="font-size:0.88rem; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-color);" title="${escapeHtml(f.file_name)}">
-                        ${escapeHtml(f.file_name)}
-                      </strong>
-                      <small style="color:var(--text-muted); font-size:0.75rem;">${f.file_size || ''}${f.file_dimensions ? ` • ${f.file_dimensions}` : ''} • ${f.uploaded_by_role === 'designer' ? '✦ Admin' : '👤 Client'}</small>
-                    </div>
+                  ${isImg && f.file_data 
+                    ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` 
+                    : `<span style="font-size:1.4rem;">${icon}</span>`
+                  }
+                  <div class="file-chip-info">
+                    <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:4px 10px; font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                      ⬇ Download Asset
+                    </a>
                   </div>
-                  <a href="${f.file_data || '#'}" target="_blank" download="${escapeHtml(f.file_name)}" class="btn-portal-outline" style="padding:6px 12px; font-size:0.8rem; text-align:center; margin-top:6px; text-decoration:none;">
-                    ⬇ Download Asset
-                  </a>
                 </div>
               `;
             }).join('');
