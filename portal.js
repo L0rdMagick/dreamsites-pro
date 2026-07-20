@@ -1122,6 +1122,22 @@ async function renderQuestionnaireSpecs() {
     qTitleEl.innerHTML = isApp ? '📱 Application Specs & Architecture Questionnaire' : '🌐 Website Design Specs & Questionnaire';
   }
 
+  // Collect any custom user/admin generated spec items in currentSpecs
+  const customQuestionObjs = [];
+  currentSpecs.forEach(s => {
+    const isBuiltIn = activeQuestions.some(aq => aq.key === s.question_key);
+    if (!isBuiltIn && s.question_key) {
+      customQuestionObjs.push({
+        key: s.question_key,
+        title: s.question_text || 'Custom Spec Item',
+        tag: s.spec_tag || '#Custom-Spec',
+        desc: 'Custom line-item specification created for this project workspace.'
+      });
+    }
+  });
+
+  const displayQuestions = [...activeQuestions, ...customQuestionObjs];
+
   // BATCH QUERY: Fetch all discussion messages for active specs in 1 single network request
   const allSpecIds = currentSpecs.map(s => s.id).filter(Boolean);
   const specMessagesMap = {};
@@ -1144,7 +1160,7 @@ async function renderQuestionnaireSpecs() {
     }
   }
 
-  for (const q of activeQuestions) {
+  for (const q of displayQuestions) {
     const spec = currentSpecs.find(s => s.question_key === q.key);
     const specId = spec ? spec.id : null;
     const cost = spec ? parseFloat(spec.line_item_cost || 0) : 0;
@@ -1903,3 +1919,68 @@ function clearAuthError() {
   const el = document.getElementById('authErrorMsg');
   if (el) el.style.display = 'none';
 }
+
+window.showAddCustomSpecModal = function() {
+  const modal = document.getElementById('addCustomSpecModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  const titleInput = document.getElementById('customSpecTitleInput');
+  if (titleInput) {
+    titleInput.value = '';
+    titleInput.focus();
+  }
+};
+
+window.closeAddCustomSpecModal = function(e) {
+  if (e) e.stopPropagation();
+  const modal = document.getElementById('addCustomSpecModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.handleAddCustomSpecSubmit = async function(e) {
+  e.preventDefault();
+  if (!currentProject) {
+    alert("Please open a project workspace first before adding custom specs.");
+    return;
+  }
+
+  const titleInput = document.getElementById('customSpecTitleInput');
+  const tagInput = document.getElementById('customSpecTagInput');
+  const descInput = document.getElementById('customSpecDescInput');
+
+  const title = titleInput ? titleInput.value.trim() : '';
+  const tag = tagInput ? tagInput.value.trim() : '#Custom-Spec';
+  const desc = descInput ? descInput.value.trim() : '';
+
+  if (!title) return;
+
+  const customKey = 'custom_spec_' + Date.now();
+
+  try {
+    const { data: inserted, error } = await db.from('ds_questionnaire_specs').insert([{
+      project_id: currentProject.id,
+      question_key: customKey,
+      question_text: title,
+      spec_tag: tag || '#Custom-Spec',
+      client_answer: desc
+    }]).select();
+
+    if (error) throw error;
+
+    if (titleInput) titleInput.value = '';
+    if (descInput) descInput.value = '';
+
+    closeAddCustomSpecModal();
+    showToastOverlay("✓ Custom Line Item Added!");
+
+    if (inserted && inserted[0]) {
+      openSpecIds.add(inserted[0].id);
+      openSpecIds.add(customKey);
+    }
+
+    await loadProjectSpecs();
+  } catch (err) {
+    console.error("Error creating custom spec item:", err);
+    alert("Could not create custom spec item. Please try again: " + err.message);
+  }
+};

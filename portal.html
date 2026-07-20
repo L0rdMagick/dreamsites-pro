@@ -205,14 +205,16 @@
           </button>
         </div>
 
-        <div class="portal-card">
-          <div class="portal-card-header">
+          <div class="portal-card-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
             <div>
               <h3 id="questionnaireHeaderTitle">Interactive Questionnaire, Specs & Quote Review</h3>
               <p class="question-desc" style="margin-bottom:0;">
                 Answer or update specifications below, save your answer versions, discuss updates in the real-time thread, and agree upon line-item pricing.
               </p>
             </div>
+            <button id="addCustomSpecBtn" class="btn-portal" onclick="showAddCustomSpecModal()" style="padding:10px 18px; font-size:0.9rem; white-space:nowrap; shrink:0;">
+              + Add Custom Spec / Line Item
+            </button>
           </div>
 
           <div id="questionnaireStatusMsg"></div>
@@ -259,6 +261,32 @@
           ⬇ Download Image ↗
         </a>
       </div>
+    </div>
+  <!-- Add Custom Spec Modal -->
+  <div id="addCustomSpecModal" class="lightbox-modal" style="display:none;" onclick="closeAddCustomSpecModal(event)">
+    <div class="lightbox-content" style="max-width:560px; background:var(--card-bg, #1a1a24); border:1px solid var(--coral-accent); border-radius:12px; padding:24px;" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="margin:0; color:var(--coral-accent); font-size:1.2rem;">+ Add Custom Spec / Line Item</h3>
+        <button class="lightbox-close-btn" onclick="closeAddCustomSpecModal(event)" style="position:static;">✕</button>
+      </div>
+      <form id="addCustomSpecForm" onsubmit="handleAddCustomSpecSubmit(event)">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="display:block; margin-bottom:6px; font-weight:600; color:var(--text-main); font-size:0.92rem;">1. Spec / Topic Title</label>
+          <input type="text" id="customSpecTitleInput" class="form-control" placeholder="e.g. 15. Custom Feature: QuickBooks API Sync" required style="width:100%;">
+        </div>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="display:block; margin-bottom:6px; font-weight:600; color:var(--text-main); font-size:0.92rem;">2. Category Tag</label>
+          <input type="text" id="customSpecTagInput" class="form-control" placeholder="e.g. #Custom-Feature or #Integration" value="#Custom-Spec" required style="width:100%;">
+        </div>
+        <div class="form-group" style="margin-bottom:18px;">
+          <label style="display:block; margin-bottom:6px; font-weight:600; color:var(--text-main); font-size:0.92rem;">3. Question / Requirement Details</label>
+          <textarea id="customSpecDescInput" class="form-control" rows="3" placeholder="Describe what you would like specified, requested, or clarified for this line item..." required style="width:100%; resize:vertical;"></textarea>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <button type="button" class="btn-portal-outline" onclick="closeAddCustomSpecModal(event)" style="padding:8px 16px;">Cancel</button>
+          <button type="submit" class="btn-portal" style="padding:8px 22px;">Create Spec Item ↗</button>
+        </div>
+      </form>
     </div>
   </div>
 
