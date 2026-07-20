@@ -201,20 +201,22 @@ const APP_QUESTIONS = [
   }
 ];
 
-function getQuestionsForProject(proj) {
-  if (!proj) return WEBSITE_QUESTIONS;
+function resolveProjectType(proj) {
+  if (!proj) return 'website';
   let pType = (proj.project_type || '').toLowerCase();
   if (!pType && proj.id) {
     pType = (localStorage.getItem(`ds_proj_type_${proj.id}`) || '').toLowerCase();
   }
-  if (!pType && currentSpecs && currentSpecs.length > 0) {
+  if (!pType && currentProject && currentProject.id === proj.id && currentSpecs && currentSpecs.length > 0) {
     const isApp = currentSpecs.some(s => APP_QUESTIONS.some(aq => aq.key === s.question_key));
     if (isApp) pType = 'application';
   }
-  if (pType === 'application' || pType === 'app') {
-    return APP_QUESTIONS;
-  }
-  return WEBSITE_QUESTIONS;
+  return (pType === 'application' || pType === 'app') ? 'application' : 'website';
+}
+
+function getQuestionsForProject(proj) {
+  const pType = resolveProjectType(proj);
+  return pType === 'application' ? APP_QUESTIONS : WEBSITE_QUESTIONS;
 }
 
 
@@ -508,6 +510,41 @@ async function loadUserProjectsList() {
 
     userProjects = projects || [];
 
+    // Hydrate project_type for user projects via background spec check
+    const pIds = userProjects.map(p => p.id);
+    if (pIds.length > 0) {
+      try {
+        const { data: specData } = await db
+          .from('ds_questionnaire_specs')
+          .select('project_id, question_key')
+          .in('project_id', pIds);
+
+        if (specData && specData.length > 0) {
+          const appProjIds = new Set(
+            specData
+              .filter(s => APP_QUESTIONS.some(aq => aq.key === s.question_key))
+              .map(s => s.project_id)
+          );
+          userProjects.forEach(p => {
+            if (appProjIds.has(p.id)) {
+              p.project_type = 'application';
+              localStorage.setItem(`ds_proj_type_${p.id}`, 'application');
+            } else if (!p.project_type) {
+              p.project_type = localStorage.getItem(`ds_proj_type_${p.id}`) || 'website';
+            }
+          });
+        }
+      } catch (checkErr) {
+        console.warn("Spec key detection check fallback:", checkErr.message);
+      }
+    }
+
+    userProjects.forEach(p => {
+      if (!p.project_type) {
+        p.project_type = localStorage.getItem(`ds_proj_type_${p.id}`) || 'website';
+      }
+    });
+
     // If client has no projects yet, auto-create a default project
     if (userProjects.length === 0) {
       const defaultName = (currentProfile.company_name ? currentProfile.company_name + ' Website' : 'My Website Project');
@@ -550,14 +587,16 @@ function renderProjectCards() {
       const createdDate = p.created_at ? new Date(p.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
       const quoteVal = parseFloat(p.total_quote || 0).toFixed(2);
       const statusObj = formatProjectStatus(p.status);
+      const pType = resolveProjectType(p);
+      const isApp = pType === 'application';
 
       return `
         <div class="project-card-item" onclick="openUserProject('${p.id}')">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
               <div class="project-card-title" style="margin-bottom:0;">${escapeHtml(p.project_name || 'Untitled Project')}</div>
-              <span style="font-size:0.75rem; padding:2px 8px; border-radius:10px; font-weight:600; background:rgba(255,255,255,0.06); color:${(p.project_type === 'application' ? 'var(--coral-accent)' : 'var(--text-muted)')}; font-family:'DM Sans', sans-serif;">
-                ${p.project_type === 'application' ? '📱 Application' : '🌐 Website'}
+              <span style="font-size:0.75rem; padding:2px 8px; border-radius:10px; font-weight:600; background:rgba(255,255,255,0.06); color:${(isApp ? 'var(--coral-accent)' : 'var(--text-muted)')}; font-family:'DM Sans', sans-serif;">
+                ${isApp ? '📱 Application' : '🌐 Website'}
               </span>
             </div>
             <span class="spec-tag ${statusObj.tagClass}">${statusObj.text}</span>
@@ -773,12 +812,19 @@ function renderAdminProjectCards() {
     const createdDate = p.created_at ? new Date(p.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
     const quoteVal = parseFloat(p.total_quote || 0).toFixed(2);
     const statusObj = formatProjectStatus(p.status);
+    const pType = resolveProjectType(p);
+    const isApp = pType === 'application';
 
     return `
       <div class="project-card-item" onclick="selectAdminProject('${p.id}')">
         <div>
           <span class="project-card-client">✦ ${escapeHtml(clientName)}</span>
-          <div class="project-card-title">${escapeHtml(p.project_name || 'Untitled Project')}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div class="project-card-title" style="margin-bottom:0;">${escapeHtml(p.project_name || 'Untitled Project')}</div>
+            <span style="font-size:0.75rem; padding:2px 8px; border-radius:10px; font-weight:600; background:rgba(255,255,255,0.06); color:${(isApp ? 'var(--coral-accent)' : 'var(--text-muted)')}; font-family:'DM Sans', sans-serif;">
+              ${isApp ? '📱 Application' : '🌐 Website'}
+            </span>
+          </div>
           <span class="spec-tag ${statusObj.tagClass}">${statusObj.text}</span>
           <div class="project-card-quote">$${quoteVal}</div>
         </div>
