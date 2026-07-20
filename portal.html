@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="portal.css?v=2">
+  <link rel="stylesheet" href="portal.css">
   <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -157,16 +157,42 @@
 
       <!-- Dashboard Navigation Tabs -->
       <nav class="portal-tabs">
-        <button class="tab-btn active" data-tab="specs">
-          <span>1. Questionnaire & Specs</span>
+        <button class="tab-btn active" data-tab="questionnaire">
+          <span>1. Questionnaire</span>
+        </button>
+        <button class="tab-btn" data-tab="specs">
+          <span>2. Specs & Quote</span>
         </button>
         <button class="tab-btn" data-tab="jobplan">
-          <span>2. Job Sheet</span>
+          <span>3. Job Sheet</span>
         </button>
       </nav>
 
-      <!-- TAB 1: Hybrid Questionnaire & Specs -->
-      <div id="tabSpecs">
+      <!-- TAB 1: Questionnaire Form -->
+      <div id="tabQuestionnaire" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <h3>Standardized Web Design & App Questionnaire</h3>
+            <p class="question-desc" style="margin-bottom:0;">
+              Answer these questions to help us understand your project vision. Each response generates a spec line item for quote building.
+            </p>
+          </div>
+        </div>
+
+        <div id="questionnaireStatusMsg"></div>
+
+        <form id="questionnaireForm">
+          <div id="questionnaireFields">
+            <!-- Dynamic fields rendered by portal.js -->
+          </div>
+          <button type="submit" class="btn-portal" style="padding: 12px 28px; font-size: 1rem;">
+            Save Preferences & Generate Spec Sheet ↗
+          </button>
+        </form>
+      </div>
+
+      <!-- TAB 2: Interactive Spec Review, Q&A & Pricing Quote -->
+      <div id="tabSpecs" style="display:none;">
 
         <!-- Total Quote Banner -->
         <div class="quote-summary-box">
@@ -185,15 +211,15 @@
         <div class="portal-card">
           <div class="portal-card-header">
             <div>
-              <h3>Standardized Questionnaire, Specs & Line Pricing</h3>
+              <h3>Interactive Spec Review & Line Pricing</h3>
               <p class="question-desc" style="margin-bottom:0;">
-                Answer or update each question below and save answers to create numbered versions. Discuss clarifications directly in each question's thread.
+                Review each answered specification, discuss follow-up questions in the thread, and agree upon specs to finalize your project quote.
               </p>
             </div>
           </div>
 
           <div id="specsReviewList">
-            <!-- Hybrid Spec Question Cards with Answer Versioning & Chat Threads rendered by portal.js -->
+            <!-- Spec Items with Tags, Prices, Q&A Threads rendered by portal.js -->
           </div>
         </div>
       </div>
@@ -218,6 +244,6 @@
 
   </main>
 
-  <script src="portal.js?v=3"></script>
+  <script src="portal.js"></script>
 </body>
 </html>
