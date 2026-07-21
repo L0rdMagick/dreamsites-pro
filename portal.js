@@ -1708,6 +1708,11 @@ window.sendSpecMessage = async function(specId) {
 
   await db.from('ds_spec_messages').insert([{
     spec_id: specId,
+    sender_id: currentUser ? currentUser.id : 'anon',
+    sender_role: role,
+    message_text: text
+  }]);
+
   openSpecIds.add(specId);
   input.value = '';
   showToastOverlay("✓ Discussion Note Posted!");
