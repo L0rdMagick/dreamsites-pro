@@ -893,6 +893,23 @@ async function loadProjectSpecs() {
 
   currentSpecs = specs || [];
 
+  // Synchronize and persist agreed_client_answer via local cache and signoff state
+  currentSpecs.forEach(s => {
+    const key = `ds_agreed_ans_${currentProject.id}_${s.question_key}`;
+    const storedAgreed = localStorage.getItem(key);
+
+    if (s.client_agreed && s.designer_agreed) {
+      s.agreed_client_answer = s.client_answer;
+      if (s.client_answer) {
+        localStorage.setItem(key, s.client_answer);
+      }
+    } else if (!s.agreed_client_answer && storedAgreed) {
+      s.agreed_client_answer = storedAgreed;
+    } else if (s.agreed_client_answer) {
+      localStorage.setItem(key, s.agreed_client_answer);
+    }
+  });
+
   const activeQuestions = getQuestionsForProject(currentProject);
   // STABLE SORT: Order specs strictly matching activeQuestions sequence
   currentSpecs.sort((a, b) => {
@@ -1777,6 +1794,10 @@ window.toggleSpecSignOff = async function(specId, role) {
     if (isBothAgreed) {
       spec.agreed_client_answer = currentAnswerText;
       spec.change_requested_by = null;
+      if (currentProject && (spec.question_key || specId)) {
+        const key = `ds_agreed_ans_${currentProject.id}_${spec.question_key || specId}`;
+        localStorage.setItem(key, currentAnswerText);
+      }
     }
   }
 
