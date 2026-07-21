@@ -1334,3 +1334,49 @@ textarea.form-control {
   border-top: 1px solid var(--card-border);
 }
 
+/* Vibrant Noticeable Agree / Sign-off Buttons */
+.btn-portal-agree {
+  background: #2ecc71;
+  color: #0d1b11;
+  border: 1px solid #2ecc71;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25);
+}
+
+.btn-portal-agree:hover {
+  background: #27ae60;
+  border-color: #27ae60;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(46, 204, 113, 0.35);
+}
+
+.btn-portal-agreed {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-portal-agreed:hover {
+  background: rgba(46, 204, 113, 0.25);
+}
+

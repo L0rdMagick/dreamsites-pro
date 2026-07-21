@@ -283,6 +283,21 @@
     </div>
   </div>
 
+  <!-- Sign-off Confirmation Modal -->
+  <div id="signoffConfirmModal" class="lightbox-modal" style="display:none;" onclick="closeSignOffModal(event)">
+    <div class="lightbox-content" style="max-width:440px; width:90%; background:var(--card-bg, #1e1e2d); border:1px solid var(--coral-accent); border-radius:14px; padding:24px; text-align:center;" onclick="event.stopPropagation()">
+      <div style="font-size:2.4rem; margin-bottom:10px;">📋</div>
+      <h3 style="margin:0 0 10px 0; color:var(--text-main); font-size:1.25rem;">Confirm Spec Agreement</h3>
+      <p id="signoffConfirmModalText" style="color:var(--text-muted); font-size:0.92rem; line-height:1.5; margin-bottom:22px;">
+        Are you sure you want to sign off and agree to the specification item: <strong id="signoffSpecTitleText" style="color:var(--coral-accent);"></strong>?
+      </p>
+      <div style="display:flex; justify-content:center; gap:12px;">
+        <button class="btn-portal-outline" onclick="closeSignOffModal()" style="padding:10px 20px;">Cancel</button>
+        <button id="signoffConfirmBtn" class="btn-portal-agree" onclick="executeSignOffToggle()" style="padding:10px 22px;">✓ Yes, Agree to Spec</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Add Custom Spec Modal -->
   <div id="addCustomSpecModal" class="lightbox-modal" style="display:none;" onclick="closeAddCustomSpecModal(event)">
     <div class="lightbox-content" style="max-width:560px; background:var(--card-bg, #1a1a24); border:1px solid var(--coral-accent); border-radius:12px; padding:24px;" onclick="event.stopPropagation()">

@@ -1349,13 +1349,13 @@ async function renderQuestionnaireSpecs() {
 
           ${specId ? `
             <!-- Spec Agreement Button -->
-            <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--card-border); padding-top:14px;">
-              <span style="font-size:0.85rem; color:var(--text-muted);">
-                Client Sign-off: <strong>${spec.client_agreed ? '✓ Yes' : 'Pending'}</strong> | 
-                Designer Sign-off: <strong>${spec.designer_agreed ? '✓ Yes' : 'Pending'}</strong>
+            <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--card-border); padding-top:14px; flex-wrap:wrap; gap:10px;">
+              <span style="font-size:0.88rem; color:var(--text-main);">
+                Client Sign-off: <strong style="color:${spec.client_agreed ? '#2ecc71' : 'var(--coral-accent)'};">${spec.client_agreed ? '✓ Yes' : 'Pending'}</strong> &nbsp;|&nbsp; 
+                Designer Sign-off: <strong style="color:${spec.designer_agreed ? '#2ecc71' : 'var(--coral-accent)'};">${spec.designer_agreed ? '✓ Yes' : 'Pending'}</strong>
               </span>
-              <button class="btn-portal-outline" onclick="toggleSpecSignOff('${specId}', ${isDesignerMode ? "'designer'" : "'client'"})">
-                ${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? '✓ Spec Agreed' : 'Agree to Spec'}
+              <button class="${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? 'btn-portal-agreed' : 'btn-portal-agree'}" onclick="confirmAndToggleSignOff('${specId}', ${isDesignerMode ? "'designer'" : "'client'"}, '${escapeHtml(q.title)}')">
+                ${(isDesignerMode ? spec.designer_agreed : spec.client_agreed) ? '✓ Spec Agreed' : '✓ Agree to Spec'}
               </button>
             </div>
           ` : ''}
@@ -2042,16 +2042,68 @@ function handleLogout() {
   showAuthView();
 }
 
+let pendingSignOffSpecId = null;
+let pendingSignOffRole = null;
+
+window.confirmAndToggleSignOff = function(specId, role, specTitle) {
+  pendingSignOffSpecId = specId;
+  pendingSignOffRole = role;
+
+  const modal = document.getElementById('signoffConfirmModal');
+  const titleEl = document.getElementById('signoffSpecTitleText');
+  if (modal) {
+    if (titleEl) titleEl.textContent = specTitle || 'this item';
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+  } else {
+    executeSignOffToggle();
+  }
+};
+
+window.closeSignOffModal = function(e) {
+  if (e) e.stopPropagation();
+  const modal = document.getElementById('signoffConfirmModal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+};
+
+window.executeSignOffToggle = async function() {
+  closeSignOffModal();
+  if (!pendingSignOffSpecId || !pendingSignOffRole) return;
+
+  const sId = pendingSignOffSpecId;
+  const sRole = pendingSignOffRole;
+
+  pendingSignOffSpecId = null;
+  pendingSignOffRole = null;
+
+  await toggleSpecSignOff(sId, sRole);
+};
+
 function showAuthView() {
   const authSec = document.getElementById('authSection');
   const projSec = document.getElementById('projectsSection');
   const dashSec = document.getElementById('portalDashboard');
   const grid = document.getElementById('projectsGrid');
+  const adminBar = document.getElementById('adminSelectorBar');
 
   if (authSec) authSec.style.display = 'block';
   if (projSec) projSec.style.display = 'none';
   if (dashSec) dashSec.style.display = 'none';
+  if (adminBar) adminBar.style.display = 'none';
   if (grid) grid.innerHTML = '';
+
+  const userBadge = document.getElementById('userBadge');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const mobileUserBadge = document.getElementById('mobileUserBadge');
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+  if (userBadge) userBadge.style.display = 'none';
+  if (logoutBtn) logoutBtn.style.display = 'none';
+  if (mobileUserBadge) mobileUserBadge.style.display = 'none';
+  if (mobileLogoutBtn) mobileLogoutBtn.style.display = 'none';
 }
 
 function showAuthError(msg) {
