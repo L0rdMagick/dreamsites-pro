@@ -2017,12 +2017,21 @@ function handleLogout() {
   if (db) db.auth.signOut();
   currentUser = null;
   currentProfile = null;
+  currentProject = null;
+  currentSpecs = [];
   showAuthView();
 }
 
 function showAuthView() {
-  document.getElementById('authSection').style.display = 'block';
-  document.getElementById('portalDashboard').style.display = 'none';
+  const authSec = document.getElementById('authSection');
+  const projSec = document.getElementById('projectsSection');
+  const dashSec = document.getElementById('portalDashboard');
+  const grid = document.getElementById('projectsGrid');
+
+  if (authSec) authSec.style.display = 'block';
+  if (projSec) projSec.style.display = 'none';
+  if (dashSec) dashSec.style.display = 'none';
+  if (grid) grid.innerHTML = '';
 }
 
 function showAuthError(msg) {
