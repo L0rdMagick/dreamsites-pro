@@ -1723,13 +1723,28 @@ window.toggleSpecSignOff = async function(specId, role) {
   const spec = currentSpecs.find(s => s.id === specId);
   if (!spec) return;
 
-  const newClientAgreed = role === 'client' ? !spec.client_agreed : spec.client_agreed;
-  const newDesignerAgreed = role === 'designer' ? !spec.designer_agreed : spec.designer_agreed;
-  const isBothAgreed = newClientAgreed && newDesignerAgreed;
+  // 1. Instantly update local memory state
+  if (role === 'client') {
+    spec.client_agreed = !spec.client_agreed;
+  } else {
+    spec.designer_agreed = !spec.designer_agreed;
+  }
 
+  const isBothAgreed = spec.client_agreed && spec.designer_agreed;
+  if (isBothAgreed) {
+    spec.agreed_client_answer = spec.client_answer;
+    spec.change_requested_by = null;
+  }
+
+  // 2. Instantly re-render local UI (0ms delay)
+  openSpecIds.add(specId);
+  renderQuestionnaireSpecs();
+  showToastOverlay("✓ Spec Agreement Updated!");
+
+  // 3. Persist to Supabase in background
   const updateObj = {
-    client_agreed: newClientAgreed,
-    designer_agreed: newDesignerAgreed
+    client_agreed: spec.client_agreed,
+    designer_agreed: spec.designer_agreed
   };
 
   if (isBothAgreed) {
@@ -1737,10 +1752,11 @@ window.toggleSpecSignOff = async function(specId, role) {
     updateObj.change_requested_by = null;
   }
 
-  openSpecIds.add(specId);
-  await db.from('ds_questionnaire_specs').update(updateObj).eq('id', specId);
-  showToastOverlay("✓ Spec Agreement Updated!");
-  await loadProjectSpecs();
+  try {
+    await db.from('ds_questionnaire_specs').update(updateObj).eq('id', specId);
+  } catch (err) {
+    console.error("Sign-off sync error:", err);
+  }
 };
 
 async function renderJobPlan() {
