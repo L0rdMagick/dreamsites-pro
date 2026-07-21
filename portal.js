@@ -1602,9 +1602,18 @@ window.saveSpecAnswerVersion = async function(qKey, specId) {
 
     if (existingSpec && existingSpec.id) {
       activeSpecId = existingSpec.id;
-      await db.from('ds_questionnaire_specs').update(updatePayload).eq('id', activeSpecId);
+      let { error: updateErr } = await db.from('ds_questionnaire_specs').update(updatePayload).eq('id', activeSpecId);
+      if (updateErr) {
+        // Fallback for core columns if optional columns are absent in database schema
+        await db.from('ds_questionnaire_specs').update({
+          client_answer: newAnswerText,
+          client_agreed: !isDesignerMode,
+          designer_agreed: isDesignerMode,
+          updated_at: new Date()
+        }).eq('id', activeSpecId);
+      }
     } else {
-      const { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
+      let { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
         project_id: currentProject.id,
         question_key: qKey,
         question_text: qObj ? qObj.title : qKey,
@@ -1615,7 +1624,20 @@ window.saveSpecAnswerVersion = async function(qKey, specId) {
         designer_agreed: isDesignerMode
       }]).select();
 
-      if (insErr) throw insErr;
+      if (insErr) {
+        // Fallback insert with core columns
+        const { data: fbIns } = await db.from('ds_questionnaire_specs').insert([{
+          project_id: currentProject.id,
+          question_key: qKey,
+          question_text: qObj ? qObj.title : qKey,
+          spec_tag: qObj ? qObj.tag : '#Spec',
+          client_answer: newAnswerText,
+          client_agreed: !isDesignerMode,
+          designer_agreed: isDesignerMode
+        }]).select();
+        inserted = fbIns;
+      }
+
       if (inserted && inserted[0]) {
         activeSpecId = inserted[0].id;
       }
@@ -1772,10 +1794,19 @@ window.toggleSpecSignOff = async function(specId, role) {
     }
 
     if (spec && spec.id) {
-      const { error } = await db.from('ds_questionnaire_specs').update(payload).eq('id', spec.id);
-      if (error) console.error("Signoff update error:", error.message);
+      let { error } = await db.from('ds_questionnaire_specs').update(payload).eq('id', spec.id);
+      if (error) {
+        console.warn("Retrying sign-off with core columns:", error.message);
+        // Fallback for core columns
+        const corePayload = {
+          client_agreed: newClientAgreed,
+          designer_agreed: newDesignerAgreed,
+          updated_at: new Date()
+        };
+        await db.from('ds_questionnaire_specs').update(corePayload).eq('id', spec.id);
+      }
     } else {
-      const { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
+      let { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
         project_id: currentProject.id,
         question_key: specId,
         question_text: qObj ? qObj.title : specId,
@@ -1786,8 +1817,21 @@ window.toggleSpecSignOff = async function(specId, role) {
       }]).select();
 
       if (insErr) {
-        console.error("Signoff insert error:", insErr.message);
-      } else if (inserted && inserted[0]) {
+        console.warn("Retrying insert sign-off with core columns:", insErr.message);
+        const { data: fbIns } = await db.from('ds_questionnaire_specs').insert([{
+          project_id: currentProject.id,
+          question_key: specId,
+          question_text: qObj ? qObj.title : specId,
+          spec_tag: qObj ? qObj.tag : '#Spec',
+          client_answer: '',
+          client_agreed: newClientAgreed,
+          designer_agreed: newDesignerAgreed,
+          updated_at: new Date()
+        }]).select();
+        inserted = fbIns;
+      }
+
+      if (inserted && inserted[0]) {
         if (!spec) {
           spec = inserted[0];
           currentSpecs.push(spec);
