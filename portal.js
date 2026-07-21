@@ -1591,7 +1591,7 @@ window.saveSpecAnswerVersion = async function(qKey, specId) {
     let activeSpecId = specId && specId !== 'null' && specId !== 'undefined' ? specId : null;
     let existingSpec = currentSpecs.find(s => s.question_key === qKey);
 
-    const changeRole = isDesignerMode ? 'Developer' : ((currentProfile && currentProfile.full_name) || 'Client');
+    const changeRole = isDesignerMode ? 'developer' : ((currentProfile && (currentProfile.username || currentProfile.full_name)) || 'client');
     const updatePayload = {
       client_answer: newAnswerText,
       change_requested_by: changeRole,
@@ -1599,6 +1599,13 @@ window.saveSpecAnswerVersion = async function(qKey, specId) {
       designer_agreed: isDesignerMode,
       updated_at: new Date()
     };
+
+    if (existingSpec) {
+      existingSpec.client_answer = newAnswerText;
+      existingSpec.change_requested_by = changeRole;
+      existingSpec.client_agreed = !isDesignerMode;
+      existingSpec.designer_agreed = isDesignerMode;
+    }
 
     if (existingSpec && existingSpec.id) {
       activeSpecId = existingSpec.id;
@@ -1916,7 +1923,7 @@ async function renderJobPlan() {
             const displayedAgreedAnswer = s.agreed_client_answer || s.client_answer;
             const hasPendingChange = (s.client_answer && s.client_answer !== displayedAgreedAnswer) || (!s.client_agreed || !s.designer_agreed);
             const changeNotice = hasPendingChange
-              ? `<div style="color:var(--coral-accent); font-size:0.82rem; margin-top:6px; font-weight:600; background:rgba(255,107,107,0.1); padding:4px 8px; border-radius:6px; display:inline-block;">* Change requested by ${escapeHtml(s.change_requested_by || 'user')}</div>`
+              ? `<div style="color:var(--coral-accent); font-size:0.82rem; margin-top:6px; font-weight:600; background:rgba(255,107,107,0.1); padding:4px 8px; border-radius:6px; display:inline-block;">* Change proposed by ${escapeHtml(s.change_requested_by || 'user')}</div>`
               : '';
 
             return `
