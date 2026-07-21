@@ -493,7 +493,7 @@ async function loadUserProjectsList() {
     const titleHeader = document.getElementById('projectsTitleHeader');
     const subtitleHeader = document.getElementById('projectsSubtitleHeader');
     if (titleHeader) titleHeader.innerHTML = 'My <em>Projects</em>';
-    if (subtitleHeader) subtitleHeader.textContent = 'Select a project card to view & edit its questionnaire, specs, and job sheet, or create a new project.';
+    if (subtitleHeader) subtitleHeader.textContent = 'Select a project card to launch its Project Builder, view the Project Overview, and inspect the Job Sheet, or create a new project.';
 
     const createBtn = document.getElementById('createProjectHeaderBtn');
     if (createBtn) createBtn.style.display = 'inline-flex';
@@ -903,6 +903,7 @@ async function loadProjectSpecs() {
 
   await renderQuestionnaireSpecs();
   renderJobPlan();
+  renderProjectOverview();
 }
 
 let openQuestionKeys = new Set([DEFAULT_QUESTIONS[0].key]);
@@ -1119,7 +1120,7 @@ async function renderQuestionnaireSpecs() {
   const isApp = (activeQuestions === APP_QUESTIONS);
   const qTitleEl = document.getElementById('questionnaireHeaderTitle');
   if (qTitleEl) {
-    qTitleEl.innerHTML = isApp ? '📱 Application Specs & Architecture Questionnaire' : '🌐 Website Design Specs & Questionnaire';
+    qTitleEl.innerHTML = isApp ? '📱 Application Specs & Architecture Builder' : '🌐 Website Design Specs & Builder';
   }
 
   // Collect any custom user/admin generated spec items in currentSpecs
@@ -1885,11 +1886,129 @@ window.addJobPlanNote = async function(jobPlanId) {
   await renderJobPlan();
 };
 
+async function renderProjectOverview() {
+  const container = document.getElementById('projectOverviewContainer');
+  if (!container) return;
+
+  if (!currentProject) {
+    container.innerHTML = '<p style="padding:20px; color:var(--text-muted);">No active project selected.</p>';
+    return;
+  }
+
+  const activeQuestions = getQuestionsForProject(currentProject);
+
+  // Collect custom spec items created for this project
+  const customQuestionObjs = [];
+  currentSpecs.forEach(s => {
+    const isBuiltIn = activeQuestions.some(aq => aq.key === s.question_key);
+    if (!isBuiltIn && s.question_key) {
+      customQuestionObjs.push({
+        key: s.question_key,
+        title: s.question_text || 'Custom Spec Item',
+        tag: s.spec_tag || '#Custom-Spec',
+        desc: 'Custom line-item specification created for this project workspace.'
+      });
+    }
+  });
+
+  const allItems = [...activeQuestions, ...customQuestionObjs];
+  let totalCost = 0;
+
+  const rowsHtml = allItems.map(q => {
+    const spec = currentSpecs.find(s => s.question_key === q.key);
+    const hasAnswer = spec && spec.client_answer && spec.client_answer.trim().length > 0;
+    const answer = hasAnswer
+      ? spec.client_answer.trim()
+      : '<span style="color:var(--text-muted); font-style:italic;">No specification answer provided yet.</span>';
+    
+    const hasNotes = spec && spec.designer_scope_notes && spec.designer_scope_notes.trim().length > 0;
+    const scopeNotes = hasNotes
+      ? spec.designer_scope_notes.trim()
+      : '<span style="color:var(--text-muted); font-style:italic;">No designer scope notes added yet.</span>';
+
+    const cost = spec ? parseFloat(spec.line_item_cost || 0) : 0;
+    totalCost += cost;
+
+    const clientSignoff = (spec && spec.client_agreed)
+      ? '<span style="color:#2ecc71; font-weight:bold;">Client Sign-off: ✓ Yes</span>'
+      : '<span style="color:var(--coral-accent);">Client Sign-off: Pending</span>';
+
+    const designerSignoff = (spec && spec.designer_agreed)
+      ? '<span style="color:#2ecc71; font-weight:bold;">Designer Sign-off: ✓ Yes</span>'
+      : '<span style="color:var(--coral-accent);">Designer Sign-off: Pending</span>';
+
+    return `
+      <tr style="border-bottom:1px solid var(--card-border);">
+        <td style="padding:14px 12px; vertical-align:top; width:22%;">
+          <span class="spec-badge" style="display:inline-block; margin-bottom:4px;">${q.tag}</span>
+          <strong style="display:block; font-size:0.95rem; color:var(--text-main);">${escapeHtml(q.title)}</strong>
+        </td>
+        <td style="padding:14px 12px; vertical-align:top; width:32%;">
+          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Main Specification Answer</strong>
+          <div style="font-size:0.9rem; color:var(--text-main); line-height:1.5;">${hasAnswer ? escapeHtml(answer) : answer}</div>
+        </td>
+        <td style="padding:14px 12px; vertical-align:top; width:26%;">
+          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Designer Scope Notes</strong>
+          <div style="font-size:0.88rem; color:var(--text-main); line-height:1.4;">${hasNotes ? escapeHtml(scopeNotes) : scopeNotes}</div>
+        </td>
+        <td style="padding:14px 12px; vertical-align:top; width:10%; white-space:nowrap;">
+          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Line Cost</strong>
+          <b style="font-size:1.05rem; color:var(--coral-accent);">$${cost.toFixed(2)}</b>
+        </td>
+        <td style="padding:14px 12px; vertical-align:top; width:10%; text-align:right; white-space:nowrap;">
+          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Sign-offs</strong>
+          <div style="font-size:0.82rem; line-height:1.5;">
+            ${clientSignoff}<br>
+            ${designerSignoff}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="background: rgba(0,0,0,0.2); border:1px solid var(--card-border); padding:24px; border-radius:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:16px; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <span class="status-badge" style="background:rgba(255,107,107,0.15); color:var(--coral-accent); border:1px solid var(--coral-accent);">📋 READ-ONLY PROJECT OVERVIEW</span>
+          <h2 style="font-family:var(--font-serif); font-size:1.8rem; margin-top:6px; margin-bottom:0;">${escapeHtml(currentProject.project_name)}</h2>
+        </div>
+        <div style="text-align:right;">
+          <small style="color:var(--text-muted); text-transform:uppercase; font-size:0.75rem;">Total Estimated Quote</small>
+          <div style="font-family:var(--font-serif); font-size:2.2rem; color:var(--coral-accent);">$${totalCost.toFixed(2)}</div>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="job-sheet-table" style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--card-border); text-align:left;">
+              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Specification</th>
+              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Main Specification Answer</th>
+              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Designer Scope Notes</th>
+              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Line Price</th>
+              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted); text-align:right;">Sign-off Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
 function showTabSection(tabKey) {
   const qTab = document.getElementById('tabQuestionnaire');
+  const oTab = document.getElementById('tabOverview');
   const sTab = document.getElementById('tabSpecs');
   const jTab = document.getElementById('tabJobPlan');
   if (qTab) qTab.style.display = (tabKey === 'questionnaire' || tabKey === 'specs') ? 'block' : 'none';
+  if (oTab) {
+    oTab.style.display = tabKey === 'overview' ? 'block' : 'none';
+    if (tabKey === 'overview') renderProjectOverview();
+  }
   if (sTab) sTab.style.display = 'none';
   if (jTab) jTab.style.display = tabKey === 'jobplan' ? 'block' : 'none';
 }

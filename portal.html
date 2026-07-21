@@ -165,7 +165,7 @@
     </section>
 
     <!-- 3. Main Dashboard (Shown once a project is opened) -->
-    <section id="portalDashboard" style="display:none;">
+    <section id="activeProjectWorkspace" style="display:none; margin-top:20px;">
 
       <!-- Project Navigation Bar -->
       <div class="project-header-bar">
@@ -181,14 +181,17 @@
       <!-- Dashboard Navigation Tabs -->
       <nav class="portal-tabs">
         <button class="tab-btn active" data-tab="questionnaire">
-          <span>1. Questionnaire & Specs</span>
+          <span>1. Project Builder</span>
+        </button>
+        <button class="tab-btn" data-tab="overview">
+          <span>2. Project Overview</span>
         </button>
         <button class="tab-btn" data-tab="jobplan">
-          <span>2. Job Sheet</span>
+          <span>3. Job Sheet</span>
         </button>
       </nav>
 
-      <!-- TAB 1: Hybrid Questionnaire, Specs & Quote Review -->
+      <!-- TAB 1: Project Builder & Quote Review -->
       <div id="tabQuestionnaire">
 
         <!-- Total Quote Banner -->
@@ -207,7 +210,7 @@
 
           <div class="portal-card-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
             <div>
-              <h3 id="questionnaireHeaderTitle">Interactive Questionnaire, Specs & Quote Review</h3>
+              <h3 id="questionnaireHeaderTitle">Interactive Project Builder & Quote Review</h3>
               <p class="question-desc" style="margin-bottom:0;">
                 Answer or update specifications below, save your answer versions, discuss updates in the real-time thread, and agree upon line-item pricing.
               </p>
@@ -226,6 +229,22 @@
               <span style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Retrieving answers, files, and discussion threads...</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Read-Only Project Overview -->
+      <div id="tabOverview" style="display:none;" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <h3>Project Overview</h3>
+            <p class="question-desc" style="margin-bottom:0;">
+              Compiled read-only summary sheet of all main specification answers, designer scope notes, line costs, and sign-off statuses.
+            </p>
+          </div>
+        </div>
+
+        <div id="projectOverviewContainer">
+          <!-- Overview rendered by portal.js -->
         </div>
       </div>
 
