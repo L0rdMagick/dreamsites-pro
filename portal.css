@@ -1264,3 +1264,73 @@ textarea.form-control {
   gap: 8px;
 }
 
+/* Project Overview Responsive Card Styles */
+.overview-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.overview-item-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: border-color 0.2s ease;
+}
+
+.overview-item-card:hover {
+  border-color: rgba(255, 107, 107, 0.35);
+}
+
+.overview-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 14px;
+}
+
+.overview-card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 768px) {
+  .overview-card-body {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.overview-block {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.overview-block-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.overview-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
+}
+

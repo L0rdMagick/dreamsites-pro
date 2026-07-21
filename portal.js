@@ -1938,36 +1938,46 @@ async function renderProjectOverview() {
       : '<span style="color:var(--coral-accent);">Designer Sign-off: Pending</span>';
 
     return `
-      <tr style="border-bottom:1px solid var(--card-border);">
-        <td style="padding:14px 12px; vertical-align:top; width:22%;">
-          <span class="spec-badge" style="display:inline-block; margin-bottom:4px;">${q.tag}</span>
-          <strong style="display:block; font-size:0.95rem; color:var(--text-main);">${escapeHtml(q.title)}</strong>
-        </td>
-        <td style="padding:14px 12px; vertical-align:top; width:32%;">
-          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Main Specification Answer</strong>
-          <div style="font-size:0.9rem; color:var(--text-main); line-height:1.5;">${hasAnswer ? escapeHtml(answer) : answer}</div>
-        </td>
-        <td style="padding:14px 12px; vertical-align:top; width:26%;">
-          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Designer Scope Notes</strong>
-          <div style="font-size:0.88rem; color:var(--text-main); line-height:1.4;">${hasNotes ? escapeHtml(scopeNotes) : scopeNotes}</div>
-        </td>
-        <td style="padding:14px 12px; vertical-align:top; width:10%; white-space:nowrap;">
-          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Line Cost</strong>
-          <b style="font-size:1.05rem; color:var(--coral-accent);">$${cost.toFixed(2)}</b>
-        </td>
-        <td style="padding:14px 12px; vertical-align:top; width:10%; text-align:right; white-space:nowrap;">
-          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block; margin-bottom:4px;">Sign-offs</strong>
-          <div style="font-size:0.82rem; line-height:1.5;">
-            ${clientSignoff}<br>
-            ${designerSignoff}
+      <div class="overview-item-card">
+        <div class="overview-card-header">
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <span class="spec-badge" style="align-self:flex-start;">${q.tag}</span>
+            <strong style="font-size:1.05rem; color:var(--text-main); font-family:'DM Sans', sans-serif;">${escapeHtml(q.title)}</strong>
           </div>
-        </td>
-      </tr>
+          <div style="text-align:right;">
+            <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); display:block;">Line Cost</span>
+            <b style="font-size:1.15rem; color:var(--coral-accent); font-family:var(--font-serif);">$${cost.toFixed(2)}</b>
+          </div>
+        </div>
+
+        <div class="overview-card-body">
+          <div class="overview-block">
+            <div class="overview-block-title">Main Specification Answer</div>
+            <div style="font-size:0.92rem; color:var(--text-main); line-height:1.5;">${hasAnswer ? escapeHtml(answer) : answer}</div>
+          </div>
+          <div class="overview-block">
+            <div class="overview-block-title">Designer Scope Notes</div>
+            <div style="font-size:0.9rem; color:var(--text-main); line-height:1.5;">${hasNotes ? escapeHtml(scopeNotes) : scopeNotes}</div>
+          </div>
+        </div>
+
+        <div class="overview-card-footer">
+          <span style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:700;">Sign-off Status:</span>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <span class="status-badge ${spec && spec.client_agreed ? 'agreed' : 'pending'}" style="font-size:0.78rem; padding:4px 10px;">
+              Client: ${spec && spec.client_agreed ? '✓ Signed Off' : 'Pending'}
+            </span>
+            <span class="status-badge ${spec && spec.designer_agreed ? 'agreed' : 'pending'}" style="font-size:0.78rem; padding:4px 10px;">
+              Designer: ${spec && spec.designer_agreed ? '✓ Signed Off' : 'Pending'}
+            </span>
+          </div>
+        </div>
+      </div>
     `;
   }).join('');
 
   container.innerHTML = `
-    <div style="background: rgba(0,0,0,0.2); border:1px solid var(--card-border); padding:24px; border-radius:14px;">
+    <div style="background: rgba(0,0,0,0.2); border:1px solid var(--card-border); padding:20px; border-radius:14px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:16px; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
         <div>
           <span class="status-badge" style="background:rgba(255,107,107,0.15); color:var(--coral-accent); border:1px solid var(--coral-accent);">📋 READ-ONLY PROJECT OVERVIEW</span>
@@ -1979,21 +1989,8 @@ async function renderProjectOverview() {
         </div>
       </div>
 
-      <div style="overflow-x:auto;">
-        <table class="job-sheet-table" style="width:100%; border-collapse:collapse;">
-          <thead>
-            <tr style="border-bottom:2px solid var(--card-border); text-align:left;">
-              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Specification</th>
-              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Main Specification Answer</th>
-              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Designer Scope Notes</th>
-              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted);">Line Price</th>
-              <th style="padding:10px 12px; font-size:0.85rem; color:var(--text-muted); text-align:right;">Sign-off Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rowsHtml}
-          </tbody>
-        </table>
+      <div class="overview-cards-list">
+        ${rowsHtml}
       </div>
     </div>
   `;
