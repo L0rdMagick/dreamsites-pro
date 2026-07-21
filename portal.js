@@ -493,7 +493,7 @@ async function loadUserProjectsList() {
     const titleHeader = document.getElementById('projectsTitleHeader');
     const subtitleHeader = document.getElementById('projectsSubtitleHeader');
     if (titleHeader) titleHeader.innerHTML = 'My <em>Projects</em>';
-    if (subtitleHeader) subtitleHeader.textContent = 'Select a project card to launch its Project Builder, view the Project Overview, and inspect the Job Sheet, or create a new project.';
+    if (subtitleHeader) subtitleHeader.textContent = 'Select a project card to launch its Project Builder, view the Proposed Project, and inspect the Agreed Project, or create a new project.';
 
     const createBtn = document.getElementById('createProjectHeaderBtn');
     if (createBtn) createBtn.style.display = 'inline-flex';
@@ -1591,19 +1591,28 @@ window.saveSpecAnswerVersion = async function(qKey, specId) {
     let activeSpecId = specId && specId !== 'null' && specId !== 'undefined' ? specId : null;
     let existingSpec = currentSpecs.find(s => s.question_key === qKey);
 
+    const changeRole = isDesignerMode ? 'Developer' : ((currentProfile && currentProfile.full_name) || 'Client');
+    const updatePayload = {
+      client_answer: newAnswerText,
+      change_requested_by: changeRole,
+      client_agreed: !isDesignerMode,
+      designer_agreed: isDesignerMode,
+      updated_at: new Date()
+    };
+
     if (existingSpec && existingSpec.id) {
       activeSpecId = existingSpec.id;
-      await db.from('ds_questionnaire_specs').update({
-        client_answer: newAnswerText,
-        updated_at: new Date()
-      }).eq('id', activeSpecId);
+      await db.from('ds_questionnaire_specs').update(updatePayload).eq('id', activeSpecId);
     } else {
       const { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
         project_id: currentProject.id,
         question_key: qKey,
         question_text: qObj ? qObj.title : qKey,
         spec_tag: qObj ? qObj.tag : '#Spec',
-        client_answer: newAnswerText
+        client_answer: newAnswerText,
+        change_requested_by: changeRole,
+        client_agreed: !isDesignerMode,
+        designer_agreed: isDesignerMode
       }]).select();
 
       if (insErr) throw insErr;
@@ -1699,11 +1708,6 @@ window.sendSpecMessage = async function(specId) {
 
   await db.from('ds_spec_messages').insert([{
     spec_id: specId,
-    sender_id: currentUser ? currentUser.id : 'anon',
-    sender_role: role,
-    message_text: text
-  }]);
-
   openSpecIds.add(specId);
   input.value = '';
   showToastOverlay("✓ Discussion Note Posted!");
@@ -1714,9 +1718,19 @@ window.toggleSpecSignOff = async function(specId, role) {
   const spec = currentSpecs.find(s => s.id === specId);
   if (!spec) return;
 
-  const updateObj = role === 'designer' 
-    ? { designer_agreed: !spec.designer_agreed }
-    : { client_agreed: !spec.client_agreed };
+  const newClientAgreed = role === 'client' ? !spec.client_agreed : spec.client_agreed;
+  const newDesignerAgreed = role === 'designer' ? !spec.designer_agreed : spec.designer_agreed;
+  const isBothAgreed = newClientAgreed && newDesignerAgreed;
+
+  const updateObj = {
+    client_agreed: newClientAgreed,
+    designer_agreed: newDesignerAgreed
+  };
+
+  if (isBothAgreed) {
+    updateObj.agreed_client_answer = spec.client_answer;
+    updateObj.change_requested_by = null;
+  }
 
   openSpecIds.add(specId);
   await db.from('ds_questionnaire_specs').update(updateObj).eq('id', specId);
@@ -1728,14 +1742,14 @@ async function renderJobPlan() {
   const container = document.getElementById('jobPlanContainer');
   if (!container) return;
 
-  const agreedSpecs = currentSpecs.filter(s => s.client_agreed && s.designer_agreed);
+  const agreedSpecs = currentSpecs.filter(s => s.agreed_client_answer || (s.client_agreed && s.designer_agreed));
 
   if (agreedSpecs.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; padding: 40px 20px;">
-        <h4 style="font-size:1.2rem; color:var(--text-muted);">No Agreed Job Sheet Yet</h4>
+        <h4 style="font-size:1.2rem; color:var(--text-muted);">No Agreed Project Yet</h4>
         <p style="font-size:0.9rem; color:var(--text-muted); margin-top:8px;">
-          Once specs are reviewed and agreed upon by both client and designer in the <strong>Spec Review & Pricing</strong> tab, they will automatically synthesize into your official Job Plan here.
+          Once specs are reviewed and agreed upon by both client and developer in the <strong>Project Builder</strong> tab, they will automatically synthesize into your official Agreed Project here.
         </p>
       </div>
     `;
@@ -1771,7 +1785,7 @@ async function renderJobPlan() {
     <div style="background: rgba(0,0,0,0.3); border:1px solid var(--card-border); padding:32px; border-radius:14px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:16px; margin-bottom:20px;">
         <div>
-          <span class="status-badge agreed">✓ OFFICIAL AGREED JOB PLAN</span>
+          <span class="status-badge agreed">✓ OFFICIAL AGREED PROJECT</span>
           <h2 style="font-family:var(--font-serif); font-size:2rem; margin-top:6px;">${currentProject.project_name}</h2>
         </div>
         <div style="text-align:right;">
@@ -1791,14 +1805,26 @@ async function renderJobPlan() {
           </tr>
         </thead>
         <tbody>
-          ${agreedSpecs.map(s => `
-            <tr>
-              <td><span class="spec-badge">${s.spec_tag}</span></td>
-              <td><strong>${s.question_text}</strong><br><small style="color:var(--text-muted);">${s.client_answer}</small></td>
-              <td>${s.designer_scope_notes || 'Standard Scope'}</td>
-              <td><b>$${parseFloat(s.line_item_cost || 0).toFixed(2)}</b></td>
-            </tr>
-          `).join('')}
+          ${agreedSpecs.map(s => {
+            const displayedAgreedAnswer = s.agreed_client_answer || s.client_answer;
+            const hasPendingChange = (s.client_answer && s.client_answer !== displayedAgreedAnswer) || (!s.client_agreed || !s.designer_agreed);
+            const changeNotice = hasPendingChange
+              ? `<div style="color:var(--coral-accent); font-size:0.82rem; margin-top:6px; font-weight:600; background:rgba(255,107,107,0.1); padding:4px 8px; border-radius:6px; display:inline-block;">* Change requested by ${escapeHtml(s.change_requested_by || 'user')}</div>`
+              : '';
+
+            return `
+              <tr>
+                <td><span class="spec-badge">${s.spec_tag}</span></td>
+                <td>
+                  <strong>${escapeHtml(s.question_text)}</strong><br>
+                  <small style="color:var(--text-muted);">${escapeHtml(displayedAgreedAnswer)}</small>
+                  ${changeNotice}
+                </td>
+                <td>${escapeHtml(s.designer_scope_notes || 'Standard Scope')}</td>
+                <td><b>$${parseFloat(s.line_item_cost || 0).toFixed(2)}</b></td>
+              </tr>
+            `;
+          }).join('')}
         </tbody>
       </table>
 
@@ -1929,14 +1955,6 @@ async function renderProjectOverview() {
     const cost = spec ? parseFloat(spec.line_item_cost || 0) : 0;
     totalCost += cost;
 
-    const clientSignoff = (spec && spec.client_agreed)
-      ? '<span style="color:#2ecc71; font-weight:bold;">Client Sign-off: ✓ Yes</span>'
-      : '<span style="color:var(--coral-accent);">Client Sign-off: Pending</span>';
-
-    const designerSignoff = (spec && spec.designer_agreed)
-      ? '<span style="color:#2ecc71; font-weight:bold;">Designer Sign-off: ✓ Yes</span>'
-      : '<span style="color:var(--coral-accent);">Designer Sign-off: Pending</span>';
-
     return `
       <div class="overview-item-card">
         <div class="overview-card-header">
@@ -1952,7 +1970,7 @@ async function renderProjectOverview() {
 
         <div class="overview-card-body">
           <div class="overview-block">
-            <div class="overview-block-title">Main Specification Answer</div>
+            <div class="overview-block-title">Proposed Main Specification Answer</div>
             <div style="font-size:0.92rem; color:var(--text-main); line-height:1.5;">${hasAnswer ? escapeHtml(answer) : answer}</div>
           </div>
           <div class="overview-block">
@@ -1980,7 +1998,7 @@ async function renderProjectOverview() {
     <div style="background: rgba(0,0,0,0.2); border:1px solid var(--card-border); padding:20px; border-radius:14px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:16px; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
         <div>
-          <span class="status-badge" style="background:rgba(255,107,107,0.15); color:var(--coral-accent); border:1px solid var(--coral-accent);">📋 READ-ONLY PROJECT OVERVIEW</span>
+          <span class="status-badge" style="background:rgba(255,107,107,0.15); color:var(--coral-accent); border:1px solid var(--coral-accent);">📋 PROPOSED PROJECT OVERVIEW</span>
           <h2 style="font-family:var(--font-serif); font-size:1.8rem; margin-top:6px; margin-bottom:0;">${escapeHtml(currentProject.project_name)}</h2>
         </div>
         <div style="text-align:right;">
