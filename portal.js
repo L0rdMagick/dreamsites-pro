@@ -1720,42 +1720,84 @@ window.sendSpecMessage = async function(specId) {
 };
 
 window.toggleSpecSignOff = async function(specId, role) {
-  const spec = currentSpecs.find(s => s.id === specId);
-  if (!spec) return;
+  if (!currentProject) return;
 
-  // 1. Instantly update local memory state
-  if (role === 'client') {
-    spec.client_agreed = !spec.client_agreed;
+  // Resolve spec by either DB UUID or question_key
+  let spec = currentSpecs.find(s => (s.id && s.id === specId) || s.question_key === specId);
+
+  const activeQuestions = getQuestionsForProject(currentProject);
+  const qObj = activeQuestions.find(q => q.key === specId) || (spec ? { title: spec.question_text, tag: spec.spec_tag } : null);
+
+  let newClientAgreed = false;
+  let newDesignerAgreed = false;
+
+  if (spec) {
+    newClientAgreed = role === 'client' ? !spec.client_agreed : !!spec.client_agreed;
+    newDesignerAgreed = role === 'designer' ? !spec.designer_agreed : !!spec.designer_agreed;
   } else {
-    spec.designer_agreed = !spec.designer_agreed;
+    newClientAgreed = role === 'client';
+    newDesignerAgreed = role === 'designer';
   }
 
-  const isBothAgreed = spec.client_agreed && spec.designer_agreed;
-  if (isBothAgreed) {
-    spec.agreed_client_answer = spec.client_answer;
-    spec.change_requested_by = null;
+  const isBothAgreed = newClientAgreed && newDesignerAgreed;
+  const currentAnswerText = spec ? (spec.client_answer || '') : '';
+
+  if (spec) {
+    spec.client_agreed = newClientAgreed;
+    spec.designer_agreed = newDesignerAgreed;
+    if (isBothAgreed) {
+      spec.agreed_client_answer = currentAnswerText;
+      spec.change_requested_by = null;
+    }
   }
 
-  // 2. Instantly re-render local UI (0ms delay)
+  // Instantly re-render local UI views
   openSpecIds.add(specId);
   renderQuestionnaireSpecs();
+  renderProjectOverview();
+  renderJobPlan();
   showToastOverlay("✓ Spec Agreement Updated!");
 
-  // 3. Persist to Supabase in background
-  const updateObj = {
-    client_agreed: spec.client_agreed,
-    designer_agreed: spec.designer_agreed
-  };
-
-  if (isBothAgreed) {
-    updateObj.agreed_client_answer = spec.client_answer;
-    updateObj.change_requested_by = null;
-  }
-
+  // Persist to Supabase DB reliably
   try {
-    await db.from('ds_questionnaire_specs').update(updateObj).eq('id', specId);
+    const payload = {
+      client_agreed: newClientAgreed,
+      designer_agreed: newDesignerAgreed,
+      updated_at: new Date()
+    };
+
+    if (isBothAgreed) {
+      payload.agreed_client_answer = currentAnswerText;
+      payload.change_requested_by = null;
+    }
+
+    if (spec && spec.id) {
+      const { error } = await db.from('ds_questionnaire_specs').update(payload).eq('id', spec.id);
+      if (error) console.error("Signoff update error:", error.message);
+    } else {
+      const { data: inserted, error: insErr } = await db.from('ds_questionnaire_specs').insert([{
+        project_id: currentProject.id,
+        question_key: specId,
+        question_text: qObj ? qObj.title : specId,
+        spec_tag: qObj ? qObj.tag : '#Spec',
+        client_answer: '',
+        agreed_client_answer: isBothAgreed ? currentAnswerText : null,
+        ...payload
+      }]).select();
+
+      if (insErr) {
+        console.error("Signoff insert error:", insErr.message);
+      } else if (inserted && inserted[0]) {
+        if (!spec) {
+          spec = inserted[0];
+          currentSpecs.push(spec);
+        } else {
+          spec.id = inserted[0].id;
+        }
+      }
+    }
   } catch (err) {
-    console.error("Sign-off sync error:", err);
+    console.error("Sign-off DB sync error:", err);
   }
 };
 
