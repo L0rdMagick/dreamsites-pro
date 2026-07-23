@@ -1518,12 +1518,13 @@ async function processSpecFileUpload(file, qKey, specId) {
 }
 
 // Lightbox Modal Handlers
-window.openImageLightbox = function(src, name, size, type, dim) {
+window.openImageLightbox = function(src, name, size, type, dim, deleteActionFn) {
   const modal = document.getElementById('imageLightboxModal');
   const img = document.getElementById('lightboxImg');
   const title = document.getElementById('lightboxTitle');
   const meta = document.getElementById('lightboxMeta');
   const dlBtn = document.getElementById('lightboxDownloadBtn');
+  const delBtn = document.getElementById('lightboxDeleteBtn');
 
   if (!modal || !img) return;
 
@@ -1532,6 +1533,19 @@ window.openImageLightbox = function(src, name, size, type, dim) {
   if (dlBtn) {
     dlBtn.href = src;
     dlBtn.download = name || 'image';
+  }
+
+  if (delBtn) {
+    if (deleteActionFn) {
+      delBtn.style.display = 'inline-flex';
+      delBtn.onclick = function() {
+        if (typeof deleteActionFn === 'function') {
+          deleteActionFn();
+        }
+      };
+    } else {
+      delBtn.style.display = 'none';
+    }
   }
 
   // Determine user-friendly file format
@@ -2422,9 +2436,19 @@ async function renderRevisions() {
 
           <!-- Screenshot Preview if attached -->
           ${rev.image ? `
-            <div style="margin-bottom:16px;">
-              <strong style="font-size:0.82rem; color:var(--text-muted); display:block; margin-bottom:6px;">📸 Attached Screenshot / Visual Reference:</strong>
-              <div style="display:inline-block; border:1px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer;" onclick="openImageLightbox('${rev.image}', 'Revision Screenshot', '', 'image/png', '')">
+            <div style="margin-bottom:16px; background:rgba(0,0,0,0.2); padding:12px; border-radius:10px; border:1px solid var(--card-border);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+                <strong style="font-size:0.84rem; color:var(--text-main);">📸 Attached Screenshot / Visual Reference:</strong>
+                <div style="display:flex; gap:8px;">
+                  <a href="${rev.image}" download="Revision_Screenshot_${rev.id}.jpg" target="_blank" class="btn-portal" style="padding:4px 12px; font-size:0.78rem; text-decoration:none;">
+                    ⬇ Download
+                  </a>
+                  <button type="button" class="btn-request-edit" onclick="deleteRevisionImage('${rev.id}')" style="padding:4px 12px; font-size:0.78rem;">
+                    🗑️ Delete Image
+                  </button>
+                </div>
+              </div>
+              <div style="display:inline-block; border:1px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer;" onclick="openImageLightbox('${rev.image}', 'Revision Screenshot', '', 'image/jpeg', '', function(){ deleteRevisionImage('${rev.id}'); })">
                 <img src="${rev.image}" alt="Revision Screenshot" style="max-height:220px; max-width:100%; display:block; object-fit:contain;">
               </div>
             </div>
@@ -2571,6 +2595,34 @@ window.handleNewRevisionSubmit = async function(e) {
   } else {
     saveRevisionPayload(null);
   }
+};
+
+// Delete Screenshot Image from a Revision Request
+window.deleteRevisionImage = async function(revId) {
+  if (!currentProject) return;
+  if (!confirm("Are you sure you want to delete this screenshot image?")) return;
+
+  // Update Local Storage Cache
+  const revisions = getProjectRevisions(currentProject.id);
+  const rev = revisions.find(r => r.id === revId);
+  if (rev) {
+    rev.image = null;
+    saveProjectRevisions(currentProject.id, revisions);
+  }
+
+  // Update Supabase Database
+  if (db) {
+    try {
+      await db.from('ds_spec_files').delete().eq('spec_id', revId);
+      await db.from('ds_questionnaire_specs').update({ designer_scope_notes: null }).eq('id', revId);
+    } catch (e) {}
+  }
+
+  // Close Lightbox if open
+  closeImageLightbox();
+
+  showToastOverlay("🗑️ Screenshot Deleted!");
+  await renderRevisions();
 };
 
 // Confirm and Toggle Revision Status
