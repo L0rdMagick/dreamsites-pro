@@ -2179,7 +2179,42 @@ function showTabSection(tabKey) {
   }
 }
 
-// Local Storage Helper Functions for Revisions & Project Status
+// Image Compression Utility for Revisions & Screenshots (prevents localStorage quota errors)
+function compressImageFile(file, maxWidth, maxHeight, quality, callback) {
+  if (!file || !file.type || !file.type.startsWith('image/')) {
+    callback(null);
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      let width = img.width;
+      let height = img.height;
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+      if (height > maxHeight) {
+        width = Math.round((width * maxHeight) / height);
+        height = maxHeight;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      callback(dataUrl);
+    };
+    img.onerror = function() { callback(e.target.result); };
+    img.src = e.target.result;
+  };
+  reader.onerror = function() { callback(null); };
+  reader.readAsDataURL(file);
+}
+
+// Storage Helpers for Revisions & Project Status
 function getProjectRevisions(projId) {
   if (!projId) return [];
   try {
@@ -2195,7 +2230,7 @@ function saveProjectRevisions(projId, revisions) {
   try {
     localStorage.setItem(`ds_revisions_${projId}`, JSON.stringify(revisions));
   } catch (e) {
-    console.error("Error saving revisions:", e);
+    console.warn("localStorage quota hit for revisions, preserved in memory/DB:", e);
   }
 }
 
@@ -2219,11 +2254,78 @@ function saveProjectStatus(projId, statusObj) {
 }
 
 // 4. Render Revisions Page
-function renderRevisions() {
+async function renderRevisions() {
   const container = document.getElementById('revisionsContainer');
   if (!container || !currentProject) return;
 
-  const revisions = getProjectRevisions(currentProject.id);
+  let revisions = getProjectRevisions(currentProject.id);
+
+  // Sync with Supabase ds_questionnaire_specs (where spec_tag = '#Revision') if connected
+  if (db) {
+    try {
+      const { data: dbRevs } = await db
+        .from('ds_questionnaire_specs')
+        .select('*')
+        .eq('project_id', currentProject.id)
+        .eq('spec_tag', '#Revision')
+        .order('created_at', { ascending: false });
+
+      if (dbRevs && dbRevs.length > 0) {
+        // Fetch spec messages for these revisions
+        const revIds = dbRevs.map(r => r.id);
+        let msgMap = {};
+        try {
+          const { data: msgs } = await db
+            .from('ds_spec_messages')
+            .select('*')
+            .in('spec_id', revIds)
+            .order('created_at', { ascending: true });
+
+          if (msgs) {
+            msgs.forEach(m => {
+              if (!msgMap[m.spec_id]) msgMap[m.spec_id] = [];
+              msgMap[m.spec_id].push({
+                sender: m.sender_role === 'designer' ? 'developer' : 'client',
+                text: m.message_text,
+                created_at: m.created_at
+              });
+            });
+          }
+        } catch (mErr) {}
+
+        // Fetch attached files/screenshots
+        let fileMap = {};
+        try {
+          const { data: files } = await db
+            .from('ds_spec_files')
+            .select('*')
+            .eq('project_id', currentProject.id);
+
+          if (files) {
+            files.forEach(f => {
+              if (f.spec_id) fileMap[f.spec_id] = f.file_data;
+            });
+          }
+        } catch (fErr) {}
+
+        const syncedRevs = dbRevs.map(r => ({
+          id: r.id,
+          url: r.question_text,
+          notes: r.client_answer,
+          image: fileMap[r.id] || r.designer_scope_notes || null,
+          developer_completed: !!r.designer_agreed,
+          client_completed: !!r.client_agreed,
+          created_at: r.created_at || new Date().toISOString(),
+          messages: msgMap[r.id] || []
+        }));
+
+        revisions = syncedRevs;
+        saveProjectRevisions(currentProject.id, revisions);
+      }
+    } catch (err) {
+      console.warn("Supabase revisions sync fallback:", err.message);
+    }
+  }
 
   let html = `
     <!-- Form to Submit New Edit Request -->
@@ -2245,7 +2347,7 @@ function renderRevisions() {
           <input type="file" id="revFileInput" accept="image/*" class="form-control" style="width:100%;">
         </div>
         <div style="display:flex; justify-content:flex-end;">
-          <button type="submit" class="btn-request-edit">
+          <button type="submit" id="revSubmitBtn" class="btn-request-edit">
             <span>🚨 Request Edit</span>
           </button>
         </div>
@@ -2274,7 +2376,7 @@ function renderRevisions() {
       const clientDone = rev.client_completed;
       const currentUserDone = isDesignerMode ? devDone : clientDone;
 
-      // Status action button: Green for "Revision Completed", Red for "Mark Unresolved / Needs Fixing"
+      // Status action button: Green for "Revision Completed", Red for "Mark Unresolved / Request Edit"
       const statusBtnHtml = currentUserDone ? `
         <button class="btn-request-edit" onclick="confirmToggleRevisionStatus('${rev.id}')" style="padding:8px 16px; font-size:0.85rem;">
           🚨 Mark Unresolved (Needs Fixing)
@@ -2323,7 +2425,7 @@ function renderRevisions() {
             <div style="margin-bottom:16px;">
               <strong style="font-size:0.82rem; color:var(--text-muted); display:block; margin-bottom:6px;">📸 Attached Screenshot / Visual Reference:</strong>
               <div style="display:inline-block; border:1px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer;" onclick="openImageLightbox('${rev.image}', 'Revision Screenshot', '', 'image/png', '')">
-                <img src="${rev.image}" alt="Revision Screenshot" style="max-height:180px; max-width:100%; display:block; object-fit:cover;">
+                <img src="${rev.image}" alt="Revision Screenshot" style="max-height:220px; max-width:100%; display:block; object-fit:contain;">
               </div>
             </div>
           ` : ''}
@@ -2359,13 +2461,14 @@ function renderRevisions() {
 }
 
 // Handle Form Submission for New Revision Request
-window.handleNewRevisionSubmit = function(e) {
+window.handleNewRevisionSubmit = async function(e) {
   e.preventDefault();
   if (!currentProject) return;
 
   const urlInput = document.getElementById('revUrlInput');
   const notesInput = document.getElementById('revNotesInput');
   const fileInput = document.getElementById('revFileInput');
+  const submitBtn = document.getElementById('revSubmitBtn');
 
   const url = urlInput ? urlInput.value.trim() : '';
   const notes = notesInput ? notesInput.value.trim() : '';
@@ -2376,83 +2479,168 @@ window.handleNewRevisionSubmit = function(e) {
     return;
   }
 
-  const createAndSave = (imageDataUrl) => {
-    const revisions = getProjectRevisions(currentProject.id);
-    const newRev = {
-      id: 'rev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-      url: url,
-      notes: notes,
-      image: imageDataUrl || null,
-      developer_completed: false,
-      client_completed: false,
-      created_at: new Date().toISOString(),
-      messages: []
-    };
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '⏳ Saving Request...';
+  }
 
-    revisions.unshift(newRev); // Insert newest at top
-    saveProjectRevisions(currentProject.id, revisions);
-    showToastOverlay("🚨 Edit Request Submitted!");
-    renderRevisions();
-    renderProjectStatus();
+  const saveRevisionPayload = async (compressedImageData) => {
+    try {
+      let createdId = 'rev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+
+      // Save into Supabase ds_questionnaire_specs
+      if (db) {
+        try {
+          const { data: inserted, error: dbErr } = await db.from('ds_questionnaire_specs').insert([{
+            project_id: currentProject.id,
+            question_key: createdId,
+            question_text: url,
+            spec_tag: '#Revision',
+            client_answer: notes,
+            designer_scope_notes: compressedImageData ? compressedImageData.substring(0, 100) + '...' : '',
+            client_agreed: false,
+            designer_agreed: false,
+            is_custom: true
+          }]).select();
+
+          if (inserted && inserted[0]) {
+            createdId = inserted[0].id;
+          }
+
+          if (compressedImageData) {
+            const fileObj = {
+              id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+              project_id: currentProject.id,
+              spec_id: createdId,
+              question_key: createdId,
+              file_name: file ? file.name : 'screenshot.jpg',
+              file_size: Math.round(compressedImageData.length / 1024) + ' KB',
+              file_type: 'image/jpeg',
+              file_data: compressedImageData,
+              uploaded_by_role: isDesignerMode ? 'designer' : 'client',
+              created_at: new Date().toISOString()
+            };
+            saveLocalProjectFile(fileObj);
+            try {
+              await db.from('ds_spec_files').insert([fileObj]);
+            } catch (fErr) {}
+          }
+        } catch (sErr) {
+          console.warn("Supabase insert fallback:", sErr.message);
+        }
+      }
+
+      // Save in Local Revisions List Cache
+      const revisions = getProjectRevisions(currentProject.id);
+      const newRev = {
+        id: createdId,
+        url: url,
+        notes: notes,
+        image: compressedImageData || null,
+        developer_completed: false,
+        client_completed: false,
+        created_at: new Date().toISOString(),
+        messages: []
+      };
+
+      revisions.unshift(newRev);
+      saveProjectRevisions(currentProject.id, revisions);
+
+      if (urlInput) urlInput.value = '';
+      if (notesInput) notesInput.value = '';
+      if (fileInput) fileInput.value = '';
+
+      showToastOverlay("🚨 Edit Request Submitted!");
+      await renderRevisions();
+      renderProjectStatus();
+    } catch (err) {
+      console.error("Error creating revision:", err);
+      alert("Error submitting revision request: " + err.message);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>🚨 Request Edit</span>';
+      }
+    }
   };
 
   if (file) {
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      createAndSave(evt.target.result);
-    };
-    reader.readAsDataURL(file);
+    compressImageFile(file, 1200, 1200, 0.75, function(compressedData) {
+      saveRevisionPayload(compressedData);
+    });
   } else {
-    createAndSave(null);
+    saveRevisionPayload(null);
   }
 };
 
 // Confirm and Toggle Revision Status
-window.confirmToggleRevisionStatus = function(revId) {
+window.confirmToggleRevisionStatus = async function(revId) {
   if (!currentProject) return;
   const revisions = getProjectRevisions(currentProject.id);
   const rev = revisions.find(r => r.id === revId);
-  if (!rev) return;
 
-  const currentState = isDesignerMode ? rev.developer_completed : rev.client_completed;
+  const currentState = isDesignerMode ? (rev ? rev.developer_completed : false) : (rev ? rev.client_completed : false);
   const targetAction = currentState ? "mark this revision as UNRESOLVED / NEEDS FIXING" : "mark this revision as REVISION COMPLETED";
-  
+
   if (confirm(`Are you sure you want to ${targetAction}?`)) {
-    if (isDesignerMode) {
-      rev.developer_completed = !rev.developer_completed;
-    } else {
-      rev.client_completed = !rev.client_completed;
+    const newStatus = !currentState;
+
+    if (rev) {
+      if (isDesignerMode) rev.developer_completed = newStatus;
+      else rev.client_completed = newStatus;
+      saveProjectRevisions(currentProject.id, revisions);
     }
 
-    saveProjectRevisions(currentProject.id, revisions);
+    if (db) {
+      try {
+        const updatePayload = isDesignerMode ? { designer_agreed: newStatus } : { client_agreed: newStatus };
+        await db.from('ds_questionnaire_specs').update(updatePayload).eq('id', revId);
+      } catch (e) {}
+    }
+
     showToastOverlay(`✓ Revision status updated!`);
-    renderRevisions();
+    await renderRevisions();
     renderProjectStatus();
   }
 };
 
 // Send Message in Revision Chat Thread
-window.sendRevisionMessage = function(revId) {
+window.sendRevisionMessage = async function(revId) {
   if (!currentProject) return;
   const input = document.getElementById(`revInput_${revId}`);
   if (!input) return;
   const text = input.value.trim();
   if (!text) return;
 
+  const role = isDesignerMode ? 'designer' : 'client';
+
+  // Save to Supabase ds_spec_messages
+  if (db) {
+    try {
+      await db.from('ds_spec_messages').insert([{
+        spec_id: revId,
+        sender_id: currentUser ? currentUser.id : 'anon',
+        sender_role: role,
+        message_text: text
+      }]);
+    } catch (e) {}
+  }
+
+  // Update local cache
   const revisions = getProjectRevisions(currentProject.id);
   const rev = revisions.find(r => r.id === revId);
-  if (!rev) return;
+  if (rev) {
+    if (!rev.messages) rev.messages = [];
+    rev.messages.push({
+      sender: isDesignerMode ? 'developer' : 'client',
+      text: text,
+      created_at: new Date().toISOString()
+    });
+    saveProjectRevisions(currentProject.id, revisions);
+  }
 
-  if (!rev.messages) rev.messages = [];
-  rev.messages.push({
-    sender: isDesignerMode ? 'developer' : 'client',
-    text: text,
-    created_at: new Date().toISOString()
-  });
-
-  saveProjectRevisions(currentProject.id, revisions);
   input.value = '';
-  renderRevisions();
+  await renderRevisions();
 };
 
 // 5. Render Project Status Page
