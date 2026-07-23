@@ -921,6 +921,8 @@ async function loadProjectSpecs() {
   await renderQuestionnaireSpecs();
   renderJobPlan();
   renderProjectOverview();
+  renderRevisions();
+  renderProjectStatus();
 }
 
 let openQuestionKeys = new Set([DEFAULT_QUESTIONS[0].key]);
@@ -2154,14 +2156,462 @@ function showTabSection(tabKey) {
   const oTab = document.getElementById('tabOverview');
   const sTab = document.getElementById('tabSpecs');
   const jTab = document.getElementById('tabJobPlan');
+  const rTab = document.getElementById('tabRevisions');
+  const stTab = document.getElementById('tabProjectStatus');
+
   if (qTab) qTab.style.display = (tabKey === 'questionnaire' || tabKey === 'specs') ? 'block' : 'none';
   if (oTab) {
     oTab.style.display = tabKey === 'overview' ? 'block' : 'none';
     if (tabKey === 'overview') renderProjectOverview();
   }
   if (sTab) sTab.style.display = 'none';
-  if (jTab) jTab.style.display = tabKey === 'jobplan' ? 'block' : 'none';
+  if (jTab) {
+    jTab.style.display = tabKey === 'jobplan' ? 'block' : 'none';
+    if (tabKey === 'jobplan') renderJobPlan();
+  }
+  if (rTab) {
+    rTab.style.display = tabKey === 'revisions' ? 'block' : 'none';
+    if (tabKey === 'revisions') renderRevisions();
+  }
+  if (stTab) {
+    stTab.style.display = tabKey === 'status' ? 'block' : 'none';
+    if (tabKey === 'status') renderProjectStatus();
+  }
 }
+
+// Local Storage Helper Functions for Revisions & Project Status
+function getProjectRevisions(projId) {
+  if (!projId) return [];
+  try {
+    const raw = localStorage.getItem(`ds_revisions_${projId}`);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveProjectRevisions(projId, revisions) {
+  if (!projId) return;
+  try {
+    localStorage.setItem(`ds_revisions_${projId}`, JSON.stringify(revisions));
+  } catch (e) {
+    console.error("Error saving revisions:", e);
+  }
+}
+
+function getProjectStatus(projId) {
+  if (!projId) return { client_completed: false, developer_completed: false };
+  try {
+    const raw = localStorage.getItem(`ds_project_status_${projId}`);
+    return raw ? JSON.parse(raw) : { client_completed: false, developer_completed: false };
+  } catch (e) {
+    return { client_completed: false, developer_completed: false };
+  }
+}
+
+function saveProjectStatus(projId, statusObj) {
+  if (!projId) return;
+  try {
+    localStorage.setItem(`ds_project_status_${projId}`, JSON.stringify(statusObj));
+  } catch (e) {
+    console.error("Error saving project status:", e);
+  }
+}
+
+// 4. Render Revisions Page
+function renderRevisions() {
+  const container = document.getElementById('revisionsContainer');
+  if (!container || !currentProject) return;
+
+  const revisions = getProjectRevisions(currentProject.id);
+
+  let html = `
+    <!-- Form to Submit New Edit Request -->
+    <div style="background: rgba(255, 107, 82, 0.05); border: 1px solid rgba(255, 107, 82, 0.2); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h4 style="margin-top:0; margin-bottom:12px; color: var(--coral-accent); font-size: 1.1rem; font-family:'DM Sans', sans-serif;">
+        + Request New Revision / Edit
+      </h4>
+      <form onsubmit="handleNewRevisionSubmit(event)">
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size:0.88rem; font-weight:600; color:var(--text-main); margin-bottom:4px;">1. Page / Section URL</label>
+          <input type="url" id="revUrlInput" class="form-control" placeholder="https://example.com/page-to-edit" required style="width:100%;">
+        </div>
+        <div style="margin-bottom: 14px;">
+          <label style="display:block; font-size:0.88rem; font-weight:600; color:var(--text-main); margin-bottom:4px;">2. Suggested Edits / Problem Notes</label>
+          <textarea id="revNotesInput" class="form-control" rows="3" placeholder="Describe the specific changes, fixes, or adjustments requested..." required style="width:100%; resize:vertical;"></textarea>
+        </div>
+        <div style="margin-bottom: 18px;">
+          <label style="display:block; font-size:0.88rem; font-weight:600; color:var(--text-main); margin-bottom:4px;">3. Screenshot / Visual Reference (Optional)</label>
+          <input type="file" id="revFileInput" accept="image/*" class="form-control" style="width:100%;">
+        </div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button type="submit" class="btn-request-edit">
+            <span>🚨 Request Edit</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Active Revisions List -->
+    <div class="revisions-list-header" style="margin-bottom: 16px; display:flex; justify-content:space-between; align-items:center;">
+      <h4 style="margin:0; font-size:1.1rem; color:var(--text-main);">
+        Requested Revisions (${revisions.length})
+      </h4>
+    </div>
+  `;
+
+  if (revisions.length === 0) {
+    html += `
+      <div style="padding: 30px; text-align: center; color: var(--text-muted); background: rgba(255,255,255,0.02); border: 1px dashed var(--card-border); border-radius: 12px;">
+        <div style="font-size: 2rem; margin-bottom: 8px;">📝</div>
+        <p style="margin: 0; font-size: 0.95rem;">No revisions have been requested yet for <strong>${escapeHtml(currentProject.project_name)}</strong>.</p>
+        <span style="font-size:0.82rem; color:var(--text-muted); margin-top:4px; display:block;">Use the form above to submit an edit request with optional screenshots.</span>
+      </div>
+    `;
+  } else {
+    html += revisions.map((rev, idx) => {
+      const devDone = rev.developer_completed;
+      const clientDone = rev.client_completed;
+      const currentUserDone = isDesignerMode ? devDone : clientDone;
+
+      // Status action button: Green for "Revision Completed", Red for "Mark Unresolved / Needs Fixing"
+      const statusBtnHtml = currentUserDone ? `
+        <button class="btn-request-edit" onclick="confirmToggleRevisionStatus('${rev.id}')" style="padding:8px 16px; font-size:0.85rem;">
+          🚨 Mark Unresolved (Needs Fixing)
+        </button>
+      ` : `
+        <button class="btn-revision-complete" onclick="confirmToggleRevisionStatus('${rev.id}')" style="padding:8px 16px; font-size:0.85rem;">
+          ✓ Revision Completed
+        </button>
+      `;
+
+      return `
+        <div class="revision-card" id="revCard_${rev.id}">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+            <div>
+              <span style="font-size:0.75rem; font-weight:700; color:var(--coral-accent); text-transform:uppercase; letter-spacing:0.5px;">Revision #${revisions.length - idx}</span>
+              <h4 style="margin:2px 0 6px 0; font-size:1.05rem; color:var(--text-main);">
+                🔗 Target URL: <a href="${escapeHtml(rev.url)}" target="_blank" style="color:var(--coral-accent); text-decoration:underline;">${escapeHtml(rev.url)} ↗</a>
+              </h4>
+              <span style="font-size:0.78rem; color:var(--text-muted);">
+                Submitted ${new Date(rev.created_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}
+              </span>
+            </div>
+
+            <!-- Dual Completion Status Badges & Action Button -->
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+              <div style="display:flex; gap:8px;">
+                <span class="status-pill ${clientDone ? 'completed' : 'pending'}">
+                  Client: ${clientDone ? 'Completed ✓' : 'Pending ⏳'}
+                </span>
+                <span class="status-pill ${devDone ? 'completed' : 'pending'}">
+                  Developer: ${devDone ? 'Completed ✓' : 'Pending ⏳'}
+                </span>
+              </div>
+              <div>${statusBtnHtml}</div>
+            </div>
+          </div>
+
+          <!-- Notes Description -->
+          <div style="background:rgba(0,0,0,0.2); padding:12px 14px; border-radius:8px; margin-bottom:12px; border-left:3px solid var(--coral-accent);">
+            <strong style="font-size:0.82rem; color:var(--text-muted); display:block; margin-bottom:4px;">Suggested Edits & Notes:</strong>
+            <p style="margin:0; font-size:0.92rem; color:var(--text-main); white-space:pre-wrap;">${escapeHtml(rev.notes)}</p>
+          </div>
+
+          <!-- Screenshot Preview if attached -->
+          ${rev.image ? `
+            <div style="margin-bottom:16px;">
+              <strong style="font-size:0.82rem; color:var(--text-muted); display:block; margin-bottom:6px;">📸 Attached Screenshot / Visual Reference:</strong>
+              <div style="display:inline-block; border:1px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer;" onclick="openImageLightbox('${rev.image}', 'Revision Screenshot', '', 'image/png', '')">
+                <img src="${rev.image}" alt="Revision Screenshot" style="max-height:180px; max-width:100%; display:block; object-fit:cover;">
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Back and Forth Chat Thread -->
+          <div class="qa-thread" style="margin-top:14px; background:rgba(0,0,0,0.15); padding:14px; border-radius:8px;">
+            <div class="qa-title" style="font-size:0.88rem; font-weight:700; margin-bottom:8px; color:var(--text-main);">
+              💬 Discussion & Feedback Chat:
+            </div>
+            <div id="revMsgStream_${rev.id}">
+              ${(rev.messages && rev.messages.length > 0) ? rev.messages.map(m => `
+                <div class="message-bubble ${m.sender === 'developer' ? 'designer' : 'client'}">
+                  <span class="msg-sender ${m.sender === 'developer' ? 'designer-name' : ''}">
+                    ${m.sender === 'developer' ? '✦ Developer / Admin' : '👤 Client'}
+                  </span>
+                  <div style="margin-top:2px;">${escapeHtml(m.text)}</div>
+                  <span class="msg-time">${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+              `).join('') : '<p style="font-size:0.82rem; color:var(--text-muted); font-style:italic; margin:0 0 8px 0;">No dialogue messages posted yet.</p>'}
+            </div>
+
+            <div class="qa-input-row" style="margin-top:8px; display:flex; gap:8px;">
+              <input type="text" class="form-control" id="revInput_${rev.id}" placeholder="Type a message or response..." onkeydown="if(event.key==='Enter') sendRevisionMessage('${rev.id}')">
+              <button class="btn-portal" onclick="sendRevisionMessage('${rev.id}')" style="padding:8px 18px;">Send</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  container.innerHTML = html;
+}
+
+// Handle Form Submission for New Revision Request
+window.handleNewRevisionSubmit = function(e) {
+  e.preventDefault();
+  if (!currentProject) return;
+
+  const urlInput = document.getElementById('revUrlInput');
+  const notesInput = document.getElementById('revNotesInput');
+  const fileInput = document.getElementById('revFileInput');
+
+  const url = urlInput ? urlInput.value.trim() : '';
+  const notes = notesInput ? notesInput.value.trim() : '';
+  const file = (fileInput && fileInput.files) ? fileInput.files[0] : null;
+
+  if (!url || !notes) {
+    alert("Please provide both a URL and details of the requested edits.");
+    return;
+  }
+
+  const createAndSave = (imageDataUrl) => {
+    const revisions = getProjectRevisions(currentProject.id);
+    const newRev = {
+      id: 'rev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      url: url,
+      notes: notes,
+      image: imageDataUrl || null,
+      developer_completed: false,
+      client_completed: false,
+      created_at: new Date().toISOString(),
+      messages: []
+    };
+
+    revisions.unshift(newRev); // Insert newest at top
+    saveProjectRevisions(currentProject.id, revisions);
+    showToastOverlay("🚨 Edit Request Submitted!");
+    renderRevisions();
+    renderProjectStatus();
+  };
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      createAndSave(evt.target.result);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    createAndSave(null);
+  }
+};
+
+// Confirm and Toggle Revision Status
+window.confirmToggleRevisionStatus = function(revId) {
+  if (!currentProject) return;
+  const revisions = getProjectRevisions(currentProject.id);
+  const rev = revisions.find(r => r.id === revId);
+  if (!rev) return;
+
+  const currentState = isDesignerMode ? rev.developer_completed : rev.client_completed;
+  const targetAction = currentState ? "mark this revision as UNRESOLVED / NEEDS FIXING" : "mark this revision as REVISION COMPLETED";
+  
+  if (confirm(`Are you sure you want to ${targetAction}?`)) {
+    if (isDesignerMode) {
+      rev.developer_completed = !rev.developer_completed;
+    } else {
+      rev.client_completed = !rev.client_completed;
+    }
+
+    saveProjectRevisions(currentProject.id, revisions);
+    showToastOverlay(`✓ Revision status updated!`);
+    renderRevisions();
+    renderProjectStatus();
+  }
+};
+
+// Send Message in Revision Chat Thread
+window.sendRevisionMessage = function(revId) {
+  if (!currentProject) return;
+  const input = document.getElementById(`revInput_${revId}`);
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  const revisions = getProjectRevisions(currentProject.id);
+  const rev = revisions.find(r => r.id === revId);
+  if (!rev) return;
+
+  if (!rev.messages) rev.messages = [];
+  rev.messages.push({
+    sender: isDesignerMode ? 'developer' : 'client',
+    text: text,
+    created_at: new Date().toISOString()
+  });
+
+  saveProjectRevisions(currentProject.id, revisions);
+  input.value = '';
+  renderRevisions();
+};
+
+// 5. Render Project Status Page
+function renderProjectStatus() {
+  const container = document.getElementById('projectStatusContainer');
+  if (!container || !currentProject) return;
+
+  const revisions = getProjectRevisions(currentProject.id);
+  const projStatus = getProjectStatus(currentProject.id);
+
+  // Determine if all revisions are fully completed by both parties
+  const totalRevisions = revisions.length;
+  const incompleteRevisions = revisions.filter(r => !(r.developer_completed && r.client_completed));
+  const allRevisionsDone = incompleteRevisions.length === 0;
+
+  const isBothCompleted = projStatus.client_completed && projStatus.developer_completed;
+  const currentUserProjDone = isDesignerMode ? projStatus.developer_completed : projStatus.client_completed;
+
+  let html = `
+    <!-- Overall Status Header Card -->
+    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 14px; padding: 24px; margin-bottom: 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+        <div>
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Official Project Status</span>
+          <h3 style="margin:4px 0 0 0; font-size:1.6rem; color:var(--text-main); font-family:var(--font-serif);">
+            ${escapeHtml(currentProject.project_name)}
+          </h3>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <span class="status-pill ${projStatus.client_completed ? 'completed' : 'pending'}" style="font-size:0.88rem; padding:6px 16px;">
+            Client: ${projStatus.client_completed ? 'Completed ✓' : 'In Progress ⏳'}
+          </span>
+          <span class="status-pill ${projStatus.developer_completed ? 'completed' : 'pending'}" style="font-size:0.88rem; padding:6px 16px;">
+            Developer: ${projStatus.developer_completed ? 'Completed ✓' : 'In Progress ⏳'}
+          </span>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--card-border); padding-top:16px; font-size:0.9rem; color:var(--text-muted);">
+        <span style="font-weight:600; color:var(--text-main);">Revisions Progress:</span> ${totalRevisions - incompleteRevisions.length} of ${totalRevisions} requested revisions fully resolved by both client and developer.
+      </div>
+    </div>
+  `;
+
+  // Celebratory Banner if both completed
+  if (isBothCompleted) {
+    html += `
+      <div class="completion-hero">
+        <div style="font-size: 3.5rem; margin-bottom: 12px;">🎉</div>
+        <h2 style="margin: 0 0 10px 0; color: #2ecc71; font-family: var(--font-serif); font-size: 2.2rem;">
+          Project is Completed!
+        </h2>
+        <p style="color: var(--text-main); max-width: 580px; margin: 0 auto 20px auto; font-size: 1.05rem; line-height: 1.6;">
+          Both the Client and Developer have confirmed that all requested revisions and specifications are 100% completed and approved.
+        </p>
+        <span style="display:inline-block; background:rgba(46,204,113,0.2); color:#2ecc71; border:1px solid #2ecc71; padding:6px 18px; border-radius:20px; font-weight:700; font-size:0.9rem;">
+          ✓ Official Final Sign-off Achieved
+        </span>
+      </div>
+    `;
+  }
+
+  // Revisions Check Block
+  if (!allRevisionsDone) {
+    html += `
+      <div style="background: rgba(243, 156, 18, 0.08); border: 1px solid rgba(243, 156, 18, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+        <h4 style="margin-top:0; color:#f39c12; font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+          ⚠️ Unresolved Revisions Remaining (${incompleteRevisions.length})
+        </h4>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:14px; line-height:1.5;">
+          All requested revisions must be marked as completed by both Client and Developer in <strong>4. Revisions</strong> before either party can mark the overall project as completed.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${incompleteRevisions.map(r => `
+            <div style="background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.88rem; color:var(--text-main);">
+                🔗 <strong>${escapeHtml(r.url)}</strong> - ${escapeHtml(r.notes.substring(0, 50))}${r.notes.length > 50 ? '...' : ''}
+              </span>
+              <div style="display:flex; gap:6px;">
+                <span class="status-pill ${r.client_completed ? 'completed' : 'pending'}" style="font-size:0.7rem; padding:2px 8px;">Client</span>
+                <span class="status-pill ${r.developer_completed ? 'completed' : 'pending'}" style="font-size:0.7rem; padding:2px 8px;">Developer</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    html += `
+      <div style="background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 24px; text-align:center;">
+        <span style="color:#2ecc71; font-weight:700; font-size:0.95rem;">
+          ✓ All requested revisions have been successfully completed by both client and developer!
+        </span>
+      </div>
+    `;
+  }
+
+  // Completion Control Button section
+  html += `
+    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; text-align: center;">
+      <h4 style="margin-top:0; font-size:1.15rem; color:var(--text-main);">
+        ${isDesignerMode ? '✦ Developer Sign-off Control' : '👤 Client Sign-off Control'}
+      </h4>
+      <p style="font-size:0.9rem; color:var(--text-muted); max-width:540px; margin:0 auto 20px auto; line-height:1.5;">
+        ${currentUserProjDone ? 
+          'You have marked this project as completed. You can revert your status to "In Progress" if additional updates are needed.' : 
+          'Once you are satisfied with all deliverables and revisions, click below to mark the project as completed.'}
+      </p>
+
+      <div>
+        ${!allRevisionsDone ? `
+          <button class="btn-portal-outline" disabled style="opacity:0.5; cursor:not-allowed; padding:12px 28px; font-size:1rem;">
+            Project Completion Locked (Pending Revisions)
+          </button>
+        ` : (currentUserProjDone ? `
+          <button class="btn-request-edit" onclick="confirmToggleProjectStatus()" style="padding:12px 28px; font-size:1rem;">
+            🚨 Mark Project In Progress
+          </button>
+        ` : `
+          <button class="btn-revision-complete" onclick="confirmToggleProjectStatus()" style="padding:12px 28px; font-size:1rem;">
+            ✓ Project is Completed
+          </button>
+        `)}
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+// Confirm and Toggle Project Status
+window.confirmToggleProjectStatus = function() {
+  if (!currentProject) return;
+  const revisions = getProjectRevisions(currentProject.id);
+  const incompleteRevisions = revisions.filter(r => !(r.developer_completed && r.client_completed));
+  
+  if (incompleteRevisions.length > 0) {
+    alert("Cannot mark project as complete until all revisions have been completed by both client and developer.");
+    return;
+  }
+
+  const projStatus = getProjectStatus(currentProject.id);
+  const currentDone = isDesignerMode ? projStatus.developer_completed : projStatus.client_completed;
+  const actionText = currentDone ? "revert the project status back to IN PROGRESS" : "mark the entire project as COMPLETED";
+
+  if (confirm(`Are you sure you want to ${actionText}?`)) {
+    if (isDesignerMode) {
+      projStatus.developer_completed = !projStatus.developer_completed;
+    } else {
+      projStatus.client_completed = !projStatus.client_completed;
+    }
+
+    saveProjectStatus(currentProject.id, projStatus);
+    showToastOverlay("✓ Project completion status updated!");
+    renderProjectStatus();
+  }
+};
 
 function handleLogout() {
   if (db) db.auth.signOut();

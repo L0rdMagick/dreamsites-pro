@@ -1380,3 +1380,99 @@ textarea.form-control {
   background: rgba(46, 204, 113, 0.25);
 }
 
+/* Revisions & Project Status Styles */
+.btn-request-edit {
+  background: #e74c3c;
+  color: #ffffff;
+  border: 1px solid #c0392b;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.25);
+}
+
+.btn-request-edit:hover {
+  background: #c0392b;
+  border-color: #a93226;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.35);
+}
+
+.btn-revision-complete {
+  background: #2ecc71;
+  color: #ffffff;
+  border: 1px solid #27ae60;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.25);
+}
+
+.btn-revision-complete:hover {
+  background: #27ae60;
+  border-color: #1e8449;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(46, 204, 113, 0.35);
+}
+
+.revision-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.revision-card:hover {
+  border-color: rgba(255, 107, 82, 0.3);
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pill.pending {
+  background: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.status-pill.completed {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.completion-hero {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(26, 36, 31, 0.8) 100%);
+  border: 2px solid #2ecc71;
+  border-radius: 16px;
+  padding: 36px 24px;
+  text-align: center;
+  margin: 20px 0;
+  box-shadow: 0 10px 30px rgba(46, 204, 113, 0.2);
+}
+

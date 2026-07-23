@@ -189,6 +189,12 @@
         <button class="tab-btn" data-tab="jobplan">
           <span>3. Agreed Project</span>
         </button>
+        <button class="tab-btn" data-tab="revisions">
+          <span>4. Revisions</span>
+        </button>
+        <button class="tab-btn" data-tab="status">
+          <span>5. Project Status</span>
+        </button>
       </nav>
 
       <!-- TAB 1: Project Builder & Quote Review -->
@@ -261,6 +267,38 @@
 
         <div id="jobPlanContainer">
           <!-- Job Sheet rendered by portal.js -->
+        </div>
+      </div>
+
+      <!-- TAB 4: Revisions -->
+      <div id="tabRevisions" style="display:none;" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <h3>4. Revisions</h3>
+            <p class="question-desc" style="margin-bottom:0;">
+              Submit edit requests, provide problematic page URLs and screenshots, and chat with the developer to track revisions to completion.
+            </p>
+          </div>
+        </div>
+
+        <div id="revisionsContainer">
+          <!-- Revisions rendered by portal.js -->
+        </div>
+      </div>
+
+      <!-- TAB 5: Project Status -->
+      <div id="tabProjectStatus" style="display:none;" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <h3>5. Project Status</h3>
+            <p class="question-desc" style="margin-bottom:0;">
+              Review overall project completion state and mark the project as complete once all requested revisions are finished.
+            </p>
+          </div>
+        </div>
+
+        <div id="projectStatusContainer">
+          <!-- Project Status rendered by portal.js -->
         </div>
       </div>
 
