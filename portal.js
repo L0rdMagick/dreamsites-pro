@@ -1262,14 +1262,13 @@ async function renderQuestionnaireSpecs() {
                 return `
                   <div class="attached-file-chip">
                     ${isImg && f.file_data 
-                      ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` 
+                      ? `<img src="${f.file_data}" class="file-thumb-preview" alt="preview" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}', function(){ deleteSpecFile('${f.id}', '${q.key}'); })" title="Click image to view larger version">` 
                       : `<div class="file-thumb-fallback">${icon}</div>`
                     }
                     <div class="asset-card-actions">
-                      <span class="asset-action-link" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')">View</span>
+                      <span class="asset-action-link" onclick="deleteSpecFile('${f.id}', '${q.key}')" style="color:#ff6b6b; font-weight:700; cursor:pointer;">Delete</span>
                       <a href="${f.file_data || '#'}" download="${escapeHtml(f.file_name)}" class="asset-action-link" target="_blank">Download</a>
                     </div>
-                    <button class="file-delete-btn" onclick="deleteSpecFile('${f.id}', '${q.key}')" title="Delete file">✕</button>
                   </div>
                 `;
               }).join('')}
@@ -1589,7 +1588,7 @@ window.closeImageLightbox = function(e) {
 };
 
 window.deleteSpecFile = async function(fileId, qKey) {
-  if (!confirm("Are you sure you want to remove this attached file?")) return;
+  if (!confirm("Are you sure you want to delete this attached file?")) return;
 
   deleteLocalProjectFile(fileId);
 
@@ -1599,12 +1598,20 @@ window.deleteSpecFile = async function(fileId, qKey) {
     console.warn("Delete file fallback:", err.message);
   }
 
-  if (projectSpecFilesMap[qKey]) {
+  if (qKey && projectSpecFilesMap[qKey]) {
     projectSpecFilesMap[qKey] = projectSpecFilesMap[qKey].filter(f => f.id !== fileId);
+  } else {
+    Object.keys(projectSpecFilesMap).forEach(k => {
+      if (projectSpecFilesMap[k]) {
+        projectSpecFilesMap[k] = projectSpecFilesMap[k].filter(f => f.id !== fileId);
+      }
+    });
   }
 
+  closeImageLightbox();
   showToastOverlay("✓ File Attachment Removed");
   await loadProjectSpecs();
+  renderJobPlan();
 };
 
 window.saveSpecAnswerVersion = async function(qKey, specId) {
@@ -2002,11 +2009,11 @@ async function renderJobPlan() {
               return `
                 <div class="asset-locker-card">
                   ${isImg && f.file_data 
-                    ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')" title="Click to enlarge image">` 
+                    ? `<img src="${f.file_data}" class="file-thumb-preview" alt="asset" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}', function(){ deleteSpecFile('${f.id}', '${f.question_key || ''}'); })" title="Click image to view larger version">` 
                     : `<div class="file-thumb-fallback">${icon}</div>`
                   }
                   <div class="asset-card-actions">
-                    <span class="asset-action-link" onclick="openImageLightbox('${f.file_data}', '${escapeHtml(f.file_name)}', '${f.file_size || ''}', '${f.file_type || ''}', '${f.file_dimensions || ''}')">View</span>
+                    <span class="asset-action-link" onclick="deleteSpecFile('${f.id}', '${f.question_key || ''}')" style="color:#ff6b6b; font-weight:700; cursor:pointer;">Delete</span>
                     <a href="${f.file_data || '#'}" download="${escapeHtml(f.file_name)}" class="asset-action-link" target="_blank">Download</a>
                   </div>
                 </div>
