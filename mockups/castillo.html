@@ -68,7 +68,7 @@
     .pitch-banner {
       background: linear-gradient(90deg, #130B04 0%, #2A1505 50%, #0F131C 100%);
       border-bottom: 1px solid var(--border-copper);
-      padding: 12px max(24px, 4vw);
+      padding: 12px clamp(20px, 5vw, 40px);
       font-size: 0.85rem;
       display: flex;
       flex-wrap: wrap;
@@ -117,7 +117,7 @@
       width: 100%;
       max-width: 1240px;
       margin: 0 auto;
-      padding: 0 max(24px, 5vw);
+      padding: 0 clamp(24px, 6vw, 48px);
     }
 
     /* Navigation */
@@ -255,6 +255,10 @@
       justify-items: center;
     }
 
+    .hero-content {
+      width: 100%;
+    }
+
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -271,12 +275,13 @@
     }
 
     .hero-title {
-      font-size: clamp(2.3rem, 5.5vw, 3.6rem);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
       font-weight: 800;
       line-height: 1.12;
       letter-spacing: -0.03em;
       margin-bottom: 24px;
       word-wrap: break-word;
+      hyphens: auto;
     }
 
     .hero-title span {
@@ -287,7 +292,7 @@
     }
 
     .hero-desc {
-      font-size: clamp(1.05rem, 2vw, 1.2rem);
+      font-size: clamp(1rem, 2vw, 1.18rem);
       color: var(--text-secondary);
       margin-bottom: 36px;
       max-width: 540px;
@@ -408,7 +413,7 @@
     }
 
     .section-title {
-      font-size: clamp(2rem, 4.5vw, 2.6rem);
+      font-size: clamp(1.9rem, 4.5vw, 2.6rem);
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 16px;
@@ -426,7 +431,7 @@
       background: var(--bg-surface-1);
       border: 1px solid var(--border-highlight);
       border-radius: 28px;
-      padding: clamp(28px, 5vw, 56px);
+      padding: clamp(24px, 5vw, 56px);
       box-shadow: 0 40px 80px -20px rgba(0,0,0,0.7);
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -440,14 +445,19 @@
 
     .form-group {
       margin-bottom: 32px;
+      padding: 0 4px;
     }
 
     .form-label {
       display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       justify-content: space-between;
+      align-items: center;
       font-weight: 700;
       font-size: 1rem;
       margin-bottom: 14px;
+      padding: 0 4px;
     }
 
     .form-label span.value {
@@ -567,7 +577,7 @@
       background: linear-gradient(145deg, var(--bg-surface-1), var(--bg-surface-2));
       border: 1px solid var(--border-highlight);
       border-radius: 28px;
-      padding: clamp(28px, 5vw, 56px);
+      padding: clamp(24px, 5vw, 56px);
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 48px;
@@ -983,10 +993,19 @@
       text-align: center;
     }
 
+    .pitch-footer .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
     .pitch-footer h2 {
-      font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+      font-size: clamp(1.8rem, 4.5vw, 2.5rem);
       font-weight: 800;
       margin-bottom: 18px;
+      max-width: 800px;
     }
 
     .pitch-footer p {
@@ -997,10 +1016,39 @@
       line-height: 1.6;
     }
 
+    .pitch-footer .btn-primary {
+      white-space: normal;
+      word-break: break-word;
+      text-align: center;
+      max-width: 100%;
+      width: auto;
+      padding: 16px 32px;
+      font-size: 1.05rem;
+      display: inline-flex;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
     /* RESPONSIVE MEDIA QUERIES */
     @media (max-width: 900px) {
       .hero-grid, .estimator-card, .voice-card {
         grid-template-columns: 1fr;
+      }
+      .hero-content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hero-title {
+        text-align: center;
+      }
+      .hero-desc {
+        text-align: center;
+      }
+      .hero-actions {
+        justify-content: center;
+        width: 100%;
       }
       .nav-links {
         display: none;
@@ -1403,7 +1451,7 @@
       <span class="badge" style="background: var(--accent-copper); color: #000; font-weight: 700; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; text-transform: uppercase;">Built By DreamSites Pro</span>
       <h2 style="margin-top: 16px;">Transform Your Business Website Into A High-Converting Sales Engine</h2>
       <p>This interactive mockup demonstrates how modern design, instant estimators, and AI tools can double your online leads.</p>
-      <a href="https://dreamsites.pro/#contact" class="btn btn-primary" style="padding: 16px 36px; font-size: 1.05rem;">
+      <a href="https://dreamsites.pro/#contact" class="btn btn-primary">
         Hire DreamSites Pro For Your Website &rarr;
       </a>
     </div>
