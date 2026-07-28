@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>50K Professional Lawn Services LLC | Organic Austin Lawn Care & Landscaping</title>
+  <meta name="description" content="Austin's premier organic lawn care, mowing, sod installation, and landscaping services. Family-owned & bootstrapped in South Austin since 2015. No subcontractors.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Dark Theme Elevation Levels (Obsidian Emerald Base) */
+      --bg-canvas: #080D09;
+      --bg-surface: #101812;
+      --bg-elevated: #17231A;
+      --bg-overlay: #202F24;
+      
+      /* Stroke & Borders */
+      --border-subtle: rgba(52, 211, 153, 0.12);
+      --border-hover: rgba(52, 211, 153, 0.35);
+      --border-bright: rgba(52, 211, 153, 0.6);
+      
+      /* Accents */
+      --accent-emerald: #10B981;
+      --accent-mint: #34D399;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --accent-gold: #F59E0B;
+      
+      /* Text Colors */
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+      
+      /* Fonts */
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-editorial: 'Newsreader', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Container Spacing */
+      --container-padding: 0 clamp(24px, 5vw, 48px);
+      --section-spacing: clamp(64px, 10vw, 112px);
+    }
+
+    /* Reset & Base Setup */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    /* Typography & Modular Scale */
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+    }
+
+    .display-title {
+      font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .editorial-accent {
+      font-family: var(--font-editorial);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--accent-mint);
+      padding: 0 4px;
+    }
+
+    .section-title {
+      font-size: clamp(1.875rem, 3.8vw, 3rem);
+      font-weight: 700;
+    }
+
+    .tabular-num {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    p {
+      color: var(--text-secondary);
+      max-width: 70ch;
+    }
+
+    /* Container Utility */
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--container-padding);
+    }
+
+    /* Floating DreamSites Pro Pitch Banner */
+    .pro-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(16, 24, 18, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 10px 16px;
+    }
+
+    .pro-banner-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 1280px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .pro-banner-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .pro-badge {
+      background: linear-gradient(135deg, var(--accent-emerald), #059669);
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .pro-banner-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-emerald);
+      color: #041208;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pro-banner-cta:hover {
+      background: var(--accent-mint);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* Main Navigation */
+    .navbar {
+      margin-top: 50px; /* Offset for top banner */
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-mint);
+      font-weight: 800;
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+    }
+
+    .brand-text-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--accent-mint);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.925rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-mint);
+    }
+
+    .phone-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 16px;
+      border-radius: 99px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: border-color 0.2s ease;
+    }
+
+    .phone-pill:hover {
+      border-color: var(--accent-emerald);
+      color: var(--accent-mint);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: clamp(48px, 8vw, 88px) 0;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--accent-mint);
+      margin-bottom: 20px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent-emerald), #059669);
+      color: #031207;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px -5px var(--accent-glow);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #34D399, var(--accent-emerald));
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-overlay);
+    }
+
+    .hero-stats-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .stat-number {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-mint);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-visual-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6);
+    }
+
+    .hero-img-wrap {
+      width: 100%;
+      height: 380px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-floating-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      background: rgba(16, 24, 18, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-subtle);
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Interactive Section Framing */
+    .section-wrap {
+      padding: var(--section-spacing) 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto clamp(40px, 6vw, 64px);
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.825rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-mint);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* TOOL 1: Estimator Slider & Calculator */
+    .tool-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: clamp(24px, 5vw, 48px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .estimator-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(32px, 5vw, 56px);
+      align-items: start;
+    }
+
+    .control-group {
+      margin-bottom: 28px;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+
+    .control-label {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .control-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-mint);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+
+    .range-slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--bg-elevated);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-mint);
+      cursor: pointer;
+      box-shadow: 0 0 12px var(--accent-glow);
+      transition: transform 0.15s ease;
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .freq-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .freq-btn.active {
+      background: var(--bg-overlay);
+      border-color: var(--accent-emerald);
+      color: var(--accent-mint);
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 14px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .checkbox-item:hover {
+      border-color: var(--border-hover);
+    }
+
+    .checkbox-item input {
+      accent-color: var(--accent-emerald);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .quote-box {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 32px;
+      text-align: center;
+      position: sticky;
+      top: 100px;
+    }
+
+    .price-display {
+      font-family: var(--font-mono);
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 800;
+      color: var(--accent-mint);
+      margin: 16px 0 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .price-sub {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .quote-breakdown {
+      text-align: left;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 20px;
+      margin-top: 20px;
+      font-size: 0.875rem;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    /* TOOL 2: Before/After Visualizer Slider */
+    .ba-container {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6);
+      user-select: none;
+    }
+
+    .ba-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ba-after-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      border-right: 2px solid var(--accent-mint);
+    }
+
+    .ba-slider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      background: var(--accent-mint);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #031207;
+      font-weight: 800;
+      box-shadow: 0 0 20px var(--accent-glow);
+      cursor: ew-resize;
+      z-index: 10;
+    }
+
+    .ba-label {
+      position: absolute;
+      bottom: 20px;
+      padding: 6px 14px;
+      background: rgba(8, 13, 9, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      z-index: 5;
+    }
+
+    .ba-label-before { left: 20px; }
+    .ba-label-after { right: 20px; color: var(--accent-mint); }
+
+    .project-thumbs {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .thumb-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 18px;
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .thumb-btn.active {
+      border-color: var(--accent-emerald);
+      color: var(--accent-mint);
+      background: var(--bg-elevated);
+    }
+
+    /* TOOL 3: AI Smart Dispatch & Zip Validator */
+    .chat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .chat-header {
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-emerald);
+    }
+
+    .chat-body {
+      padding: 24px;
+      height: 340px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chat-msg {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .msg-ai {
+      align-self: flex-start;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      border-bottom-left-radius: 2px;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: var(--accent-emerald);
+      color: #031207;
+      font-weight: 600;
+      border-bottom-right-radius: 2px;
+    }
+
+    .chat-input-row {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent-emerald);
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .service-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 28px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .service-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-mint);
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+    }
+
+    .service-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .service-card p {
+      font-size: 0.925rem;
+      margin-bottom: 20px;
+    }
+
+    .service-features {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+
+    .service-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .service-features li::before {
+      content: "✓";
+      color: var(--accent-mint);
+      font-weight: 800;
+    }
+
+    /* Austin Service Area Tag Cloud */
+    .area-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 36px;
+      text-align: center;
+    }
+
+    .zip-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .zip-tag {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* High-Converting Sales Pitch Footer for Client */
+    .pitch-footer-section {
+      background: linear-gradient(180deg, var(--bg-canvas), #061009);
+      border-top: 1px solid var(--border-bright);
+      padding: clamp(64px, 10vw, 96px) 0;
+      text-align: center;
+    }
+
+    .pitch-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 24px;
+      padding: clamp(36px, 6vw, 64px);
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 30px 60px -15px var(--accent-glow);
+    }
+
+    .pitch-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-emerald);
+      color: #031207;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 16px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-bright);
+      border-radius: 20px;
+      padding: 36px;
+      width: 90%;
+      max-width: 520px;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-emerald);
+    }
+
+    /* Mobile Responsiveness Rules */
+    @media (max-width: 900px) {
+      .hero-grid, .estimator-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav-menu {
+        display: none;
+      }
+      .hero-stats-row {
+        flex-wrap: wrap;
+      }
+      .quote-box {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Floating Sales Pitch Banner -->
+  <div class="pro-banner">
+    <div class="pro-banner-inner">
+      <div class="pro-banner-tag">
+        <span class="pro-badge">DREAMSITES PRO PREVIEW</span>
+        <span>Interactive Redesign Proposal for <strong>50K Professional Lawn Services LLC</strong></span>
+      </div>
+      <a href="#dreamsites-pitch" class="pro-banner-cta">Book Client Consultation &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Main Navigation -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="brand-logo">
+        <div class="brand-mark">50K</div>
+        <div>
+          <div class="brand-text-name">50K Professional Lawn Services</div>
+          <div class="brand-sub">Austin Organic Lawn & Landscaping</div>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#estimator" class="nav-link">Instant Estimator</a></li>
+        <li><a href="#visualizer" class="nav-link">Before & After</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#dispatch" class="nav-link">24/7 AI Dispatch</a></li>
+        <li><a href="#service-area" class="nav-link">Service Area</a></li>
+      </ul>
+
+      <a href="tel:8445055296" class="phone-pill">
+        <span>📞</span> 844-50K-LAWN
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-grid">
+      <div>
+        <div class="badge-pill">
+          <span>🌿</span> 100% Organic • Bootstrapped in South Austin Since 2015
+        </div>
+        <h1 class="display-title">
+          Austin’s Premier <span class="editorial-accent">Organic</span> Lawn Care & Turf Science.
+        </h1>
+        <p style="margin-top: 20px; font-size: 1.125rem;">
+          Family-owned, professionally-run lawn maintenance and custom landscaping. <strong>No subcontractors. No franchise fluff. No middleman.</strong> Just honest, age-old organic care and cutting-edge horticultural science.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#estimator" class="btn-primary">Calculate Instant Quote &rarr;</a>
+          <a href="#visualizer" class="btn-secondary">View Austin Projects</a>
+        </div>
+
+        <div class="hero-stats-row">
+          <div>
+            <div class="stat-number">2015</div>
+            <div class="stat-label">South Austin Local</div>
+          </div>
+          <div>
+            <div class="stat-number">0%</div>
+            <div class="stat-label">Subcontractors</div>
+          </div>
+          <div>
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Organic Certified</div>
+          </div>
+          <div>
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">AI Smart Dispatch</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual-card">
+        <div class="hero-img-wrap">
+          <img src="../images/mockups/50K Professional Lawn Services LLC/image_2.jpg" alt="50K Organic Lawn Care Austin Project">
+        </div>
+        <div class="hero-floating-badge">
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem;">South Austin Organic Transformation</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Onion Creek Community • Weekly Maintenance</div>
+          </div>
+          <span style="color: var(--accent-mint); font-weight: 800;">5.0 ★★★★★</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL 1: Instant Cost Estimator Slider -->
+  <section id="estimator" class="section-wrap">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Interactive Estimator Tool</span>
+        <h2 class="section-title">Instant Lawn Care Price Calculator</h2>
+        <p>Get an immediate, transparent estimate tailored specifically to your Austin property size and custom service options.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="estimator-grid">
+          <div>
+            <!-- Controls -->
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Property / Lawn Area</span>
+                <span class="control-value" id="sqft-val">4,500 Sq Ft</span>
+              </div>
+              <input type="range" id="sqft-slider" class="range-slider" min="500" max="20000" step="250" value="4500">
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Service Frequency</span>
+              </div>
+              <div class="option-grid">
+                <button class="freq-btn active" data-freq="weekly">Weekly (Best Value)</button>
+                <button class="freq-btn" data-freq="biweekly">Bi-Weekly</button>
+                <button class="freq-btn" data-freq="monthly">Monthly</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Organic Add-On Services</span>
+              </div>
+              <div class="checkbox-list">
+                <label class="checkbox-item">
+                  <span>🌿 Organic Soil Fertilization & Aeration</span>
+                  <input type="checkbox" id="addon-fert" checked>
+                </label>
+                <label class="checkbox-item">
+                  <span>🌱 Mulch Installation & Flower Bed Touchup</span>
+                  <input type="checkbox" id="addon-mulch">
+                </label>
+                <label class="checkbox-item">
+                  <span>✂️ Tree & Shrub Precision Trimming</span>
+                  <input type="checkbox" id="addon-shrub">
+                </label>
+                <label class="checkbox-item">
+                  <span>🍂 Leaf Cleanup & Lawn Debris Hauling</span>
+                  <input type="checkbox" id="addon-leaf">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Quote Box -->
+          <div>
+            <div class="quote-box">
+              <span class="eyebrow">Estimated Rate</span>
+              <div class="price-display" id="total-price">$54</div>
+              <div class="price-sub" id="freq-subtext">per weekly visit (Flat-rate transparent pricing)</div>
+
+              <div class="quote-breakdown">
+                <div class="breakdown-row">
+                  <span>Base Mowing & Edging:</span>
+                  <span class="tabular-num" id="base-cost">$39.00</span>
+                </div>
+                <div class="breakdown-row">
+                  <span>Selected Add-ons:</span>
+                  <span class="tabular-num" id="addons-cost">$15.00</span>
+                </div>
+                <div class="breakdown-row" style="color: var(--accent-mint); font-weight: 600; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-subtle);">
+                  <span>Frequency Discount Applied:</span>
+                  <span>15% Off</span>
+                </div>
+              </div>
+
+              <button class="btn-primary" style="width: 100%; margin-top: 24px;" onclick="openModal()">
+                Lock In Quote & Schedule &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL 2: Interactive Before/After Visualizer -->
+  <section id="visualizer" class="section-wrap">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Visual Proof</span>
+        <h2 class="section-title">The 50K Organic Turf Transformation</h2>
+        <p>Drag the interactive comparison slider to witness how our non-chemical organic treatment revitalizes Austin yards.</p>
+      </div>
+
+      <div class="ba-container" id="ba-visualizer">
+        <img class="ba-img" src="../images/mockups/50K Professional Lawn Services LLC/image_4.jpg" alt="50K Organic Lawn After">
+        <div class="ba-after-wrap" id="ba-wrap">
+          <img class="ba-img" src="../images/mockups/50K Professional Lawn Services LLC/image_7.jpg" alt="Lawn Before Organic Treatment">
+        </div>
+        <div class="ba-slider-handle" id="ba-handle">&harr;</div>
+        <span class="ba-label ba-label-before">COMPETITOR / UNTREATED</span>
+        <span class="ba-label ba-label-after">50K ORGANIC REVIVAL</span>
+      </div>
+
+      <div class="project-thumbs">
+        <button class="thumb-btn active">Fulmore School Organic Lawn Revival</button>
+        <button class="thumb-btn">Southpark Meadows Sod Replacement</button>
+        <button class="thumb-btn">Travis Heights Mulch & Shrub Bed</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL 3: 24/7 AI Smart Dispatch & Zip Code Assistant -->
+  <section id="dispatch" class="section-wrap">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Smart Client Dispatch</span>
+        <h2 class="section-title">24/7 AI Service Area & Scheduling Assistant</h2>
+        <p>Test our instant digital dispatch tool. Type your Austin zip code or ask about specific lawn services.</p>
+      </div>
+
+      <div class="chat-card">
+        <div class="chat-header">
+          <div class="chat-status">
+            <span class="status-dot"></span>
+            <span>50K Organic Dispatch Bot • Active Online</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Austin, TX</span>
+        </div>
+
+        <div class="chat-body" id="chat-box">
+          <div class="chat-msg msg-ai">
+            👋 Welcome to 50K Professional Lawn Services! Enter your <strong>Austin Zip Code</strong> (e.g. 78748, 78704, 78745) to check immediate service availability and schedule your free estimate.
+          </div>
+        </div>
+
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" class="chat-input" placeholder="Type zip code (e.g. 78748) or question..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+          <button class="btn-primary" style="padding: 12px 20px;" onclick="sendChatMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section id="services" class="section-wrap">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Core Offerings</span>
+        <h2 class="section-title">Complete Lawn & Landscaping Services</h2>
+        <p>Handled exclusively by our in-house Austin crews with professional-grade equipment.</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-icon">✂️</div>
+            <h3>Organic Lawn Mowing & Edging</h3>
+            <p>Precision mowing height tailored for Texas Bermuda & St. Augustine turf with crisp sidewalk edging and line trimming.</p>
+            <ul class="service-features">
+              <li>Mulching mowers for nutrient retention</li>
+              <li>String trimming along fences & beds</li>
+              <li>Hard surface debris blowoff</li>
+            </ul>
+          </div>
+          <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Get Mowing Quote</a>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-icon">🌱</div>
+            <h3>Organic Soil Fertilization</h3>
+            <p>Non-toxic organic soil nourishment and deep core aeration safe for children, pets, and local Austin waterways.</p>
+            <ul class="service-features">
+              <li>Pet & child safe organic formula</li>
+              <li>Soil microbiome enrichment</li>
+              <li>Weed suppression & root fortification</li>
+            </ul>
+          </div>
+          <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Get Soil Quote</a>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-icon">🌾</div>
+            <h3>Fresh Sod Installation</h3>
+            <p>Complete removal of dead patches and professional installation of premium Palmetto St. Augustine or Zoysia turf.</p>
+            <ul class="service-features">
+              <li>Soil grading & bed preparation</li>
+              <li>Freshly cut local farm sod</li>
+              <li>Initial deep watering protocol</li>
+            </ul>
+          </div>
+          <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Get Sod Quote</a>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-icon">🪵</div>
+            <h3>Mulch & Shrub Care</h3>
+            <p>Premium dark organic cedar or hardwood mulch installation combined with hand pruning for hedges and trees.</p>
+            <ul class="service-features">
+              <li>Weed barrier installation</li>
+              <li>3-inch protective mulch depth</li>
+              <li>Seasonal shrub & bush shaping</li>
+            </ul>
+          </div>
+          <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Get Mulch Quote</a>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-icon">🧹</div>
+            <h3>Yard Cleanup & Hauling</h3>
+            <p>All-inclusive property cleanups, leaf removal, storm storm debris clearing, and green waste disposal.</p>
+            <ul class="service-features">
+              <li>Seasonal leaf vacuuming & bagging</li>
+              <li>Overgrown brush clearing</li>
+              <li>Eco-friendly green waste recycling</li>
+            </ul>
+          </div>
+          <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Get Cleanup Quote</a>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-icon">🏢</div>
+            <h3>Commercial Groundskeeping</h3>
+            <p>Dedicated ongoing landscape maintenance for commercial properties, HOA communities, and retail centers.</p>
+            <ul class="service-features">
+              <li>Custom corporate service contracts</li>
+              <li>Dedicated property manager</li>
+              <li>Comprehensive liability insured</li>
+            </ul>
+          </div>
+          <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Commercial Inquiry</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Area Section -->
+  <section id="service-area" class="section-wrap">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Local Coverage</span>
+        <h2 class="section-title">Proudly Servicing South & Central Austin</h2>
+        <p>Bootstrapped right here in South Austin. We know Texas turf, soil, and weather inside and out.</p>
+      </div>
+
+      <div class="area-box">
+        <h3 style="font-size: 1.4rem; font-weight: 700;">Austin Zip Codes Served Daily</h3>
+        <div class="zip-tags">
+          <span class="zip-tag">78748 (Southpark / Slaughter)</span>
+          <span class="zip-tag">78744 (Onion Creek)</span>
+          <span class="zip-tag">78745 (Westgate / Garrison)</span>
+          <span class="zip-tag">78747 (Bradshaw Crossing)</span>
+          <span class="zip-tag">78704 (SoCo / Travis Heights)</span>
+          <span class="zip-tag">78749 (Southland Oaks)</span>
+          <span class="zip-tag">78702 (East Austin)</span>
+          <span class="zip-tag">78703 (Tarrytown)</span>
+          <span class="zip-tag">78705 (Hyde Park / Campus)</span>
+          <span class="zip-tag">78735 (Barton Creek)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- High-Converting Sales Pitch Footer for Client -->
+  <section id="dreamsites-pitch" class="pitch-footer-section">
+    <div class="container">
+      <div class="pitch-card">
+        <span class="pitch-logo-badge">PROPOSAL FOR 50K LAWN SERVICES</span>
+        <h2 class="display-title" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 16px;">
+          Ready to Automate Lead Capture & Double Online Bookings?
+        </h2>
+        <p style="margin: 0 auto 32px; font-size: 1.1rem; color: var(--text-secondary);">
+          This interactive prototype was engineered specifically for <strong>50K Professional Lawn Services LLC</strong> by <strong>DreamSites Pro</strong>. Upgrade your web presence with an instant price calculator, 24/7 AI dispatching, and mobile perfection that converts Austin homeowners into high-value recurring clients.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <a href="https://dreamsites.pro" target="_blank" class="btn-primary" style="font-size: 1.1rem; padding: 16px 36px;">
+            Approve Proposal & Hire DreamSites Pro &rarr;
+          </a>
+          <a href="tel:8445055296" class="btn-secondary" style="font-size: 1.1rem; padding: 16px 28px;">
+            Book Strategy Call
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Form -->
+  <div class="modal-overlay" id="quote-modal">
+    <div class="modal-card">
+      <button class="close-modal" onclick="closeModal()">&times;</button>
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Lock In Your 50K Organic Rate</h3>
+      <p style="font-size: 0.9rem; margin-bottom: 20px;">Provide your property details and we'll confirm your service date within 2 hours.</p>
+
+      <form onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Austin Property Address *</label>
+          <input type="text" class="form-input" required placeholder="1234 Onion Creek Pkwy, Austin, TX 78748">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" class="form-input" required placeholder="(512) 555-0199">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Rate Locked</label>
+          <input type="text" class="form-input" id="modal-locked-rate" readonly style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-mint);">
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Confirm & Schedule Service &rarr;</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Estimator Calculator Logic
+    const sqftSlider = document.getElementById('sqft-slider');
+    const sqftVal = document.getElementById('sqft-val');
+    const totalPriceEl = document.getElementById('total-price');
+    const baseCostEl = document.getElementById('base-cost');
+    const addonsCostEl = document.getElementById('addons-cost');
+    const freqSubtext = document.getElementById('freq-subtext');
+
+    let currentFreq = 'weekly';
+
+    function calculateEstimate() {
+      const sqft = parseInt(sqftSlider.value);
+      sqftVal.textContent = sqft.toLocaleString() + ' Sq Ft';
+
+      // Base formula: $35 minimum for up to 3000 sq ft, +$8 per 1000 sq ft after
+      let base = 35;
+      if (sqft > 3000) {
+        base += Math.ceil((sqft - 3000) / 1000) * 7.5;
+      }
+
+      let addons = 0;
+      if (document.getElementById('addon-fert').checked) addons += 18;
+      if (document.getElementById('addon-mulch').checked) addons += 25;
+      if (document.getElementById('addon-shrub').checked) addons += 20;
+      if (document.getElementById('addon-leaf').checked) addons += 15;
+
+      let multiplier = 1.0;
+      if (currentFreq === 'weekly') {
+        multiplier = 0.85; // 15% off
+        freqSubtext.textContent = 'per weekly visit (Flat-rate transparent pricing)';
+      } else if (currentFreq === 'biweekly') {
+        multiplier = 0.95;
+        freqSubtext.textContent = 'per bi-weekly visit';
+      } else {
+        multiplier = 1.1;
+        freqSubtext.textContent = 'per single monthly visit';
+      }
+
+      const finalPerVisit = Math.round((base + addons) * multiplier);
+
+      baseCostEl.textContent = '$' + (base * multiplier).toFixed(2);
+      addonsCostEl.textContent = '$' + (addons * multiplier).toFixed(2);
+      totalPriceEl.textContent = '$' + finalPerVisit;
+    }
+
+    sqftSlider.addEventListener('input', calculateEstimate);
+    document.querySelectorAll('.checkbox-item input').forEach(el => el.addEventListener('change', calculateEstimate));
+
+    document.querySelectorAll('.freq-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFreq = btn.dataset.freq;
+        calculateEstimate();
+      });
+    });
+
+    calculateEstimate();
+
+    // Modal Control
+    function openModal() {
+      const rate = totalPriceEl.textContent + ' ' + freqSubtext.textContent;
+      document.getElementById('modal-locked-rate').value = rate;
+      document.getElementById('quote-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('quote-modal').classList.remove('active');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      alert('Thank you! Your 50K Organic Lawn Care estimate has been locked in. An Austin crew manager will reach out to confirm your first service date!');
+      closeModal();
+    }
+
+    // Before/After Visualizer Touch/Drag Logic
+    const baContainer = document.getElementById('ba-visualizer');
+    const baWrap = document.getElementById('ba-wrap');
+    const baHandle = document.getElementById('ba-handle');
+
+    let isDragging = false;
+
+    function setSliderPos(x) {
+      const rect = baContainer.getBoundingClientRect();
+      let offsetX = x - rect.left;
+      if (offsetX < 0) offsetX = 0;
+      if (offsetX > rect.width) offsetX = rect.width;
+      const pct = (offsetX / rect.width) * 100;
+      baWrap.style.width = pct + '%';
+      baHandle.style.left = pct + '%';
+    }
+
+    baContainer.addEventListener('mousedown', (e) => { isDragging = true; setSliderPos(e.clientX); });
+    window.addEventListener('mousemove', (e) => { if (isDragging) setSliderPos(e.clientX); });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    baContainer.addEventListener('touchstart', (e) => { isDragging = true; setSliderPos(e.touches[0].clientX); });
+    window.addEventListener('touchmove', (e) => { if (isDragging) setSliderPos(e.touches[0].clientX); });
+    window.addEventListener('touchend', () => { isDragging = false; });
+
+    // Chatbot AI Assistant Logic
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chat-box');
+
+      // Add user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg msg-user';
+      userMsg.textContent = text;
+      chatBox.appendChild(userMsg);
+
+      input.value = '';
+
+      // AI Response logic
+      setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'chat-msg msg-ai';
+
+        const austinZips = ['78748', '78744', '78745', '78747', '78704', '78749', '78702', '78703', '78705', '78735', '78722', '78723'];
+        const isZip = austinZips.some(z => text.includes(z));
+
+        if (isZip || text.length === 5 && !isNaN(text)) {
+          aiMsg.innerHTML = `✅ <strong>Zip code verified!</strong> 50K Professional Lawn Services has active organic crews in <strong>${text}</strong>. We can schedule your property for <strong>this Tuesday or Thursday</strong>. Would you like to lock in your rate?`;
+        } else if (text.toLowerCase().includes('price') || text.toLowerCase().includes('cost')) {
+          aiMsg.innerHTML = `💡 Our organic lawn mowing starts at just <strong>$35/visit</strong> for typical South Austin yards. Use our <a href="#estimator" style="color: var(--accent-mint);">Instant Calculator above</a> for an exact estimate!`;
+        } else {
+          aiMsg.innerHTML = `🌱 Thanks for reaching out! We provide 100% organic lawn care, sod replacement, and landscaping across South & Central Austin with <strong>no subcontractors</strong>. Call us directly at <strong>844-50K-LAWN (844-505-5296)</strong> or request an online quote above!`;
+        }
+
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
