@@ -592,7 +592,7 @@
       color: var(--text-secondary);
     }
 
-    /* TOOL 2: Before/After Visualizer Slider */
+    /* FIXED TOOL 2: Non-Distorting Before/After Visualizer Slider */
     .ba-container {
       position: relative;
       width: 100%;
@@ -602,25 +602,40 @@
       border: 1px solid var(--border-subtle);
       box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6);
       user-select: none;
+      background: #000;
     }
 
-    .ba-img {
+    /* Before Image: Fixed Full Width Background Layer */
+    .ba-img-before {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
+    /* Clipping Mask Container for After Image */
     .ba-after-wrap {
       position: absolute;
       top: 0;
       left: 0;
-      width: 50%;
+      width: 50%; /* JS updates this width */
       height: 100%;
       overflow: hidden;
-      border-right: 2px solid var(--accent-mint);
+      border-right: 3px solid var(--accent-mint);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    }
+
+    /* After Image: MUST have fixed width equal to container width so it never distorts/scales during slide */
+    .ba-img-after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .ba-slider-handle {
@@ -628,16 +643,18 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       background: var(--accent-mint);
+      border: 3px solid #031207;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #031207;
       font-weight: 800;
-      box-shadow: 0 0 20px var(--accent-glow);
+      font-size: 1.1rem;
+      box-shadow: 0 0 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.4);
       cursor: ew-resize;
       z-index: 10;
     }
@@ -645,98 +662,113 @@
     .ba-label {
       position: absolute;
       bottom: 20px;
-      padding: 6px 14px;
-      background: rgba(8, 13, 9, 0.85);
-      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      background: rgba(8, 13, 9, 0.88);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--border-subtle);
-      border-radius: 6px;
+      border-radius: 8px;
       font-family: var(--font-mono);
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--text-primary);
       z-index: 5;
+      letter-spacing: 0.05em;
     }
 
-    .ba-label-before { left: 20px; }
-    .ba-label-after { right: 20px; color: var(--accent-mint); }
+    .ba-label-before { left: 20px; color: #F87171; border-color: rgba(248, 113, 113, 0.3); }
+    .ba-label-after { right: 20px; color: var(--accent-mint); border-color: rgba(52, 211, 153, 0.3); }
 
-    .project-thumbs {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-
-    .thumb-btn {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      padding: 10px 18px;
-      border-radius: 10px;
-      color: var(--text-secondary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .thumb-btn.active {
-      border-color: var(--accent-emerald);
-      color: var(--accent-mint);
-      background: var(--bg-elevated);
-    }
-
-    /* TOOL 3: AI Smart Dispatch & Zip Validator */
+    /* ENHANCED TOOL 3: Modern UI AI Dispatch Bot */
     .chat-card {
       background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-bright);
       border-radius: 24px;
-      max-width: 800px;
+      max-width: 840px;
       margin: 0 auto;
       overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7);
     }
 
     .chat-header {
-      background: var(--bg-elevated);
+      background: linear-gradient(135deg, var(--bg-elevated), #142016);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 18px 24px;
+      padding: 20px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .chat-status {
+    .chat-bot-info {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      font-weight: 600;
+      gap: 14px;
     }
 
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      background: var(--accent-emerald);
+    .bot-avatar {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-emerald), #047857);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .bot-name {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bot-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--accent-mint);
+      font-family: var(--font-mono);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 2px 8px;
+      border-radius: 99px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .status-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-mint);
       border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-mint);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.4; transform: scale(0.9); }
     }
 
     .chat-body {
-      padding: 24px;
-      height: 340px;
+      padding: 28px;
+      height: 380px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
+      background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.03), transparent 60%);
     }
 
     .chat-msg {
-      max-width: 80%;
-      padding: 14px 18px;
-      border-radius: 14px;
+      max-width: 82%;
+      padding: 16px 20px;
+      border-radius: 16px;
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .msg-ai {
@@ -744,19 +776,47 @@
       background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
       color: var(--text-primary);
-      border-bottom-left-radius: 2px;
+      border-top-left-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .msg-user {
       align-self: flex-end;
+      background: linear-gradient(135deg, var(--accent-emerald), #059669);
+      color: #020E06;
+      font-weight: 600;
+      border-top-right-radius: 4px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .zip-chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chip-btn {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      color: var(--accent-mint);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip-btn:hover {
       background: var(--accent-emerald);
       color: #031207;
-      font-weight: 600;
-      border-bottom-right-radius: 2px;
+      border-color: var(--accent-emerald);
     }
 
     .chat-input-row {
-      padding: 16px 24px;
+      padding: 18px 24px;
       border-top: 1px solid var(--border-subtle);
       background: var(--bg-elevated);
       display: flex;
@@ -767,8 +827,8 @@
       flex: 1;
       background: var(--bg-canvas);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 12px 16px;
+      border-radius: 12px;
+      padding: 14px 18px;
       color: var(--text-primary);
       font-family: var(--font-heading);
       font-size: 0.95rem;
@@ -1007,7 +1067,7 @@
         <span class="pro-badge">DREAMSITES PRO PREVIEW</span>
         <span>Interactive Redesign Proposal for <strong>50K Professional Lawn Services LLC</strong></span>
       </div>
-      <a href="#dreamsites-pitch" class="pro-banner-cta">Book Client Consultation &rarr;</a>
+      <a href="https://www.dreamsites.pro/#contact" target="_blank" class="pro-banner-cta">Book Client Consultation &rarr;</a>
     </div>
   </div>
 
@@ -1179,60 +1239,73 @@
     </div>
   </section>
 
-  <!-- TOOL 2: Interactive Before/After Visualizer -->
+  <!-- TOOL 2: Fixed Non-Distorting Before/After Visualizer -->
   <section id="visualizer" class="section-wrap">
     <div class="container">
       <div class="section-header">
         <span class="eyebrow">Visual Proof</span>
         <h2 class="section-title">The 50K Organic Turf Transformation</h2>
-        <p>Drag the interactive comparison slider to witness how our non-chemical organic treatment revitalizes Austin yards.</p>
+        <p>Drag the slider to reveal how 50K Organic Lawn Services transforms weeds and brown spots into lush, deep-green turf.</p>
       </div>
 
       <div class="ba-container" id="ba-visualizer">
-        <img class="ba-img" src="../images/mockups/50K Professional Lawn Services LLC/image_4.jpg" alt="50K Organic Lawn After">
+        <!-- BEFORE IMAGE LAYER (Fixed Full-Width Base) -->
+        <img class="ba-img-before" id="ba-img-before" src="../images/mockups/50K Professional Lawn Services LLC/image_4.jpg" alt="Untreated Lawn Before 50K Service">
+        
+        <!-- AFTER IMAGE LAYER (Clipping Container) -->
         <div class="ba-after-wrap" id="ba-wrap">
-          <img class="ba-img" src="../images/mockups/50K Professional Lawn Services LLC/image_7.jpg" alt="Lawn Before Organic Treatment">
+          <img class="ba-img-after" id="ba-img-after" src="../images/mockups/50K Professional Lawn Services LLC/image_7.jpg" alt="50K Organic Lawn Revival After">
         </div>
-        <div class="ba-slider-handle" id="ba-handle">&harr;</div>
-        <span class="ba-label ba-label-before">COMPETITOR / UNTREATED</span>
-        <span class="ba-label ba-label-after">50K ORGANIC REVIVAL</span>
-      </div>
 
-      <div class="project-thumbs">
-        <button class="thumb-btn active">Fulmore School Organic Lawn Revival</button>
-        <button class="thumb-btn">Southpark Meadows Sod Replacement</button>
-        <button class="thumb-btn">Travis Heights Mulch & Shrub Bed</button>
+        <div class="ba-slider-handle" id="ba-handle">&harr;</div>
+        <span class="ba-label ba-label-before">BEFORE: UNTREATED LAWN</span>
+        <span class="ba-label ba-label-after">AFTER: 50K ORGANIC REVIVAL</span>
       </div>
     </div>
   </section>
 
-  <!-- TOOL 3: 24/7 AI Smart Dispatch & Zip Code Assistant -->
+  <!-- ENHANCED TOOL 3: 24/7 AI Smart Dispatch & Zip Code Assistant -->
   <section id="dispatch" class="section-wrap">
     <div class="container">
       <div class="section-header">
-        <span class="eyebrow">Smart Client Dispatch</span>
-        <h2 class="section-title">24/7 AI Service Area & Scheduling Assistant</h2>
-        <p>Test our instant digital dispatch tool. Type your Austin zip code or ask about specific lawn services.</p>
+        <span class="eyebrow">Smart Automated Dispatch</span>
+        <h2 class="section-title">24/7 AI Crew Availability & Quote Assistant</h2>
+        <p>Experience how instant AI dispatching converts website visitors into scheduled lawn care customers around the clock.</p>
       </div>
 
       <div class="chat-card">
         <div class="chat-header">
-          <div class="chat-status">
-            <span class="status-dot"></span>
-            <span>50K Organic Dispatch Bot • Active Online</span>
+          <div class="chat-bot-info">
+            <div class="bot-avatar">🤖</div>
+            <div>
+              <div class="bot-name">
+                50K AI Dispatcher
+                <span class="bot-status-badge">
+                  <span class="status-pulse"></span> ACTIVE ONLINE
+                </span>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Instant Austin Crew Lookup • 24/7 Availability</div>
+            </div>
           </div>
-          <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Austin, TX</span>
         </div>
 
         <div class="chat-body" id="chat-box">
           <div class="chat-msg msg-ai">
-            👋 Welcome to 50K Professional Lawn Services! Enter your <strong>Austin Zip Code</strong> (e.g. 78748, 78704, 78745) to check immediate service availability and schedule your free estimate.
+            <div>👋 <strong>Welcome to 50K Professional Lawn Services!</strong></div>
+            <div style="margin-top: 6px;">I am your 24/7 Austin Dispatch Assistant. Select your zip code or enter it below to check immediate crew availability:</div>
+            
+            <div class="zip-chips">
+              <button class="chip-btn" onclick="selectZipChip('78748')">📍 78748 (Onion Creek)</button>
+              <button class="chip-btn" onclick="selectZipChip('78704')">📍 78704 (SoCo)</button>
+              <button class="chip-btn" onclick="selectZipChip('78745')">📍 78745 (Westgate)</button>
+              <button class="chip-btn" onclick="selectZipChip('78703')">📍 78703 (Tarrytown)</button>
+            </div>
           </div>
         </div>
 
         <div class="chat-input-row">
-          <input type="text" id="chat-input" class="chat-input" placeholder="Type zip code (e.g. 78748) or question..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-          <button class="btn-primary" style="padding: 12px 20px;" onclick="sendChatMessage()">Send</button>
+          <input type="text" id="chat-input" class="chat-input" placeholder="Type your zip code (e.g. 78748) or question..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+          <button class="btn-primary" style="padding: 12px 22px;" onclick="sendChatMessage()">Send &rarr;</button>
         </div>
       </div>
     </div>
@@ -1308,7 +1381,7 @@
           <div>
             <div class="service-icon">🧹</div>
             <h3>Yard Cleanup & Hauling</h3>
-            <p>All-inclusive property cleanups, leaf removal, storm storm debris clearing, and green waste disposal.</p>
+            <p>All-inclusive property cleanups, leaf removal, storm debris clearing, and green waste disposal.</p>
             <ul class="service-features">
               <li>Seasonal leaf vacuuming & bagging</li>
               <li>Overgrown brush clearing</li>
@@ -1375,11 +1448,11 @@
         </p>
 
         <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
-          <a href="https://dreamsites.pro" target="_blank" class="btn-primary" style="font-size: 1.1rem; padding: 16px 36px;">
+          <a href="https://www.dreamsites.pro/#contact" target="_blank" class="btn-primary" style="font-size: 1.1rem; padding: 16px 36px;">
             Approve Proposal & Hire DreamSites Pro &rarr;
           </a>
-          <a href="tel:8445055296" class="btn-secondary" style="font-size: 1.1rem; padding: 16px 28px;">
-            Book Strategy Call
+          <a href="tel:5125477129" class="btn-secondary" style="font-size: 1.1rem; padding: 16px 28px;">
+            📞 Call Us: 512-547-7129
           </a>
         </div>
       </div>
@@ -1430,7 +1503,7 @@
       const sqft = parseInt(sqftSlider.value);
       sqftVal.textContent = sqft.toLocaleString() + ' Sq Ft';
 
-      // Base formula: $35 minimum for up to 3000 sq ft, +$8 per 1000 sq ft after
+      // Base formula: $35 minimum for up to 3000 sq ft, +$7.50 per 1000 sq ft after
       let base = 35;
       if (sqft > 3000) {
         base += Math.ceil((sqft - 3000) / 1000) * 7.5;
@@ -1492,12 +1565,20 @@
       closeModal();
     }
 
-    // Before/After Visualizer Touch/Drag Logic
+    // FIXED BEFORE/AFTER SLIDER LOGIC - PREVENTS IMAGE DISTORTION / SCALING
     const baContainer = document.getElementById('ba-visualizer');
     const baWrap = document.getElementById('ba-wrap');
     const baHandle = document.getElementById('ba-handle');
+    const baImgAfter = document.getElementById('ba-img-after');
 
     let isDragging = false;
+
+    // Keep after-image width fixed to container width so clipping mask never distorts image
+    function updateAfterImgDimensions() {
+      if (baContainer && baImgAfter) {
+        baImgAfter.style.width = baContainer.offsetWidth + 'px';
+      }
+    }
 
     function setSliderPos(x) {
       const rect = baContainer.getBoundingClientRect();
@@ -1507,7 +1588,11 @@
       const pct = (offsetX / rect.width) * 100;
       baWrap.style.width = pct + '%';
       baHandle.style.left = pct + '%';
+      updateAfterImgDimensions();
     }
+
+    window.addEventListener('resize', updateAfterImgDimensions);
+    updateAfterImgDimensions();
 
     baContainer.addEventListener('mousedown', (e) => { isDragging = true; setSliderPos(e.clientX); });
     window.addEventListener('mousemove', (e) => { if (isDragging) setSliderPos(e.clientX); });
@@ -1517,7 +1602,12 @@
     window.addEventListener('touchmove', (e) => { if (isDragging) setSliderPos(e.touches[0].clientX); });
     window.addEventListener('touchend', () => { isDragging = false; });
 
-    // Chatbot AI Assistant Logic
+    // ENHANCED CHATBOT LOGIC
+    function selectZipChip(zip) {
+      document.getElementById('chat-input').value = zip;
+      sendChatMessage();
+    }
+
     function sendChatMessage() {
       const input = document.getElementById('chat-input');
       const text = input.value.trim();
@@ -1542,16 +1632,24 @@
         const isZip = austinZips.some(z => text.includes(z));
 
         if (isZip || text.length === 5 && !isNaN(text)) {
-          aiMsg.innerHTML = `✅ <strong>Zip code verified!</strong> 50K Professional Lawn Services has active organic crews in <strong>${text}</strong>. We can schedule your property for <strong>this Tuesday or Thursday</strong>. Would you like to lock in your rate?`;
+          aiMsg.innerHTML = `
+            <div style="color: var(--accent-mint); font-weight: 700; margin-bottom: 4px;">✅ Active Crew Verified for ${text}</div>
+            <div>Good news! 50K Organic crews service <strong>${text}</strong> weekly. Next open schedule slots:</div>
+            <div style="margin-top: 8px; background: var(--bg-canvas); padding: 10px; border-radius: 8px; border: 1px solid var(--border-subtle); font-size: 0.85rem; font-family: var(--font-mono);">
+              📅 Tuesday Morning (8:00 AM - 11:00 AM)<br>
+              📅 Thursday Afternoon (1:00 PM - 4:00 PM)
+            </div>
+            <button class="btn-primary" style="margin-top: 12px; padding: 8px 16px; font-size: 0.85rem;" onclick="openModal()">Book This Service Slot &rarr;</button>
+          `;
         } else if (text.toLowerCase().includes('price') || text.toLowerCase().includes('cost')) {
-          aiMsg.innerHTML = `💡 Our organic lawn mowing starts at just <strong>$35/visit</strong> for typical South Austin yards. Use our <a href="#estimator" style="color: var(--accent-mint);">Instant Calculator above</a> for an exact estimate!`;
+          aiMsg.innerHTML = `💡 Organic lawn care starts at <strong>$35/visit</strong> for standard Austin lots. Slide the <a href="#estimator" style="color: var(--accent-mint); text-decoration: underline;">Instant Pricing Tool above</a> for an exact quote!`;
         } else {
-          aiMsg.innerHTML = `🌱 Thanks for reaching out! We provide 100% organic lawn care, sod replacement, and landscaping across South & Central Austin with <strong>no subcontractors</strong>. Call us directly at <strong>844-50K-LAWN (844-505-5296)</strong> or request an online quote above!`;
+          aiMsg.innerHTML = `🌱 Thanks for reaching out! We provide 100% organic lawn maintenance across South & Central Austin with <strong>no subcontractors</strong>. Call our Austin office at <strong>844-50K-LAWN (844-505-5296)</strong> or click <a href="#estimator" style="color: var(--accent-mint);">Instant Estimator</a> above!`;
         }
 
         chatBox.appendChild(aiMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+      }, 400);
 
       chatBox.scrollTop = chatBox.scrollHeight;
     }
