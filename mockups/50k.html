@@ -519,11 +519,23 @@
       display: block;
     }
 
-    /* GALLERY PROJECT SHOWCASE GRID (USES CLIENT JPG IMAGES) */
+    /* PORTFOLIO IMAGE GRID RESPONSIVE RULES (EVEN COLS > 640px, 1 COL <= 640px) */
     .portfolio-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .portfolio-card {
@@ -1411,16 +1423,11 @@
   <header class="navbar">
     <div class="container nav-inner">
       
-      <!-- LOGO LOCATION 1: Main Header Navigation (Ultra-Bold Simplified Emblem) -->
       <a href="#" class="brand-logo-svg-wrap">
         <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- High-Contrast Outer Lawn Green Circle -->
           <circle cx="50" cy="50" r="48" fill="#4CAF50"/>
-          <!-- Inner Deep Moss Roundel -->
           <circle cx="50" cy="50" r="42" fill="#2E442E"/>
-          <!-- Crisp Leaf Cutout Curve -->
           <path d="M50 14C35 24 30 42 34 66C44 72 62 68 66 54C70 42 62 24 50 14Z" fill="#4CAF50"/>
-          <!-- Simplified High-Legibility 50K Typography -->
           <text x="50" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">50K</text>
         </svg>
         <div>
@@ -1482,13 +1489,11 @@
         </div>
       </div>
 
-      <!-- IMAGE 1: Hero Showcase JPG Image -->
       <div class="hero-visual-card tilt-card">
         <div class="hero-img-wrap">
           <img src="../images/mockups/50K Professional Lawn Services LLC/image_2.jpg" alt="50K Organic Lawn Care Austin Project">
         </div>
         
-        <!-- LOGO LOCATION 2: Hero Showcase Card Emblem Badge -->
         <div class="hero-floating-badge">
           <div style="display: flex; align-items: center; gap: 10px;">
             <svg style="width: 36px; height: 36px; flex-shrink: 0;" viewBox="0 0 100 100" fill="none">
@@ -1601,7 +1606,7 @@
     </div>
   </section>
 
-  <!-- TOOL 2: IMAGE 2 & 3: Before/After Visualizer Slider JPG Images -->
+  <!-- TOOL 2: Before/After Visualizer Slider -->
   <section id="visualizer" class="section-wrap alt-bg">
     <div class="container">
       <div class="section-header">
@@ -1611,11 +1616,9 @@
       </div>
 
       <div class="ba-container" id="ba-visualizer">
-        <!-- IMAGE 2: Untreated Lawn Before JPG -->
         <img class="ba-img-before" id="ba-img-before" src="../images/mockups/50K Professional Lawn Services LLC/image_7.jpg" alt="Untreated Lawn Before 50K Service">
         
         <div class="ba-after-wrap" id="ba-wrap">
-          <!-- IMAGE 3: 50K Revived Lawn After JPG -->
           <img class="ba-img-after" id="ba-img-after" src="../images/mockups/50K Professional Lawn Services LLC/image_4.jpg" alt="50K Organic Lawn Revival After">
         </div>
 
@@ -1626,7 +1629,7 @@
     </div>
   </section>
 
-  <!-- NEW SECTION: IMAGES 4, 5, 6, 7: Client Project Portfolio Gallery (Real JPGs) -->
+  <!-- Client Project Portfolio Gallery (EVEN COLUMNS RULE ENFORCED) -->
   <section id="projects" class="section-wrap">
     <div class="container">
       <div class="section-header">
@@ -1636,7 +1639,6 @@
       </div>
 
       <div class="portfolio-grid">
-        <!-- IMAGE 4: image_5.jpg -->
         <div class="portfolio-card tilt-card">
           <div class="portfolio-img-wrap">
             <img src="../images/mockups/50K Professional Lawn Services LLC/image_5.jpg" alt="Organic Aeration & Soil Enrichment Onion Creek">
@@ -1647,7 +1649,6 @@
           </div>
         </div>
 
-        <!-- IMAGE 5: image_6.jpg -->
         <div class="portfolio-card tilt-card">
           <div class="portfolio-img-wrap">
             <img src="../images/mockups/50K Professional Lawn Services LLC/image_6.jpg" alt="Sod Installation & Hardwood Mulch Tarrytown">
@@ -1658,7 +1659,6 @@
           </div>
         </div>
 
-        <!-- IMAGE 6: image_8.jpg -->
         <div class="portfolio-card tilt-card">
           <div class="portfolio-img-wrap">
             <img src="../images/mockups/50K Professional Lawn Services LLC/image_8.jpg" alt="Commercial Groundskeeping SoCo">
@@ -1669,7 +1669,6 @@
           </div>
         </div>
 
-        <!-- IMAGE 7: image_9.jpg -->
         <div class="portfolio-card tilt-card">
           <div class="portfolio-img-wrap">
             <img src="../images/mockups/50K Professional Lawn Services LLC/image_9.jpg" alt="Shrub Pruning & Flowerbed Shaping Westgate">
@@ -1912,7 +1911,6 @@
     <div class="container">
       <div class="pitch-card">
         
-        <!-- LOGO LOCATION 3: Sales Pitch Proposal Header Badge -->
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
           <div class="pitch-logo-badge">
             <svg style="width: 24px; height: 24px; flex-shrink: 0;" viewBox="0 0 100 100" fill="none">
