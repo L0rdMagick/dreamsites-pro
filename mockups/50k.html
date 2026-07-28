@@ -114,9 +114,9 @@
       padding: var(--container-padding);
     }
 
-    /* Floating DreamSites Pro Pitch Banner (Deep Moss Green #2E442E) */
+    /* Sticky/Relative Top Sales Pitch Banner (Prevents Header Overlap on Mobile) */
     .pro-banner {
-      position: fixed;
+      position: sticky;
       top: 0;
       left: 0;
       right: 0;
@@ -125,6 +125,7 @@
       border-bottom: 2px solid var(--accent-leaf);
       padding: 10px 16px;
       color: var(--text-on-dark);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .pro-banner-inner {
@@ -180,7 +181,7 @@
 
     /* Main Navigation Bar (Deep Moss Green #2E442E) */
     .navbar {
-      margin-top: 50px; /* Offset for top banner */
+      margin-top: 0; /* Stacked cleanly under pro-banner with zero overlap */
       padding: 18px 0;
       background: var(--bg-moss-dark);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -613,7 +614,7 @@
       font-weight: 500;
     }
 
-    /* TOOL 2: Fixed Non-Distorting Before/After Visualizer Slider */
+    /* TOOL 2: Non-Distorting Before/After Visualizer Slider */
     .ba-container {
       position: relative;
       width: 100%;
@@ -682,7 +683,6 @@
 
     .ba-label {
       position: absolute;
-      bottom: 20px;
       padding: 8px 16px;
       background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(10px);
@@ -694,10 +694,22 @@
       z-index: 5;
       letter-spacing: 0.05em;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      white-space: nowrap;
     }
 
-    .ba-label-before { left: 20px; color: #D32F2F; border-color: rgba(211, 47, 47, 0.3); }
-    .ba-label-after { right: 20px; color: var(--accent-moss); border-color: rgba(46, 68, 46, 0.3); }
+    .ba-label-before {
+      left: 20px;
+      bottom: 20px;
+      color: #D32F2F;
+      border-color: rgba(211, 47, 47, 0.3);
+    }
+
+    .ba-label-after {
+      right: 20px;
+      bottom: 20px;
+      color: var(--accent-moss);
+      border-color: rgba(46, 68, 46, 0.3);
+    }
 
     /* TOOL 3: Modern UI AI Dispatch Bot */
     .chat-card {
@@ -839,15 +851,17 @@
     }
 
     .chat-input-row {
-      padding: 18px 24px;
+      padding: 16px 20px;
       border-top: 1px solid var(--border-subtle);
       background: var(--bg-surface);
       display: flex;
       gap: 12px;
+      align-items: center;
     }
 
     .chat-input {
       flex: 1;
+      min-width: 0; /* Allows input to shrink properly on mobile without pushing send button offscreen */
       background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
@@ -1071,7 +1085,7 @@
       border-color: var(--accent-leaf);
     }
 
-    /* Mobile Responsiveness Rules */
+    /* Strict Mobile Responsiveness Adjustments */
     @media (max-width: 900px) {
       .hero-grid, .estimator-grid {
         grid-template-columns: 1fr;
@@ -1086,11 +1100,43 @@
         position: static;
       }
     }
+
+    @media (max-width: 640px) {
+      /* Fix Before/After Badges Overlap on Small Screens */
+      .ba-container {
+        height: 380px;
+      }
+      .ba-label {
+        font-size: 0.725rem;
+        padding: 6px 12px;
+      }
+      .ba-label-before {
+        top: 14px;
+        left: 14px;
+        bottom: auto;
+      }
+      .ba-label-after {
+        bottom: 14px;
+        right: 14px;
+      }
+
+      /* Fix Chat Input & Send Button Cutoff on Mobile */
+      .chat-input-row {
+        padding: 12px 14px;
+        gap: 8px;
+      }
+      .chat-input-row .btn-primary {
+        padding: 12px 16px !important;
+        font-size: 0.9rem !important;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Floating Sales Pitch Banner (Deep Moss Green #2E442E) -->
+  <!-- Top Floating Sales Pitch Banner (Deep Moss Green #2E442E - Sticky Top to Prevent Header Overlap) -->
   <div class="pro-banner">
     <div class="pro-banner-inner">
       <div class="pro-banner-tag">
@@ -1182,7 +1228,7 @@
     </div>
   </section>
 
-  <!-- TOOL 1: Instant Cost Estimator Slider (Clean White Canvas) -->
+  <!-- TOOL 1: Instant Cost Estimator Slider -->
   <section id="estimator" class="section-wrap">
     <div class="container">
       <div class="section-header">
@@ -1291,6 +1337,7 @@
         </div>
 
         <div class="ba-slider-handle" id="ba-handle">&harr;</div>
+        <!-- Non-Overlapping Mobile Safe Badges -->
         <span class="ba-label ba-label-before">BEFORE: UNTREATED LAWN</span>
         <span class="ba-label ba-label-after">AFTER: 50K ORGANIC REVIVAL</span>
       </div>
@@ -1338,7 +1385,7 @@
 
         <div class="chat-input-row">
           <input type="text" id="chat-input" class="chat-input" placeholder="Type your zip code (e.g. 78748) or question..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-          <button class="btn-primary" style="padding: 12px 22px;" onclick="sendChatMessage()">Send &rarr;</button>
+          <button class="btn-primary" onclick="sendChatMessage()">Send &rarr;</button>
         </div>
       </div>
     </div>
