@@ -157,7 +157,7 @@
       z-index: 2;
     }
 
-    /* SVG LOGO SYSTEM */
+    /* HIGH-CONTRAST SIMPLIFIED LOGO SYSTEM */
     .brand-logo-svg-wrap {
       display: flex;
       align-items: center;
@@ -168,12 +168,12 @@
     .brand-logo-svg {
       width: 48px;
       height: 48px;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .brand-logo-svg-wrap:hover .brand-logo-svg {
-      transform: scale(1.08) rotate(4deg);
+      transform: scale(1.1) rotate(3deg);
     }
 
     /* Sticky Top Sales Pitch Banner */
@@ -517,6 +517,60 @@
       color: var(--accent-leaf);
       margin-bottom: 12px;
       display: block;
+    }
+
+    /* GALLERY PROJECT SHOWCASE GRID (USES CLIENT JPG IMAGES) */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .portfolio-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .portfolio-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-leaf);
+    }
+
+    .portfolio-img-wrap {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .portfolio-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .portfolio-card:hover .portfolio-img-wrap img {
+      transform: scale(1.08);
+    }
+
+    .portfolio-info {
+      padding: 18px 20px;
+    }
+
+    .portfolio-info h4 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-header);
+      margin-bottom: 4px;
+    }
+
+    .portfolio-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
     }
 
     /* TOOL 1: Estimator Slider */
@@ -1357,16 +1411,17 @@
   <header class="navbar">
     <div class="container nav-inner">
       
-      <!-- KEY LOGO LOCATION 1: Main Header Navigation -->
+      <!-- LOGO LOCATION 1: Main Header Navigation (Ultra-Bold Simplified Emblem) -->
       <a href="#" class="brand-logo-svg-wrap">
         <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" fill="#2E442E" stroke="#4CAF50" stroke-width="4"/>
-          <!-- Overlapping Organic Leaf Blades -->
-          <path d="M50 18C34 26 28 44 32 68C42 74 62 70 68 56C72 44 64 28 50 18Z" fill="#4CAF50"/>
-          <path d="M50 18C60 28 66 44 60 64C50 72 36 66 32 54C30 42 40 26 50 18Z" fill="#81C784" opacity="0.85"/>
-          <!-- Inner Monogram 50K Badge -->
-          <circle cx="50" cy="50" r="22" fill="#2E442E" stroke="#81C784" stroke-width="2"/>
-          <text x="50" y="55" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="-0.5">50K</text>
+          <!-- High-Contrast Outer Lawn Green Circle -->
+          <circle cx="50" cy="50" r="48" fill="#4CAF50"/>
+          <!-- Inner Deep Moss Roundel -->
+          <circle cx="50" cy="50" r="42" fill="#2E442E"/>
+          <!-- Crisp Leaf Cutout Curve -->
+          <path d="M50 14C35 24 30 42 34 66C44 72 62 68 66 54C70 42 62 24 50 14Z" fill="#4CAF50"/>
+          <!-- Simplified High-Legibility 50K Typography -->
+          <text x="50" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">50K</text>
         </svg>
         <div>
           <div class="brand-text-name">50K Professional Lawn Services</div>
@@ -1377,9 +1432,9 @@
       <ul class="nav-menu">
         <li><a href="#estimator" class="nav-link">Instant Estimator</a></li>
         <li><a href="#visualizer" class="nav-link">Before & After</a></li>
+        <li><a href="#projects" class="nav-link">Austin Projects</a></li>
         <li><a href="#services" class="nav-link">Services</a></li>
         <li><a href="#dispatch" class="nav-link">24/7 AI Dispatch</a></li>
-        <li><a href="#service-area" class="nav-link">Service Area</a></li>
       </ul>
 
       <a href="tel:8445055296" class="phone-pill">
@@ -1427,20 +1482,20 @@
         </div>
       </div>
 
+      <!-- IMAGE 1: Hero Showcase JPG Image -->
       <div class="hero-visual-card tilt-card">
         <div class="hero-img-wrap">
           <img src="../images/mockups/50K Professional Lawn Services LLC/image_2.jpg" alt="50K Organic Lawn Care Austin Project">
         </div>
         
-        <!-- KEY LOGO LOCATION 2: Hero Visual Showcase Floating Badge -->
+        <!-- LOGO LOCATION 2: Hero Showcase Card Emblem Badge -->
         <div class="hero-floating-badge">
           <div style="display: flex; align-items: center; gap: 10px;">
             <svg style="width: 36px; height: 36px; flex-shrink: 0;" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="46" fill="#2E442E" stroke="#4CAF50" stroke-width="4"/>
-              <path d="M50 18C34 26 28 44 32 68C42 74 62 70 68 56C72 44 64 28 50 18Z" fill="#4CAF50"/>
-              <path d="M50 18C60 28 66 44 60 64C50 72 36 66 32 54C30 42 40 26 50 18Z" fill="#81C784" opacity="0.85"/>
-              <circle cx="50" cy="50" r="22" fill="#2E442E" stroke="#81C784" stroke-width="2"/>
-              <text x="50" y="55" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle">50K</text>
+              <circle cx="50" cy="50" r="48" fill="#4CAF50"/>
+              <circle cx="50" cy="50" r="42" fill="#2E442E"/>
+              <path d="M50 14C35 24 30 42 34 66C44 72 62 68 66 54C70 42 62 24 50 14Z" fill="#4CAF50"/>
+              <text x="50" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">50K</text>
             </svg>
             <div>
               <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-header);">South Austin Organic Transformation</div>
@@ -1546,7 +1601,7 @@
     </div>
   </section>
 
-  <!-- TOOL 2: Before/After Visualizer Slider -->
+  <!-- TOOL 2: IMAGE 2 & 3: Before/After Visualizer Slider JPG Images -->
   <section id="visualizer" class="section-wrap alt-bg">
     <div class="container">
       <div class="section-header">
@@ -1556,9 +1611,11 @@
       </div>
 
       <div class="ba-container" id="ba-visualizer">
+        <!-- IMAGE 2: Untreated Lawn Before JPG -->
         <img class="ba-img-before" id="ba-img-before" src="../images/mockups/50K Professional Lawn Services LLC/image_7.jpg" alt="Untreated Lawn Before 50K Service">
         
         <div class="ba-after-wrap" id="ba-wrap">
+          <!-- IMAGE 3: 50K Revived Lawn After JPG -->
           <img class="ba-img-after" id="ba-img-after" src="../images/mockups/50K Professional Lawn Services LLC/image_4.jpg" alt="50K Organic Lawn Revival After">
         </div>
 
@@ -1569,8 +1626,65 @@
     </div>
   </section>
 
+  <!-- NEW SECTION: IMAGES 4, 5, 6, 7: Client Project Portfolio Gallery (Real JPGs) -->
+  <section id="projects" class="section-wrap">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Recent Work Portfolio</span>
+        <h2 class="section-title mower-line-reveal">Featured Austin Organic Lawn Transformations</h2>
+        <p>Real photos from our weekly organic lawn maintenance, soil fertilization, sod installation, and landscaping projects across Austin.</p>
+      </div>
+
+      <div class="portfolio-grid">
+        <!-- IMAGE 4: image_5.jpg -->
+        <div class="portfolio-card tilt-card">
+          <div class="portfolio-img-wrap">
+            <img src="../images/mockups/50K Professional Lawn Services LLC/image_5.jpg" alt="Organic Aeration & Soil Enrichment Onion Creek">
+          </div>
+          <div class="portfolio-info">
+            <h4>Onion Creek Turf Revival</h4>
+            <p>Organic aeration, compost top-dressing & weekly precision mowing.</p>
+          </div>
+        </div>
+
+        <!-- IMAGE 5: image_6.jpg -->
+        <div class="portfolio-card tilt-card">
+          <div class="portfolio-img-wrap">
+            <img src="../images/mockups/50K Professional Lawn Services LLC/image_6.jpg" alt="Sod Installation & Hardwood Mulch Tarrytown">
+          </div>
+          <div class="portfolio-info">
+            <h4>Tarrytown Sod & Mulch Bed Touchup</h4>
+            <p>Fresh Palmetto St. Augustine sod with dark organic hardwood mulch.</p>
+          </div>
+        </div>
+
+        <!-- IMAGE 6: image_8.jpg -->
+        <div class="portfolio-card tilt-card">
+          <div class="portfolio-img-wrap">
+            <img src="../images/mockups/50K Professional Lawn Services LLC/image_8.jpg" alt="Commercial Groundskeeping SoCo">
+          </div>
+          <div class="portfolio-info">
+            <h4>SoCo Commercial Groundskeeping</h4>
+            <p>Precision curb edging, perimeter string trimming & debris blowoff.</p>
+          </div>
+        </div>
+
+        <!-- IMAGE 7: image_9.jpg -->
+        <div class="portfolio-card tilt-card">
+          <div class="portfolio-img-wrap">
+            <img src="../images/mockups/50K Professional Lawn Services LLC/image_9.jpg" alt="Shrub Pruning & Flowerbed Shaping Westgate">
+          </div>
+          <div class="portfolio-info">
+            <h4>Westgate Shrub & Flowerbed Care</h4>
+            <p>Hand pruning hedges, tree crown trimming & organic weed suppression.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- TOOL 3: Modern UI AI Dispatch Bot -->
-  <section id="dispatch" class="section-wrap">
+  <section id="dispatch" class="section-wrap alt-bg">
     <div class="container">
       <div class="section-header">
         <span class="eyebrow">Smart Automated Dispatch</span>
@@ -1617,7 +1731,7 @@
   </section>
 
   <!-- Services Grid -->
-  <section id="services" class="section-wrap alt-bg">
+  <section id="services" class="section-wrap">
     <div class="container">
       <div class="section-header">
         <span class="eyebrow">Core Offerings</span>
@@ -1713,33 +1827,6 @@
     </div>
   </section>
 
-  <!-- Service Area Section -->
-  <section id="service-area" class="section-wrap">
-    <div class="container">
-      <div class="section-header">
-        <span class="eyebrow">Local Coverage</span>
-        <h2 class="section-title mower-line-reveal">Proudly Servicing South & Central Austin</h2>
-        <p>Bootstrapped right here in South Austin. We know Texas turf, soil, and weather inside and out.</p>
-      </div>
-
-      <div class="area-box">
-        <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-header);">Austin Zip Codes Served Daily</h3>
-        <div class="zip-tags">
-          <span class="zip-tag">78748 (Southpark / Slaughter)</span>
-          <span class="zip-tag">78744 (Onion Creek)</span>
-          <span class="zip-tag">78745 (Westgate / Garrison)</span>
-          <span class="zip-tag">78747 (Bradshaw Crossing)</span>
-          <span class="zip-tag">78704 (SoCo / Travis Heights)</span>
-          <span class="zip-tag">78749 (Southland Oaks)</span>
-          <span class="zip-tag">78702 (East Austin)</span>
-          <span class="zip-tag">78703 (Tarrytown)</span>
-          <span class="zip-tag">78705 (Hyde Park / Campus)</span>
-          <span class="zip-tag">78735 (Barton Creek)</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- BENTO BOX SHOWCASE SECTION -->
   <section id="bento-preview-expansion" class="section-wrap alt-bg">
     <div class="container">
@@ -1825,14 +1912,14 @@
     <div class="container">
       <div class="pitch-card">
         
-        <!-- KEY LOGO LOCATION 3: Sales Pitch Proposal Header Badge -->
+        <!-- LOGO LOCATION 3: Sales Pitch Proposal Header Badge -->
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
           <div class="pitch-logo-badge">
             <svg style="width: 24px; height: 24px; flex-shrink: 0;" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="46" fill="#2E442E" stroke="#81C784" stroke-width="5"/>
-              <path d="M50 18C34 26 28 44 32 68C42 74 62 70 68 56C72 44 64 28 50 18Z" fill="#81C784"/>
-              <circle cx="50" cy="50" r="22" fill="#2E442E"/>
-              <text x="50" y="55" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle">50K</text>
+              <circle cx="50" cy="50" r="48" fill="#4CAF50"/>
+              <circle cx="50" cy="50" r="42" fill="#2E442E"/>
+              <path d="M50 14C35 24 30 42 34 66C44 72 62 68 66 54C70 42 62 24 50 14Z" fill="#4CAF50"/>
+              <text x="50" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">50K</text>
             </svg>
             <span>PROPOSAL FOR 50K LAWN SERVICES</span>
           </div>
