@@ -180,13 +180,12 @@
 
     /* ==========================================================================
        1. TOP ANNOUNCEMENT BAR & PROPOSAL PREVIEW (SAFETY ORANGE)
-       Fix 3: Relative document flow so it never overlaps the main navbar
        ========================================================================== */
     .top-bar {
       background-color: var(--color-safety-orange);
       color: var(--color-crisp-white);
       padding: 10px 0;
-      position: relative; /* Document flow prevents mobile navbar overlap */
+      position: relative;
       width: 100%;
       z-index: 1001;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -786,13 +785,12 @@
       color: #666;
     }
 
-    /* Fix 2: Mobile switch container bounds */
     .toggle-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      flex-wrap: wrap; /* Prevents toggle switch from wrapping off-screen */
+      flex-wrap: wrap;
       background-color: var(--color-light-gray);
       border: 1px solid var(--color-border);
       padding: 16px 20px;
@@ -822,7 +820,7 @@
       display: inline-block;
       width: 50px;
       height: 26px;
-      flex-shrink: 0; /* Prevents switch box from squishing */
+      flex-shrink: 0;
     }
 
     .switch input {
@@ -1283,7 +1281,6 @@
 
     /* ==========================================================================
        10. CONTACT / BOOKING FORM (CRISP WHITE BACKGROUND)
-       Fix 1: Safe mobile container & 100% width input discipline
        ========================================================================== */
     .booking-card {
       background-color: var(--color-crisp-white);
@@ -1335,7 +1332,7 @@
       outline: none;
       font-size: 0.9375rem;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      appearance: none; /* Mobile safe select rendering */
+      appearance: none;
     }
 
     .form-input:focus {
@@ -1485,12 +1482,21 @@
       flex-wrap: wrap;
     }
 
+    /* ==========================================================================
+       13. FOOTER (DEEP BLUE BACKGROUND #1C3D5A)
+       Fix: High-contrast white/light-gray text override for crisp legibility
+       ========================================================================== */
     .footer-section {
       background-color: var(--color-deep-blue);
-      color: var(--color-light-gray);
+      color: #F8FAFC;
       padding: 36px 0 28px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
       width: 100%;
+    }
+
+    .footer-section p {
+      color: #F8FAFC !important;
+      font-size: 0.875rem;
     }
 
     .footer-inner {
@@ -1510,12 +1516,13 @@
     }
 
     .footer-link {
-      color: var(--color-crisp-white);
+      color: #FFFFFF !important;
+      font-weight: 500;
       transition: color 0.2s ease;
     }
 
     .footer-link:hover {
-      color: var(--color-safety-orange);
+      color: var(--color-safety-orange) !important;
     }
 
     /* ==========================================================================
@@ -1584,7 +1591,6 @@
 
   <!-- ==========================================================================
        1. TOP ANNOUNCEMENT BAR & PROPOSAL PREVIEW (SAFETY ORANGE #FF6D00)
-       Fix 3: Relative positioning prevents mobile navbar overlap
        ========================================================================== -->
   <div class="top-bar">
     <div class="container">
@@ -1818,7 +1824,7 @@
               </div>
             </div>
 
-            <!-- Fix 2: Micro-Mesh Guard Toggle with Mobile Safety Wrapper -->
+            <!-- Micro-Mesh Guard Option -->
             <div class="toggle-row">
               <div class="toggle-info">
                 <h4>Add Micro-Mesh Gutter Guard Protection</h4>
@@ -2046,7 +2052,6 @@
 
   <!-- ==========================================================================
        10. CONTACT / BOOKING FORM (CRISP WHITE BACKGROUND)
-       Fix 1: Container padding discipline & mobile input bounds
        ========================================================================== -->
   <section id="booking" class="section-wrap">
     <div class="container">
@@ -2186,6 +2191,7 @@
 
   <!-- ==========================================================================
        13. FOOTER (DEEP BLUE BACKGROUND #1C3D5A)
+       High-contrast crisp white & off-white text override
        ========================================================================== -->
   <footer class="footer-section">
     <div class="container">
