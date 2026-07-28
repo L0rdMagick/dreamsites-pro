@@ -13,28 +13,30 @@
 
   <style>
     :root {
-      /* Modern & High-Energy Palette Mapping */
-      --bg-canvas: #F9F9F9;         /* Off-White / Light Gray Page Background */
-      --bg-surface: #FFFFFF;        /* Pure White Card Backgrounds */
-      --bg-elevated: #F0F4EC;       /* Subtle Lime Elevated Surface */
-      --bg-dark-nav: #2B2B2B;       /* Dark Slate Gray Main Navigation */
+      /* Classic & Earthy Palette Mapping */
+      --bg-canvas: #FFFFFF;
+      --bg-mint-tint: #E8F5E9;       /* Soft Mint Tint for alternating section backgrounds */
+      --bg-surface: #FFFFFF;         /* Pure White Card Backgrounds */
+      --bg-moss-dark: #2E442E;       /* Deep Moss Green for headers / banners */
+      --bg-soil-brown: #4E342E;      /* Rich Soil Brown for footer & secondary buttons */
       
       /* Stroke & Borders */
-      --border-subtle: rgba(124, 179, 66, 0.22);
-      --border-hover: #7CB342;
-      --border-bright: #7CB342;
+      --border-subtle: rgba(76, 175, 80, 0.22);
+      --border-hover: #4CAF50;
+      --border-bright: #4CAF50;
       
       /* Accents */
-      --accent-lime: #7CB342;        /* Bright Lime Green for Primary CTAs */
-      --accent-lime-hover: #8BC34A;  /* Hover Lime Brightening */
-      --accent-yellow: #FFB300;      /* Energetic Yellow for Phone/Badges/Icons */
-      --accent-dark-slate: #2B2B2B;  /* Dark Slate Gray */
+      --accent-leaf: #4CAF50;        /* Vibrant Leaf Green for Primary CTAs & Active links */
+      --accent-leaf-hover: #43A047;
+      --accent-moss: #2E442E;        /* Deep Moss Green for H1, H2, H3 */
+      --accent-soil: #4E342E;        /* Rich Soil Brown */
       
       /* Text Colors */
-      --text-primary: #2B2B2B;      /* Dark Slate Gray Body & Headers */
+      --text-primary: #333333;      /* Charcoal Main Body Font */
+      --text-header: #2E442E;       /* Deep Moss Green for Main Headers */
       --text-secondary: #4A4A4A;
-      --text-muted: #6E6E6E;
-      --text-on-dark: #FFFFFF;      /* Pure White Header Font on Dark Nav */
+      --text-muted: #666666;
+      --text-on-dark: #FFFFFF;
       
       /* Fonts */
       --font-heading: 'Plus Jakarta Sans', sans-serif;
@@ -68,7 +70,7 @@
     /* Typography & Modular Scale */
     h1, h2, h3, h4 {
       font-family: var(--font-heading);
-      color: var(--text-primary);
+      color: var(--text-header); /* Deep Moss Green (#2E442E) for Main Headers */
       line-height: 1.15;
       letter-spacing: -0.025em;
     }
@@ -77,21 +79,21 @@
       font-size: clamp(2.5rem, 5.5vw, 4.5rem);
       font-weight: 800;
       letter-spacing: -0.03em;
-      color: var(--text-primary);
+      color: var(--text-header);
     }
 
     .editorial-accent {
       font-family: var(--font-editorial);
       font-style: italic;
       font-weight: 600;
-      color: var(--accent-lime);
+      color: var(--accent-leaf);
       padding: 0 4px;
     }
 
     .section-title {
       font-size: clamp(1.875rem, 3.8vw, 3rem);
       font-weight: 700;
-      color: var(--text-primary);
+      color: var(--text-header);
     }
 
     .tabular-num {
@@ -100,7 +102,7 @@
     }
 
     p {
-      color: var(--text-secondary);
+      color: var(--text-primary); /* Charcoal (#333333) Main Body Font */
       max-width: 70ch;
     }
 
@@ -112,15 +114,15 @@
       padding: var(--container-padding);
     }
 
-    /* Floating DreamSites Pro Pitch Banner */
+    /* Floating DreamSites Pro Pitch Banner (Deep Moss Green #2E442E) */
     .pro-banner {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 1000;
-      background: var(--bg-dark-nav);
-      border-bottom: 2px solid var(--accent-yellow);
+      background: var(--bg-moss-dark);
+      border-bottom: 2px solid var(--accent-leaf);
       padding: 10px 16px;
       color: var(--text-on-dark);
     }
@@ -145,8 +147,8 @@
     }
 
     .pro-badge {
-      background: var(--accent-yellow);
-      color: var(--bg-dark-nav);
+      background: var(--accent-leaf);
+      color: #FFFFFF;
       font-family: var(--font-mono);
       font-size: 0.7rem;
       font-weight: 800;
@@ -160,7 +162,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       color: #FFFFFF;
       font-weight: 700;
       font-size: 0.85rem;
@@ -171,16 +173,16 @@
     }
 
     .pro-banner-cta:hover {
-      background: var(--accent-lime-hover);
+      background: var(--accent-leaf-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(124, 179, 66, 0.4);
+      box-shadow: 0 4px 14px rgba(76, 175, 80, 0.4);
     }
 
-    /* Main Navigation Bar (Dark Slate Gray #2B2B2B) */
+    /* Main Navigation Bar (Deep Moss Green #2E442E) */
     .navbar {
       margin-top: 50px; /* Offset for top banner */
       padding: 18px 0;
-      background: var(--bg-dark-nav);
+      background: var(--bg-moss-dark);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -202,7 +204,7 @@
     .brand-mark {
       width: 44px;
       height: 44px;
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -222,7 +224,7 @@
 
     .brand-sub {
       font-size: 0.75rem;
-      color: var(--accent-yellow);
+      color: #A5D6A7;
       font-family: var(--font-mono);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -244,37 +246,37 @@
       transition: color 0.15s ease;
     }
 
-    .nav-link:hover {
-      color: var(--accent-lime-hover);
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent-leaf); /* Active Link Color: Vibrant Leaf Green (#4CAF50) */
     }
 
     .phone-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--accent-yellow);
-      border: 1px solid var(--accent-yellow);
+      background: var(--accent-leaf);
+      border: 1px solid var(--accent-leaf);
       padding: 8px 18px;
       border-radius: 99px;
-      color: var(--bg-dark-nav);
+      color: #FFFFFF;
       text-decoration: none;
       font-family: var(--font-mono);
       font-size: 0.9rem;
       font-weight: 800;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(255, 179, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
     }
 
     .phone-pill:hover {
-      background: #FFCA28;
+      background: var(--accent-leaf-hover);
       transform: translateY(-1px);
     }
 
-    /* Hero Section */
+    /* Hero Section (Soft Mint Tint Background #E8F5E9) */
     .hero-section {
       padding: clamp(48px, 8vw, 88px) 0;
       position: relative;
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
     }
 
     .hero-grid {
@@ -288,13 +290,13 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 179, 0, 0.15);
-      border: 1px solid var(--accent-yellow);
+      background: #FFFFFF;
+      border: 1px solid var(--accent-leaf);
       padding: 6px 14px;
       border-radius: 99px;
       font-size: 0.825rem;
       font-weight: 700;
-      color: var(--bg-dark-nav);
+      color: var(--accent-moss);
       margin-bottom: 20px;
     }
 
@@ -306,13 +308,13 @@
       flex-wrap: wrap;
     }
 
-    /* Primary CTA Button: Bright Lime Green (#7CB342) */
+    /* Primary CTA Button: Vibrant Leaf Green (#4CAF50) */
     .btn-primary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       color: #FFFFFF;
       font-weight: 700;
       font-size: 1rem;
@@ -321,24 +323,25 @@
       text-decoration: none;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(124, 179, 66, 0.35);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-primary:hover {
-      background: var(--accent-lime-hover);
+      background: var(--accent-leaf-hover);
       transform: translateY(-2px);
-      box-shadow: 0 12px 25px rgba(124, 179, 66, 0.45);
+      box-shadow: 0 12px 25px rgba(76, 175, 80, 0.45);
     }
 
+    /* Secondary Action Button: Rich Soil Brown (#4E342E) */
     .btn-secondary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: var(--bg-surface);
-      border: 2px solid var(--accent-lime);
-      color: var(--text-primary);
+      background: var(--accent-soil);
+      border: 2px solid var(--accent-soil);
+      color: #FFFFFF;
       font-weight: 700;
       font-size: 1rem;
       padding: 14px 24px;
@@ -346,12 +349,13 @@
       text-decoration: none;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      box-shadow: 0 4px 12px rgba(78, 52, 46, 0.25);
     }
 
     .btn-secondary:hover {
-      background: var(--accent-lime);
-      color: #FFFFFF;
+      background: #3E2723;
+      border-color: #3E2723;
+      transform: translateY(-1px);
     }
 
     .hero-stats-row {
@@ -366,7 +370,7 @@
       font-family: var(--font-mono);
       font-size: 1.5rem;
       font-weight: 800;
-      color: var(--accent-lime);
+      color: var(--accent-moss);
     }
 
     .stat-label {
@@ -416,10 +420,14 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     }
 
-    /* Section Framing */
+    /* Section Framing & Alternating Backgrounds */
     .section-wrap {
       padding: var(--section-spacing) 0;
       border-top: 1px solid var(--border-subtle);
+    }
+
+    .section-wrap.alt-bg {
+      background: var(--bg-mint-tint); /* Soft Mint Tint (#E8F5E9) for alternating sections */
     }
 
     .section-header {
@@ -434,12 +442,12 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--accent-lime);
+      color: var(--accent-leaf);
       margin-bottom: 12px;
       display: block;
     }
 
-    /* TOOL 1: Estimator Slider & Calculator (Pure White Card Backgrounds #FFFFFF) */
+    /* TOOL 1: Estimator Slider & Calculator */
     .tool-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
@@ -470,14 +478,14 @@
     .control-label {
       font-weight: 700;
       font-size: 1rem;
-      color: var(--text-primary);
+      color: var(--text-header);
     }
 
     .control-value {
       font-family: var(--font-mono);
       font-weight: 700;
-      color: var(--bg-dark-nav);
-      background: var(--accent-yellow);
+      color: #FFFFFF;
+      background: var(--accent-moss);
       padding: 4px 12px;
       border-radius: 6px;
     }
@@ -497,9 +505,9 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(124, 179, 66, 0.4);
+      box-shadow: 0 0 12px rgba(76, 175, 80, 0.4);
       transition: transform 0.15s ease;
     }
 
@@ -514,9 +522,9 @@
     }
 
     .freq-btn {
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
+      color: var(--text-primary);
       font-family: var(--font-heading);
       font-weight: 700;
       padding: 12px;
@@ -527,8 +535,8 @@
     }
 
     .freq-btn.active {
-      background: var(--accent-lime);
-      border-color: var(--accent-lime);
+      background: var(--accent-leaf);
+      border-color: var(--accent-leaf);
       color: #FFFFFF;
     }
 
@@ -542,7 +550,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
       padding: 14px 18px;
       border-radius: 10px;
@@ -552,18 +560,18 @@
     }
 
     .checkbox-item:hover {
-      border-color: var(--accent-lime);
+      border-color: var(--accent-leaf);
     }
 
     .checkbox-item input {
-      accent-color: var(--accent-lime);
+      accent-color: var(--accent-leaf);
       width: 18px;
       height: 18px;
       cursor: pointer;
     }
 
     .quote-box {
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
       border-radius: 18px;
       padding: 32px;
@@ -577,7 +585,7 @@
       font-family: var(--font-mono);
       font-size: clamp(2.5rem, 4vw, 3.5rem);
       font-weight: 800;
-      color: var(--accent-lime);
+      color: var(--accent-moss);
       margin: 16px 0 8px;
       font-variant-numeric: tabular-nums;
     }
@@ -601,7 +609,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
-      color: var(--text-secondary);
+      color: var(--text-primary);
       font-weight: 500;
     }
 
@@ -637,7 +645,7 @@
       width: 50%;
       height: 100%;
       overflow: hidden;
-      border-right: 4px solid var(--accent-lime);
+      border-right: 4px solid var(--accent-leaf);
       box-shadow: 4px 0 20px rgba(0,0,0,0.3);
     }
 
@@ -658,13 +666,13 @@
       transform: translate(-50%, -50%);
       width: 48px;
       height: 48px;
-      background: var(--accent-yellow);
-      border: 3px solid var(--bg-dark-nav);
+      background: var(--accent-leaf);
+      border: 3px solid #FFFFFF;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--bg-dark-nav);
+      color: #FFFFFF;
       font-weight: 800;
       font-size: 1.1rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
@@ -689,7 +697,7 @@
     }
 
     .ba-label-before { left: 20px; color: #D32F2F; border-color: rgba(211, 47, 47, 0.3); }
-    .ba-label-after { right: 20px; color: var(--accent-lime); border-color: rgba(124, 179, 66, 0.3); }
+    .ba-label-after { right: 20px; color: var(--accent-moss); border-color: rgba(46, 68, 46, 0.3); }
 
     /* TOOL 3: Modern UI AI Dispatch Bot */
     .chat-card {
@@ -703,8 +711,8 @@
     }
 
     .chat-header {
-      background: var(--bg-dark-nav);
-      border-bottom: 2px solid var(--accent-yellow);
+      background: var(--bg-moss-dark);
+      border-bottom: 2px solid var(--accent-leaf);
       padding: 20px 24px;
       display: flex;
       align-items: center;
@@ -720,14 +728,14 @@
     .bot-avatar {
       width: 44px;
       height: 44px;
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.3rem;
       color: #FFFFFF;
-      box-shadow: 0 4px 12px rgba(124, 179, 66, 0.4);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
     }
 
     .bot-name {
@@ -744,21 +752,21 @@
       align-items: center;
       gap: 6px;
       font-size: 0.75rem;
-      color: var(--accent-yellow);
+      color: #A5D6A7;
       font-family: var(--font-mono);
-      background: rgba(255, 179, 0, 0.15);
+      background: rgba(165, 214, 167, 0.15);
       padding: 2px 8px;
       border-radius: 99px;
-      border: 1px solid rgba(255, 179, 0, 0.3);
+      border: 1px solid rgba(165, 214, 167, 0.3);
       font-weight: 700;
     }
 
     .status-pulse {
       width: 8px;
       height: 8px;
-      background: var(--accent-yellow);
+      background: #A5D6A7;
       border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-yellow);
+      box-shadow: 0 0 8px #A5D6A7;
       animation: pulse 1.8s infinite;
     }
 
@@ -775,7 +783,7 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
     }
 
     .chat-msg {
@@ -797,11 +805,11 @@
 
     .msg-user {
       align-self: flex-end;
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       color: #FFFFFF;
       font-weight: 600;
       border-top-right-radius: 4px;
-      box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
     }
 
     .zip-chips {
@@ -813,8 +821,8 @@
 
     .chip-btn {
       background: #FFFFFF;
-      border: 1px solid var(--accent-lime);
-      color: var(--bg-dark-nav);
+      border: 1px solid var(--accent-leaf);
+      color: var(--accent-moss);
       font-family: var(--font-mono);
       font-size: 0.8rem;
       font-weight: 700;
@@ -826,7 +834,7 @@
     }
 
     .chip-btn:hover {
-      background: var(--accent-lime);
+      background: var(--accent-leaf);
       color: #FFFFFF;
     }
 
@@ -840,7 +848,7 @@
 
     .chat-input {
       flex: 1;
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
       padding: 14px 18px;
@@ -851,7 +859,7 @@
     }
 
     .chat-input:focus {
-      border-color: var(--accent-lime);
+      border-color: var(--accent-leaf);
     }
 
     /* Services Grid */
@@ -875,21 +883,21 @@
     }
 
     .service-card:hover {
-      border-color: var(--accent-lime);
+      border-color: var(--accent-leaf);
       transform: translateY(-4px);
-      box-shadow: 0 15px 30px -5px rgba(124, 179, 66, 0.2);
+      box-shadow: 0 15px 30px -5px rgba(76, 175, 80, 0.2);
     }
 
     .service-icon {
       width: 48px;
       height: 48px;
-      background: rgba(255, 179, 0, 0.15);
-      border: 1px solid var(--accent-yellow);
+      background: var(--bg-mint-tint);
+      border: 1px solid var(--border-subtle);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--bg-dark-nav);
+      color: var(--accent-moss);
       margin-bottom: 20px;
       font-size: 1.4rem;
     }
@@ -898,7 +906,7 @@
       font-size: 1.3rem;
       font-weight: 800;
       margin-bottom: 10px;
-      color: var(--text-primary);
+      color: var(--text-header);
     }
 
     .service-card p {
@@ -916,15 +924,14 @@
       align-items: center;
       gap: 8px;
       font-size: 0.875rem;
-      color: var(--text-secondary);
+      color: var(--text-primary);
       margin-bottom: 6px;
       font-weight: 600;
     }
 
-    /* Icon Color: Energetic Yellow (#FFB300) / Lime */
     .service-features li::before {
       content: "✓";
-      color: var(--accent-lime);
+      color: var(--accent-leaf);
       font-weight: 900;
     }
 
@@ -947,41 +954,41 @@
     }
 
     .zip-tag {
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
       padding: 6px 14px;
       border-radius: 99px;
       font-family: var(--font-mono);
       font-size: 0.85rem;
-      color: var(--bg-dark-nav);
+      color: var(--accent-moss);
       font-weight: 700;
     }
 
-    /* High-Converting Sales Pitch Footer for Client */
+    /* Footer Background: Rich Soil Brown (#4E342E) */
     .pitch-footer-section {
-      background: var(--bg-dark-nav);
-      border-top: 4px solid var(--accent-lime);
+      background: var(--bg-soil-brown);
+      border-top: 4px solid var(--accent-leaf);
       padding: clamp(64px, 10vw, 96px) 0;
       text-align: center;
       color: var(--text-on-dark);
     }
 
     .pitch-card {
-      background: #333333;
+      background: #3E2723;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 24px;
       padding: clamp(36px, 6vw, 64px);
       max-width: 900px;
       margin: 0 auto;
-      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.4);
     }
 
     .pitch-logo-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--accent-yellow);
-      color: var(--bg-dark-nav);
+      background: var(--accent-leaf);
+      color: #FFFFFF;
       font-family: var(--font-mono);
       font-weight: 800;
       font-size: 0.85rem;
@@ -998,7 +1005,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(43, 43, 43, 0.85);
+      background: rgba(46, 68, 46, 0.8);
       backdrop-filter: blur(8px);
       z-index: 2000;
       display: flex;
@@ -1016,7 +1023,7 @@
 
     .modal-card {
       background: var(--bg-surface);
-      border: 2px solid var(--accent-lime);
+      border: 2px solid var(--accent-leaf);
       border-radius: 20px;
       padding: 36px;
       width: 90%;
@@ -1045,12 +1052,12 @@
       font-size: 0.875rem;
       font-weight: 700;
       margin-bottom: 6px;
-      color: var(--text-primary);
+      color: var(--text-header);
     }
 
     .form-input {
       width: 100%;
-      background: var(--bg-canvas);
+      background: var(--bg-mint-tint);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
       padding: 12px 16px;
@@ -1061,7 +1068,7 @@
     }
 
     .form-input:focus {
-      border-color: var(--accent-lime);
+      border-color: var(--accent-leaf);
     }
 
     /* Mobile Responsiveness Rules */
@@ -1083,7 +1090,7 @@
 </head>
 <body>
 
-  <!-- Top Floating Sales Pitch Banner -->
+  <!-- Top Floating Sales Pitch Banner (Deep Moss Green #2E442E) -->
   <div class="pro-banner">
     <div class="pro-banner-inner">
       <div class="pro-banner-tag">
@@ -1094,7 +1101,7 @@
     </div>
   </div>
 
-  <!-- Main Navigation Bar (Dark Slate Gray #2B2B2B) -->
+  <!-- Main Navigation Bar (Deep Moss Green #2E442E) -->
   <header class="navbar">
     <div class="container nav-inner">
       <a href="#" class="brand-logo">
@@ -1113,14 +1120,13 @@
         <li><a href="#service-area" class="nav-link">Service Area</a></li>
       </ul>
 
-      <!-- Phone Number Highlight: Energetic Yellow #FFB300 -->
       <a href="tel:8445055296" class="phone-pill">
         <span>📞</span> 844-50K-LAWN
       </a>
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero Section (Soft Mint Tint Background #E8F5E9) -->
   <section class="hero-section">
     <div class="container hero-grid">
       <div>
@@ -1135,8 +1141,9 @@
         </p>
 
         <div class="hero-ctas">
-          <!-- Primary CTA Button: Bright Lime Green #7CB342 -->
+          <!-- Primary CTA Button: Vibrant Leaf Green #4CAF50 -->
           <a href="#estimator" class="btn-primary">Calculate Instant Quote &rarr;</a>
+          <!-- Secondary Action Button: Rich Soil Brown #4E342E -->
           <a href="#visualizer" class="btn-secondary">View Austin Projects</a>
         </div>
 
@@ -1166,17 +1173,16 @@
         </div>
         <div class="hero-floating-badge">
           <div>
-            <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-primary);">South Austin Organic Transformation</div>
+            <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-header);">South Austin Organic Transformation</div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">Onion Creek Community • Weekly Maintenance</div>
           </div>
-          <!-- Rating Star Icon Highlight: Energetic Yellow #FFB300 -->
-          <span style="color: var(--accent-yellow); font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">5.0 ★★★★★</span>
+          <span style="color: #F59E0B; font-weight: 800;">5.0 ★★★★★</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TOOL 1: Instant Cost Estimator Slider (Pure White Card #FFFFFF) -->
+  <!-- TOOL 1: Instant Cost Estimator Slider (Clean White Canvas) -->
   <section id="estimator" class="section-wrap">
     <div class="container">
       <div class="section-header">
@@ -1249,13 +1255,13 @@
                   <span>Selected Add-ons:</span>
                   <span class="tabular-num" id="addons-cost">$15.00</span>
                 </div>
-                <div class="breakdown-row" style="color: var(--accent-lime); font-weight: 700; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-subtle);">
+                <div class="breakdown-row" style="color: var(--accent-leaf); font-weight: 700; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-subtle);">
                   <span>Frequency Discount Applied:</span>
                   <span>15% Off</span>
                 </div>
               </div>
 
-              <!-- Primary CTA Button: Bright Lime Green #7CB342 -->
+              <!-- Primary CTA Button: Vibrant Leaf Green #4CAF50 -->
               <button class="btn-primary" style="width: 100%; margin-top: 24px;" onclick="openModal()">
                 Lock In Quote & Schedule &rarr;
               </button>
@@ -1266,8 +1272,8 @@
     </div>
   </section>
 
-  <!-- TOOL 2: Fixed Non-Distorting Before/After Visualizer Slider -->
-  <section id="visualizer" class="section-wrap">
+  <!-- TOOL 2: Fixed Non-Distorting Before/After Visualizer Slider (Alternating Mint Tint Background #E8F5E9) -->
+  <section id="visualizer" class="section-wrap alt-bg">
     <div class="container">
       <div class="section-header">
         <span class="eyebrow">Visual Proof</span>
@@ -1338,8 +1344,8 @@
     </div>
   </section>
 
-  <!-- Services Grid (Pure White Cards #FFFFFF) -->
-  <section id="services" class="section-wrap">
+  <!-- Services Grid (Alternating Mint Tint Background #E8F5E9) -->
+  <section id="services" class="section-wrap alt-bg">
     <div class="container">
       <div class="section-header">
         <span class="eyebrow">Core Offerings</span>
@@ -1350,7 +1356,6 @@
       <div class="services-grid">
         <div class="service-card">
           <div>
-            <!-- Icon Background: Energetic Yellow #FFB300 -->
             <div class="service-icon">✂️</div>
             <h3>Organic Lawn Mowing & Edging</h3>
             <p>Precision mowing height tailored for Texas Bermuda & St. Augustine turf with crisp sidewalk edging and line trimming.</p>
@@ -1360,6 +1365,7 @@
               <li>Hard surface debris blowoff</li>
             </ul>
           </div>
+          <!-- Secondary Action Button: Rich Soil Brown #4E342E -->
           <a href="#estimator" class="btn-secondary" style="width: 100%; text-align: center;">Get Mowing Quote</a>
         </div>
 
@@ -1446,7 +1452,7 @@
       </div>
 
       <div class="area-box">
-        <h3 style="font-size: 1.4rem; font-weight: 800;">Austin Zip Codes Served Daily</h3>
+        <h3 style="font-size: 1.4rem; font-weight: 800; color: var(--text-header);">Austin Zip Codes Served Daily</h3>
         <div class="zip-tags">
           <span class="zip-tag">78748 (Southpark / Slaughter)</span>
           <span class="zip-tag">78744 (Onion Creek)</span>
@@ -1463,7 +1469,7 @@
     </div>
   </section>
 
-  <!-- High-Converting Sales Pitch Footer for Client -->
+  <!-- Footer Section (Rich Soil Brown #4E342E) -->
   <section id="dreamsites-pitch" class="pitch-footer-section">
     <div class="container">
       <div class="pitch-card">
@@ -1476,10 +1482,11 @@
         </p>
 
         <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <!-- Primary CTA Button: Vibrant Leaf Green #4CAF50 -->
           <a href="https://www.dreamsites.pro/#contact" target="_blank" class="btn-primary" style="font-size: 1.1rem; padding: 16px 36px;">
             Approve Proposal & Hire DreamSites Pro &rarr;
           </a>
-          <a href="tel:5125477129" class="btn-secondary" style="font-size: 1.1rem; padding: 16px 28px; background: #2B2B2B; color: #FFFFFF; border-color: var(--accent-yellow);">
+          <a href="tel:5125477129" class="btn-secondary" style="font-size: 1.1rem; padding: 16px 28px; background: #2E442E; border-color: #2E442E;">
             📞 Call Us: 512-547-7129
           </a>
         </div>
@@ -1491,8 +1498,8 @@
   <div class="modal-overlay" id="quote-modal">
     <div class="modal-card">
       <button class="close-modal" onclick="closeModal()">&times;</button>
-      <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Lock In Your 50K Organic Rate</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-secondary);">Provide your property details and we'll confirm your service date within 2 hours.</p>
+      <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; color: var(--text-header);">Lock In Your 50K Organic Rate</h3>
+      <p style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-primary);">Provide your property details and we'll confirm your service date within 2 hours.</p>
 
       <form onsubmit="handleFormSubmit(event)">
         <div class="form-group">
@@ -1509,7 +1516,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">Estimated Rate Locked</label>
-          <input type="text" class="form-input" id="modal-locked-rate" readonly style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-lime);">
+          <input type="text" class="form-input" id="modal-locked-rate" readonly style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-leaf);">
         </div>
         <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Confirm & Schedule Service &rarr;</button>
       </form>
@@ -1660,7 +1667,7 @@
 
         if (isZip || text.length === 5 && !isNaN(text)) {
           aiMsg.innerHTML = `
-            <div style="color: var(--accent-lime); font-weight: 800; margin-bottom: 4px;">✅ Active Crew Verified for ${text}</div>
+            <div style="color: var(--accent-moss); font-weight: 800; margin-bottom: 4px;">✅ Active Crew Verified for ${text}</div>
             <div>Good news! 50K Organic crews service <strong>${text}</strong> weekly. Next open schedule slots:</div>
             <div style="margin-top: 8px; background: #FFFFFF; padding: 10px; border-radius: 8px; border: 1px solid var(--border-subtle); font-size: 0.85rem; font-family: var(--font-mono); color: var(--text-primary);">
               📅 Tuesday Morning (8:00 AM - 11:00 AM)<br>
@@ -1669,9 +1676,9 @@
             <button class="btn-primary" style="margin-top: 12px; padding: 8px 16px; font-size: 0.85rem;" onclick="openModal()">Book This Service Slot &rarr;</button>
           `;
         } else if (text.toLowerCase().includes('price') || text.toLowerCase().includes('cost')) {
-          aiMsg.innerHTML = `💡 Organic lawn care starts at <strong>$35/visit</strong> for standard Austin lots. Slide the <a href="#estimator" style="color: var(--accent-lime); font-weight: 700; text-decoration: underline;">Instant Pricing Tool above</a> for an exact quote!`;
+          aiMsg.innerHTML = `💡 Organic lawn care starts at <strong>$35/visit</strong> for standard Austin lots. Slide the <a href="#estimator" style="color: var(--accent-leaf); font-weight: 700; text-decoration: underline;">Instant Pricing Tool above</a> for an exact quote!`;
         } else {
-          aiMsg.innerHTML = `🌱 Thanks for reaching out! We provide 100% organic lawn maintenance across South & Central Austin with <strong>no subcontractors</strong>. Call our Austin office at <strong>844-50K-LAWN (844-505-5296)</strong> or click <a href="#estimator" style="color: var(--accent-lime); font-weight: 700;">Instant Estimator</a> above!`;
+          aiMsg.innerHTML = `🌱 Thanks for reaching out! We provide 100% organic lawn maintenance across South & Central Austin with <strong>no subcontractors</strong>. Call our Austin office at <strong>844-50K-LAWN (844-505-5296)</strong> or click <a href="#estimator" style="color: var(--accent-leaf); font-weight: 700;">Instant Estimator</a> above!`;
         }
 
         chatBox.appendChild(aiMsg);
